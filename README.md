@@ -12,9 +12,9 @@ Our final project for CSC 307, a music recommendation and curation desktop appli
 
 ## Authors
 
- - Sreelakshmi Kariyadan
- - Oscar Jones
- - Maxence Weyrich
- - Amanda Cheng
- - Devon Subel
- - Declan Kelly
+ - Sreelakshmi Kariyadan ([skariyadan](github.com/skariyadan))
+ - Oscar Jones ([objones](github.com/objones))
+ - Maxence Weyrich ([maxwey](github.com/maxwey))
+ - Amanda Cheng ([mndcheng](github.com/mndcheng))
+ - Devon Subel ([DevonSubel](github.com/DevonSubel))
+ - Declan Kelly ([declanvk](github.com/declanvk))
