@@ -1,0 +1,3 @@
+As a heavy user of the app, I want to start listening to recommended songs, so that I can quickly sort through a high volume of songs and identify those I like the most.
+As a power user, I want the application to save my settings when I close the application, so that when I re-open the application I have a consistent user experience.
+As a new user of the app, I want instructions for performing common tasks in the app, so that I can learn to effectively use the application.
