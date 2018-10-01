@@ -1,0 +1,4 @@
+As a user, I want to be able to blacklist artists, so I can permanently avoid artists I dislike. 
+As a user, I want to have a list of previously played songs, so that I can find songs I’ve listened to before.
+As a user who likes to customize song information, I want to change song metadata information, so that I can fix mistakes or inconsistencies.
+
