@@ -1,3 +1,11 @@
 language: java
 jdk:
 - openjdk8
+
+addons:
+  sonarcloud:
+    organization: "declanvk-github"
+script:
+  # the following command line builds the project, runs the tests with coverage and then execute the SonarCloud analysis
+  - mvn clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar
+# sonar_token 5d4ff9c2cf3d2f3c69ffc3d12b510c9ebee71930
