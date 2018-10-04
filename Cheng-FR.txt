@@ -1,0 +1,5 @@
+The system shall provide song recommendations based on the characteristics* of previously liked songs.
+The system shall provide an interface to allow importing files with song metadata information into the song datastore.
+The system shall provide an interface to allow modifying the data in the song datastore.
+
+*characteristics refers to song metadata including information such as key, tempo, genre, artist and year.
