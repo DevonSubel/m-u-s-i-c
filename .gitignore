@@ -82,3 +82,6 @@ local.properties
 
 # Random Eclipse file
 .project
+
+# output folder
+target/
