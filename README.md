@@ -1,4 +1,4 @@
-# M.U.S.I.C
+# M.U.S.I.C [![Build Status](https://travis-ci.org/declanvk/m-u-s-i-c.svg?branch=development)](https://travis-ci.org/declanvk/m-u-s-i-c)
 
  - **M**.U.S.I.C
  - **U**niversal
