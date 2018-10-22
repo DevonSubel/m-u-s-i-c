@@ -85,3 +85,6 @@ local.properties
 
 # output folder
 target/
+
+# music database
+*.db
