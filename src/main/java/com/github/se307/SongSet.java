@@ -12,16 +12,16 @@ public class SongSet {
 	
 	private ArrayList<Song> song_list;
  		
-	public SongSet(ResultSet playlist, ResultSet manyToManyMapping, HashMap<Integer, Song> allSongs) {
+	public SongSet(ResultSet songSet, ResultSet manyToManyMapping, HashMap<Integer, Song> allSongs) {
 		song_list = new ArrayList<Song>();
 		
 		try {
-			song_set_pk = playlist.getInt("PLAYLIST_PK");
-			song_set_name = playlist.getString("PLAYLIST_NAME");
+			song_set_pk = songSet.getInt("id");
+			song_set_name = songSet.getString("name");
 			
 			while(!manyToManyMapping.isAfterLast()) {
 				
-				int song_id = manyToManyMapping.getInt("SONG_FK");
+				int song_id = manyToManyMapping.getInt("song_id");
 				song_list.add(allSongs.get(song_id));
 				
 				manyToManyMapping.next();
@@ -42,7 +42,7 @@ public class SongSet {
 	
 	public void setSongSetName(String song_set_name) {
 		this.song_set_name = song_set_name;
-		updateDB("PLAYLIST_NAME");
+		updateDB("name");
 	}
 	
 	public void addSongToSet(Song added_song) {
