@@ -17,11 +17,11 @@ public class App extends Application {
     @Override public void start(Stage stage) {
         // create the scene
         stage.setTitle("Web View");
-        scene = new Scene(new Browser(),900,600, Color.web("#666970"));
+        scene = new Scene(new Browser(),2560,1600, Color.web("#211E1E"));
         stage.setScene(scene);
         
-        URL url = this.getClass().getResource("/com/github/se307/App.css");
-        scene.getStylesheets().add(url.toString());        
+//        URL css = this.getClass().getResource("/com/github/se307/App.css");
+//        scene.getStylesheets().add(css.toString());
         stage.show();
     }
 	
