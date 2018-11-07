@@ -1,3 +1,0 @@
-As a power user, I want to use keyboard shortcuts, so that I can quickly navigate the application without using my mouse.
-As a user who works at night, I want a dark theme for the application, so that I am not blinded when I open the application.
-As a user with multiple systems, I want to be able to export song metadata from the song datastore, so the data is portable between computers.

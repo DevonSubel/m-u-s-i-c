@@ -1,0 +1,3 @@
+As a person knowledgeable about music, I want to use an advanced search feature, so that I can find songs with a specific genres, tempo and/or keys.
+As a person looking for music recommendations, I want to specify whether I liked a song, so that I can get better search results as I continue to use the application.
+As a singer, I want to view the lyrics of each song, so that I can sing along as the song plays.

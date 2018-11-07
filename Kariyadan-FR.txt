@@ -1,3 +1,0 @@
-The system shall provide a link to the song.
-The system shall provide a list of songs that will play in the listed order unless otherwise specified. 
-The system shall provide the ability to play song files loaded from the internet as well as those downloaded onto the computer.

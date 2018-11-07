@@ -1,0 +1,3 @@
+The system shall allow users to find more songs by the same artist of songs they have “liked”.
+The system shall allow users to sort the list of “liked” songs based on characteristics*.
+The system shall provide the song characteristics*.

@@ -1,0 +1,4 @@
+The system shall use a local settings file to save user searches.
+The system shall provide a light and dark theme the user can toggle between.
+The system shall allow users to blacklist artists.
+
