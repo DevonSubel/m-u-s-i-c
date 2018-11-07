@@ -1,0 +1,6 @@
+The system shall provide an interface to allow exporting song metadata from the song datastore.
+The system shall enforce datastore integrity by requiring a minimum amount of information* to be provided when adding a new song.
+The system shall learn from previously “liked” and “disliked” songs to tune recommendations.
+
+* ‘minimum amount of information’ is defined as including the song name, song artist and song file and/or link
+

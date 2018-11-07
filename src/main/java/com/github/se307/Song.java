@@ -12,12 +12,11 @@
 
 package com.github.se307;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 import org.apache.commons.text.similarity.JaroWinklerDistance;
 
@@ -30,25 +29,17 @@ public class Song {
 	private String song_name;
 	private String artist_name;
 	private String album_name;
-	private Short song_length;
-	private ArrayList<String> genre_list;
-	private Short song_year;
-	private Short bpm;
-	/*
-	 * Song key is represented as a number from 1-7 corresponding to (A, B, C, D, E, F, G), respectively.
-	 * A negative value indicates a Minor key, while a positive number represents a Major key
-	 */
-	private Byte song_key; 
+	private Integer song_length;
+	private Integer genre_id;
+	private Integer song_year;
+	private Integer bpm;
 	private String additional_notes;
-	private ArrayList<String> playlists_containing_song;
-	private String music_service;
-	private URL song_url;
-	private Byte song_user_rating;
-	private String song_lyrics;
+	private String song_url;
 	
-	// For tracking purposes when an update needs to happen
-	private int db_row_id;
-	
+
+	private static final String UPDATE_STATEMENT_CONST = "UPDATE song SET %s = ? WHERE id = ?;";
+	private static final String[] DB_FIELD_NAMES = { "name", "artist_name", "album_name", "song_length", "genre_id", "song_year", "bpm", "additional_notes", "uri" };
+	private static HashMap<String, PreparedStatement> sqlMapper;
 	
 	/**
 	 * Create a song object from the Result Set given.
@@ -58,33 +49,29 @@ public class Song {
 	 * @param set SQL query response from which to build this Song Object
 	 */
 	public Song(ResultSet rs) {
-		try {
-			this.song_pk = rs.getInt("SONG_ID");
-			this.song_name = rs.getString("SONG_NAME");
-			this.artist_name = rs.getString("ARTIST_NAME");
-			this.album_name = rs.getString("ALBUM_NAME");
-			this.song_length = rs.getShort("SONG_LENGTH");
-			String genres = rs.getString("GENRES");
-			if(genres != null) {
-				this.genre_list = new ArrayList<String>(Arrays.asList(genres.split(",\\s*")));
-				Collections.sort(this.genre_list);
-			}
-			this.song_year = rs.getShort("SONG_YEAR");
-			this.bpm = rs.getShort("BPM");
-			this.song_key = rs.getByte("SONG_KEY");
-			this.additional_notes = rs.getString("NOTES");
-			String playlists = rs.getString("PLAYLISTS_CONTAINING_SONG");
-			if(playlists != null) {
-				this.playlists_containing_song = new ArrayList<String>(Arrays.asList(playlists.split(",\\s*")));
-				Collections.sort(this.playlists_containing_song);
-			}
-			this.music_service = rs.getString("MUSIC_SERVICE");
-			this.song_url = rs.getURL("SONG_URL");
-			this.song_user_rating = rs.getByte("USER_RATING");
-			this.song_lyrics = rs.getString("SONG_LYRICS");
+		try {	
 			
+			if (Song.sqlMapper == null) {
+				Connection dbConnection = DatabaseDriver.getConnection();
+				Song.sqlMapper = new HashMap<String, PreparedStatement>();
+				
+				for (String dbField : Song.DB_FIELD_NAMES) {
+					Song.sqlMapper.put(dbField, dbConnection.prepareStatement(String.format(Song.UPDATE_STATEMENT_CONST, dbField)));
+				}
+				
+			}
 			
-			this.db_row_id = rs.getRow();
+			this.song_pk = rs.getInt("id");
+			this.song_name = rs.getString("name");
+			this.artist_name = rs.getString("artist_name");
+			this.album_name = rs.getString("album_name");
+			this.song_length = rs.getInt("song_length");
+			this.genre_id = rs.getInt("genre_id");
+			this.song_year = rs.getInt("song_year");
+			this.bpm = rs.getInt("bpm");
+			this.additional_notes = rs.getString("additional_notes");
+			this.song_url = rs.getString("uri");
+			
 		} catch(SQLException e) {
 			e.printStackTrace();
 		}		
@@ -135,38 +122,17 @@ public class Song {
 				this.bpm.shortValue() == other.bpm.shortValue())
 			current_sum += 1.0f;
 		
-		if(this.song_key != null || other.song_key != null)
-			characteristics_compared_on++;
-		if(this.song_key != null && other.song_key != null && 
-				this.song_key.byteValue() == other.song_key.byteValue())
-			current_sum += 1.0f;
-		
-		if(this.music_service != null || other.music_service != null)
-			characteristics_compared_on++;
-		if(this.music_service != null && other.music_service != null && 
-				this.song_key.equals(other.song_key))
-			current_sum += 1.0f;
-		
 		if(this.additional_notes != null || other.additional_notes != null)
 			characteristics_compared_on++;
 		if(this.additional_notes != null && other.additional_notes != null)
 			current_sum += DISTANCE_CALCULATOR.apply(this.additional_notes, other.additional_notes);
 		
-		if(this.song_user_rating != null || other.song_user_rating != null)
-			characteristics_compared_on++;
-		if(this.song_user_rating != null && other.song_user_rating != null &&
-				this.song_user_rating.byteValue() == other.song_user_rating.byteValue())
-			current_sum += 1.0f;
 		
-		if(this.genre_list != null || other.genre_list != null)
+		if(this.genre_id != null || other.genre_id != null)
 			characteristics_compared_on++;
-		if(this.genre_list != null && other.genre_list != null && 
-				(this.genre_list.size() > 0 || other.genre_list.size() > 0)) {
-			float incr = 1.0f / Math.max(this.genre_list.size(), other.genre_list.size());
-			for(int i = 0; i < Math.min(this.genre_list.size(), other.genre_list.size()); i++) {
-				if(this.genre_list.get(i).equals(other.genre_list.get(i)))
-					current_sum += incr;	
-			}
+		if(this.genre_id != null && other.genre_id != null && 
+				(this.genre_id == other.genre_id)) {
+				current_sum += 1.0f;
 		}
 		
 		if (characteristics_compared_on == 0) {
@@ -197,128 +163,115 @@ public class Song {
 		return album_name;
 	}
 
-	public Short getSongLength() {
+	public Integer getSongLength() {
 		return song_length;
 	}
 
-	public ArrayList<String> getGenreList() {
-		return genre_list;
+	public Integer getGenreId() {
+		return genre_id;
 	}
 
-	public Short getSongYear() {
+	public Integer getSongYear() {
 		return song_year;
 	}
 
-	public Short getBpm() {
+	public Integer getBpm() {
 		return bpm;
-	}
-
-	public Byte getSongKey() {
-		return song_key;
 	}
 
 	public String getAdditionalNotes() {
 		return additional_notes;
 	}
 
-	public ArrayList<String> getPlaylistsContainingSong() {
-		return playlists_containing_song;
-	}
-
-	public String getMusicService() {
-		return music_service;
-	}
-
-	public URL getSongUrl() {
+	public String getSongUrl() {
 		return song_url;
 	}
 
-	public Byte getSongUserRating() {
-		return song_user_rating;
-	}
-
-	public String getSongLyrics() {
-		return song_lyrics;
-	}
 	
 	/*
 	 * Setter methods
 	 * All setters will trigger an update to the database.
 	 */
-
-	private void triggerDBUpdate(String field_name) {
-		//Insert code here that update the database 
-	}
-	
 	
 	public void setSongName(String song_name) {
-		this.song_name = song_name;
-		triggerDBUpdate("SONG_NAME");
+		try {
+			Song.sqlMapper.get("name").setString(this.song_pk, song_name);
+			this.song_name = song_name;	
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setArtistName(String artist_name) {
-		this.artist_name = artist_name;
-		triggerDBUpdate("ARTIST_NAME");
+		try {
+			Song.sqlMapper.get("artist_name").setString(this.song_pk, artist_name);
+			this.artist_name = artist_name;	
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setAlbumName(String album_name) {
-		this.album_name = album_name;
-		triggerDBUpdate("ALBUM_NAME");
+		try {
+			Song.sqlMapper.get("album_name").setString(this.song_pk, album_name);
+			this.album_name = album_name;	
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	public void setSongLength(Short song_length) {
-		this.song_length = song_length;
-		triggerDBUpdate("SONG_LENGTH");
+	public void setSongLength(Integer song_length) {
+		try {
+			Song.sqlMapper.get("song_length").setInt(this.song_pk, song_length);
+			this.song_length = song_length;	
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	public void setGenreList(ArrayList<String> genre_list) {
-		this.genre_list = genre_list;
-		triggerDBUpdate("GENRES");
+	public void setGenreList(Integer genre_id) {
+		try {
+			Song.sqlMapper.get("genre_id").setInt(this.song_pk, genre_id);
+			this.genre_id = genre_id;	
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	public void setSongYear(Short song_year) {
-		this.song_year = song_year;
-		triggerDBUpdate("SONG_YEAR");
+	public void setSongYear(Integer song_year) {
+		try {
+			Song.sqlMapper.get("song_year").setInt(this.song_pk, song_year);
+			this.song_year = song_year;	
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	public void setBpm(Short bpm) {
-		this.bpm = bpm;
-		triggerDBUpdate("BPM");
-	}
-
-	public void setSongKey(Byte song_key) {
-		this.song_key = song_key;
-		triggerDBUpdate("SONG_KEY");
+	public void setBpm(Integer bpm) {
+		try {
+			Song.sqlMapper.get("bpm").setInt(this.song_pk, bpm);
+			this.bpm = bpm;	
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setAdditionalNotes(String additional_notes) {
-		this.additional_notes = additional_notes;
-		triggerDBUpdate("NOTES");
+		try {
+			Song.sqlMapper.get("additional_notes").setString(this.song_pk, additional_notes);
+			this.additional_notes = additional_notes;	
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	public void setPlaylistsContainingSong(ArrayList<String> playlists_containing_song) {
-		this.playlists_containing_song = playlists_containing_song;
-		triggerDBUpdate("PLAYLISTS_CONTAINING_SONG");
-	}
-
-	public void setMusicService(String music_service) {
-		this.music_service = music_service;
-		triggerDBUpdate("MUSIC_SERVICE");
-	}
-
-	public void setSongUrl(URL song_url) {
-		this.song_url = song_url;
-		triggerDBUpdate("SONG_URL");
-	}
-
-	public void setSongUserRating(Byte song_user_rating) {
-		this.song_user_rating = song_user_rating;
-		triggerDBUpdate("USER_RATING");
-	}
-
-	public void setSongLyrics(String song_lyrics) {
-		this.song_lyrics = song_lyrics;
-		triggerDBUpdate("SONG_LYRICS");
+	public void setSongUrl(String song_url) {
+		try {
+			Song.sqlMapper.get("uri").setString(this.song_pk, song_url);
+			this.song_url = song_url;	
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 }

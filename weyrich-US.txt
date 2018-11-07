@@ -1,3 +1,0 @@
-As a DJ, I want to create playlists, so that I can play sets of songs that I’ve put together.
-As a person new to rock, I want to find songs with similar characteristics, so that I can get into new music.
-As a musician looking for inspiration, I want to listen to songs that are like the ones I write, so that I know what songs work.

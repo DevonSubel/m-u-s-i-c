@@ -1,0 +1,3 @@
+The system shall scroll through the lyrics in sync with the song as it is playing.
+The system shall have a “like” and a “dislike” button for each song.
+The system shall provide a form by which the user can express properties desired in a song.
