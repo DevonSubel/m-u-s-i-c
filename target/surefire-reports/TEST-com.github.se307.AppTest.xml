@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.github.se307.AppTest" time="0.044" tests="1" errors="0" skipped="0" failures="0">
+<testsuite xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="https://maven.apache.org/surefire/maven-surefire-plugin/xsd/surefire-test-report.xsd" name="com.github.se307.AppTest" time="0.064" tests="1" errors="0" skipped="0" failures="0">
   <properties>
     <property name="gopherProxySet" value="false"/>
     <property name="awt.toolkit" value="sun.lwawt.macosx.LWCToolkit"/>
@@ -7,7 +7,7 @@
     <property name="java.specification.version" value="1.8"/>
     <property name="sun.cpu.isalist" value=""/>
     <property name="sun.jnu.encoding" value="UTF-8"/>
-    <property name="java.class.path" value="/Users/amandacheng/Documents/GitHub/m-u-s-i-c/target/test-classes:/Users/amandacheng/Documents/GitHub/m-u-s-i-c/target/classes:/Users/amandacheng/.m2/repository/junit/junit/4.11/junit-4.11.jar:/Users/amandacheng/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/Users/amandacheng/.m2/repository/org/apache/commons/commons-text/1.6/commons-text-1.6.jar:/Users/amandacheng/.m2/repository/org/apache/commons/commons-lang3/3.8.1/commons-lang3-3.8.1.jar:/Users/amandacheng/.m2/repository/org/xerial/sqlite-jdbc/3.23.1/sqlite-jdbc-3.23.1.jar:"/>
+    <property name="java.class.path" value="/Users/amandacheng/Documents/GitHub/m-u-s-i-c/target/test-classes:/Users/amandacheng/Documents/GitHub/m-u-s-i-c/target/classes:/Users/amandacheng/.m2/repository/junit/junit/4.11/junit-4.11.jar:/Users/amandacheng/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/Users/amandacheng/.m2/repository/org/apache/commons/commons-text/1.6/commons-text-1.6.jar:/Users/amandacheng/.m2/repository/org/apache/commons/commons-lang3/3.8.1/commons-lang3-3.8.1.jar:/Users/amandacheng/.m2/repository/org/xerial/sqlite-jdbc/3.23.1/sqlite-jdbc-3.23.1.jar:/Users/amandacheng/Documents/GitHub/m-u-s-i-c/lib/jfxrt.jar:"/>
     <property name="java.vm.vendor" value="Oracle Corporation"/>
     <property name="sun.arch.data.model" value="64"/>
     <property name="java.vendor.url" value="http://java.oracle.com/"/>
@@ -17,8 +17,8 @@
     <property name="user.country" value="US"/>
     <property name="sun.java.launcher" value="SUN_STANDARD"/>
     <property name="sun.boot.library.path" value="/Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/jre/lib"/>
-    <property name="sun.java.command" value="/Users/amandacheng/Documents/GitHub/m-u-s-i-c/target/surefire/surefirebooter7375895297998650418.jar /Users/amandacheng/Documents/GitHub/m-u-s-i-c/target/surefire 2018-11-06T17-20-48_261-jvmRun1 surefire7154067499746195214tmp surefire_0433878482378160794tmp"/>
-    <property name="surefire.test.class.path" value="/Users/amandacheng/Documents/GitHub/m-u-s-i-c/target/test-classes:/Users/amandacheng/Documents/GitHub/m-u-s-i-c/target/classes:/Users/amandacheng/.m2/repository/junit/junit/4.11/junit-4.11.jar:/Users/amandacheng/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/Users/amandacheng/.m2/repository/org/apache/commons/commons-text/1.6/commons-text-1.6.jar:/Users/amandacheng/.m2/repository/org/apache/commons/commons-lang3/3.8.1/commons-lang3-3.8.1.jar:/Users/amandacheng/.m2/repository/org/xerial/sqlite-jdbc/3.23.1/sqlite-jdbc-3.23.1.jar:"/>
+    <property name="sun.java.command" value="/Users/amandacheng/Documents/GitHub/m-u-s-i-c/target/surefire/surefirebooter5071278648206113217.jar /Users/amandacheng/Documents/GitHub/m-u-s-i-c/target/surefire 2018-11-06T18-04-16_182-jvmRun1 surefire835932230902824184tmp surefire_08984652897636330319tmp"/>
+    <property name="surefire.test.class.path" value="/Users/amandacheng/Documents/GitHub/m-u-s-i-c/target/test-classes:/Users/amandacheng/Documents/GitHub/m-u-s-i-c/target/classes:/Users/amandacheng/.m2/repository/junit/junit/4.11/junit-4.11.jar:/Users/amandacheng/.m2/repository/org/hamcrest/hamcrest-core/1.3/hamcrest-core-1.3.jar:/Users/amandacheng/.m2/repository/org/apache/commons/commons-text/1.6/commons-text-1.6.jar:/Users/amandacheng/.m2/repository/org/apache/commons/commons-lang3/3.8.1/commons-lang3-3.8.1.jar:/Users/amandacheng/.m2/repository/org/xerial/sqlite-jdbc/3.23.1/sqlite-jdbc-3.23.1.jar:/Users/amandacheng/Documents/GitHub/m-u-s-i-c/lib/jfxrt.jar:"/>
     <property name="sun.cpu.endian" value="little"/>
     <property name="user.home" value="/Users/amandacheng"/>
     <property name="user.language" value="en"/>
@@ -30,7 +30,7 @@
     <property name="java.vm.specification.vendor" value="Oracle Corporation"/>
     <property name="java.specification.name" value="Java Platform API Specification"/>
     <property name="java.awt.graphicsenv" value="sun.awt.CGraphicsEnvironment"/>
-    <property name="surefire.real.class.path" value="/Users/amandacheng/Documents/GitHub/m-u-s-i-c/target/surefire/surefirebooter7375895297998650418.jar"/>
+    <property name="surefire.real.class.path" value="/Users/amandacheng/Documents/GitHub/m-u-s-i-c/target/surefire/surefirebooter5071278648206113217.jar"/>
     <property name="sun.boot.class.path" value="/Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/jre/lib/resources.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/jre/lib/rt.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/jre/lib/sunrsasign.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/jre/lib/jsse.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/jre/lib/jce.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/jre/lib/charsets.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/jre/lib/jfr.jar:/Library/Java/JavaVirtualMachines/jdk1.8.0_131.jdk/Contents/Home/jre/classes"/>
     <property name="sun.management.compiler" value="HotSpot 64-Bit Tiered Compilers"/>
     <property name="java.runtime.version" value="1.8.0_131-b11"/>
@@ -58,5 +58,5 @@
     <property name="sun.io.unicode.encoding" value="UnicodeBig"/>
     <property name="java.class.version" value="52.0"/>
   </properties>
-  <testcase name="shouldAnswerWithTrue" classname="com.github.se307.AppTest" time="0.002"/>
+  <testcase name="shouldAnswerWithTrue" classname="com.github.se307.AppTest" time="0.005"/>
 </testsuite>

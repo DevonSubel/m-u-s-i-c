@@ -35,6 +35,13 @@
       <artifactId>sqlite-jdbc</artifactId>
       <version>3.23.1</version>
     </dependency>
+    <dependency>
+	  <groupId>com.oracle</groupId>
+	  <artifactId>javafx</artifactId>
+	  <version>2.2.3</version>
+	  <scope>system</scope>
+	  <systemPath>${project.basedir}/lib/jfxrt.jar</systemPath>
+	</dependency>
   </dependencies>
 
   <build>
