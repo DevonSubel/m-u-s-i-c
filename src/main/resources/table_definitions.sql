@@ -1,7 +1,7 @@
 CREATE TABLE IF NOT EXISTS genre
 (
-    id integer PRIMARY KEY AUTOINCREMENT NOT NULL
-    name varchar(40) NOT NULL,
+    id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+    name varchar(40) NOT NULL
 );
 CREATE UNIQUE INDEX IF NOT EXISTS genre_name_uindex ON genre (name);
 
@@ -22,8 +22,8 @@ CREATE TABLE IF NOT EXISTS song
 
 CREATE TABLE IF NOT EXISTS song_set
 (
-    id integer PRIMARY KEY AUTOINCREMENT NOT NULL
-    name varchar(40) NOT NULL,
+    id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
+    name varchar(40) NOT NULL
 );
 CREATE UNIQUE INDEX IF NOT EXISTS song_set_name_uindex ON song_set (name);
 
