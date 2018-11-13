@@ -14,7 +14,6 @@ package com.github.se307;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
@@ -37,9 +36,11 @@ public class Song {
 	private String song_url;
 	
 
-	private static final String UPDATE_STATEMENT_CONST = "UPDATE song SET %s = ? WHERE id = ?;";
-	private static final String[] DB_FIELD_NAMES = { "name", "artist_name", "album_name", "song_length", "genre_id", "song_year", "bpm", "additional_notes", "uri" };
-	private static HashMap<String, PreparedStatement> sqlMapper;
+	private static final String UPDATE_STATEMENT_CONST = "UPDATE song SET ? = ? WHERE id = ?;";
+	private static final String DELETE_STATEMENT_CONST = "DELETE FROM song WHERE id = ?";
+	
+	private static PreparedStatement updateStatement;
+	private static PreparedStatement deleteStatement;
 	
 	/**
 	 * Create a song object from the Result Set given.
@@ -51,14 +52,11 @@ public class Song {
 	public Song(ResultSet rs) {
 		try {	
 			
-			if (Song.sqlMapper == null) {
+			if (Song.updateStatement == null || Song.deleteStatement == null) {
 				Connection dbConnection = DatabaseDriver.getConnection();
-				Song.sqlMapper = new HashMap<String, PreparedStatement>();
 				
-				for (String dbField : Song.DB_FIELD_NAMES) {
-					Song.sqlMapper.put(dbField, dbConnection.prepareStatement(String.format(Song.UPDATE_STATEMENT_CONST, dbField)));
-				}
-				
+				Song.updateStatement = dbConnection.prepareStatement(Song.UPDATE_STATEMENT_CONST);
+				Song.deleteStatement = dbConnection.prepareStatement(Song.DELETE_STATEMENT_CONST);
 			}
 			
 			this.song_pk = rs.getInt("id");
@@ -143,6 +141,23 @@ public class Song {
 	}
 
 	
+	public void deleteSong() {
+		try {
+			Song.deleteStatement.setInt(1, this.song_pk);
+						
+			Song.deleteStatement.executeUpdate();
+			
+			// Mark this song Object as having been deleted. 
+			this.song_pk = -1;
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean isDeleted() {
+		return (this.song_pk < 0);
+	}
+	
 	/*
 	 * Getter methods
 	 */
@@ -195,7 +210,11 @@ public class Song {
 	
 	public void setSongName(String song_name) {
 		try {
-			Song.sqlMapper.get("name").setString(this.song_pk, song_name);
+			Song.updateStatement.setString(1, "name");
+			Song.updateStatement.setString(2, song_name);
+			Song.updateStatement.setInt(3, this.song_pk);
+						
+			Song.updateStatement.executeUpdate();
 			this.song_name = song_name;	
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -204,7 +223,11 @@ public class Song {
 
 	public void setArtistName(String artist_name) {
 		try {
-			Song.sqlMapper.get("artist_name").setString(this.song_pk, artist_name);
+			Song.updateStatement.setString(1, "artist_name");
+			Song.updateStatement.setString(2, artist_name);
+			Song.updateStatement.setInt(3, this.song_pk);
+						
+			Song.updateStatement.executeUpdate();
 			this.artist_name = artist_name;	
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -213,7 +236,11 @@ public class Song {
 
 	public void setAlbumName(String album_name) {
 		try {
-			Song.sqlMapper.get("album_name").setString(this.song_pk, album_name);
+			Song.updateStatement.setString(1, "album_name");
+			Song.updateStatement.setString(2, album_name);
+			Song.updateStatement.setInt(3, this.song_pk);
+						
+			Song.updateStatement.executeUpdate();
 			this.album_name = album_name;	
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -222,7 +249,11 @@ public class Song {
 
 	public void setSongLength(Integer song_length) {
 		try {
-			Song.sqlMapper.get("song_length").setInt(this.song_pk, song_length);
+			Song.updateStatement.setString(1, "song_length");
+			Song.updateStatement.setInt(2, song_length);
+			Song.updateStatement.setInt(3, this.song_pk);
+						
+			Song.updateStatement.executeUpdate();
 			this.song_length = song_length;	
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -231,7 +262,11 @@ public class Song {
 
 	public void setGenreList(Integer genre_id) {
 		try {
-			Song.sqlMapper.get("genre_id").setInt(this.song_pk, genre_id);
+			Song.updateStatement.setString(1, "genre_id");
+			Song.updateStatement.setInt(2, genre_id);
+			Song.updateStatement.setInt(3, this.song_pk);
+						
+			Song.updateStatement.executeUpdate();
 			this.genre_id = genre_id;	
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -240,7 +275,11 @@ public class Song {
 
 	public void setSongYear(Integer song_year) {
 		try {
-			Song.sqlMapper.get("song_year").setInt(this.song_pk, song_year);
+			Song.updateStatement.setString(1, "song_year");
+			Song.updateStatement.setInt(2, song_year);
+			Song.updateStatement.setInt(3, this.song_pk);
+						
+			Song.updateStatement.executeUpdate();
 			this.song_year = song_year;	
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -249,7 +288,11 @@ public class Song {
 
 	public void setBpm(Integer bpm) {
 		try {
-			Song.sqlMapper.get("bpm").setInt(this.song_pk, bpm);
+			Song.updateStatement.setString(1, "bpm");
+			Song.updateStatement.setInt(2, bpm);
+			Song.updateStatement.setInt(3, this.song_pk);
+						
+			Song.updateStatement.executeUpdate();
 			this.bpm = bpm;	
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -258,7 +301,11 @@ public class Song {
 
 	public void setAdditionalNotes(String additional_notes) {
 		try {
-			Song.sqlMapper.get("additional_notes").setString(this.song_pk, additional_notes);
+			Song.updateStatement.setString(1, "additional_notes");
+			Song.updateStatement.setString(2, additional_notes);
+			Song.updateStatement.setInt(3, this.song_pk);
+						
+			Song.updateStatement.executeUpdate();
 			this.additional_notes = additional_notes;	
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -267,11 +314,15 @@ public class Song {
 
 	public void setSongUrl(String song_url) {
 		try {
-			Song.sqlMapper.get("uri").setString(this.song_pk, song_url);
+			Song.updateStatement.setString(1, "song_url");
+			Song.updateStatement.setString(2, song_url);
+			Song.updateStatement.setInt(3, this.song_pk);
+						
+			Song.updateStatement.executeUpdate();
 			this.song_url = song_url;	
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
-
 }
+
