@@ -14,8 +14,6 @@ package com.github.se307;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
 
 import org.apache.commons.text.similarity.JaroWinklerDistance;
 
@@ -23,56 +21,88 @@ public class Song {
 	
 	public static final JaroWinklerDistance DISTANCE_CALCULATOR = new JaroWinklerDistance();
 	
-	private int song_pk;
+	private static final SongDatabaseDriver DB_DRIVER = SongDatabaseDriver.getInstance(); 
 	
-	private String song_name;
-	private String artist_name;
-	private String album_name;
-	private Integer song_length;
-	private Integer genre_id;
-	private Integer song_year;
+	
+	private long songKey;
+	
+	private boolean isInflated;
+	
+	private String songName;
+	private String artistName;
+	private String albumName;
+	private Integer songLength;
+	private Integer genreID;
+	private Integer songYear;
 	private Integer bpm;
-	private String additional_notes;
-	private String song_url;
+	private String additionalNotes;
+	private String songURL;
+	
 	
 
-	private static final String UPDATE_STATEMENT_CONST = "UPDATE song SET ? = ? WHERE id = ?;";
-	private static final String DELETE_STATEMENT_CONST = "DELETE FROM song WHERE id = ?";
+	/**
+	 * Create a Song object with the given unique key identifier.
+	 * The Song object is not inflated, until requested.
+	 * 
+	 * @param songKey	the key of the Song entry
+	 */
+	public Song(long songKey) {
+		this.songKey = songKey;
+		this.isInflated = false;
+	}
 	
-	private static PreparedStatement updateStatement;
-	private static PreparedStatement deleteStatement;
 	
 	/**
-	 * Create a song object from the Result Set given.
-	 * This object not call .next() one time, thus can be safely used
-	 * so that none of the objects are skipped over.
-	 *  
-	 * @param set SQL query response from which to build this Song Object
+	 * Flatten does the opposite of inflate by removing the fields, 
+	 * thus allowing them to be garbage collected to decrease memory impact.
+	 * 
+	 * This method is probably not necessary, but hey... we got an inflate so why not.
 	 */
-	public Song(ResultSet rs) {
-		try {	
+	public void flatten() {
+		// TODO: flatten object
+	}
+	
+	/**
+	 * Inflate the object by querying the database for the fields associated with 
+	 * the Song object.
+	 * 
+	 * Although inflate will be called before the fields of the object can be accessed, 
+	 * it is not necessary for inflate to run when setting fields.
+	 */
+	public void inflate() {
+		if(!this.isInflated) {
 			
-			if (Song.updateStatement == null || Song.deleteStatement == null) {
-				Connection dbConnection = DatabaseDriver.getConnection();
+			ResultSet rs = Song.DB_DRIVER.getSong(this.songKey);
+			try {	
+				this.songName = rs.getString("name");
+				this.artistName = rs.getString("artist_name");
+				this.albumName = rs.getString("album_name");
 				
-				Song.updateStatement = dbConnection.prepareStatement(Song.UPDATE_STATEMENT_CONST);
-				Song.deleteStatement = dbConnection.prepareStatement(Song.DELETE_STATEMENT_CONST);
+				this.songLength = rs.getInt("song_length");
+				if(rs.wasNull()) 
+					this.songLength = null;
+				
+				this.genreID = rs.getInt("genre_id");
+				if(rs.wasNull())
+					this.genreID = null;
+				
+				this.songYear = rs.getInt("song_year");
+				if(rs.wasNull())
+					this.songYear = null;
+				
+				this.bpm = rs.getInt("bpm");
+				if(rs.wasNull())
+					this.bpm = null;
+				
+				this.additionalNotes = rs.getString("additional_notes");
+				this.songURL = rs.getString("uri");
+				
+			} catch(SQLException e) {
+				e.printStackTrace();
 			}
 			
-			this.song_pk = rs.getInt("id");
-			this.song_name = rs.getString("name");
-			this.artist_name = rs.getString("artist_name");
-			this.album_name = rs.getString("album_name");
-			this.song_length = rs.getInt("song_length");
-			this.genre_id = rs.getInt("genre_id");
-			this.song_year = rs.getInt("song_year");
-			this.bpm = rs.getInt("bpm");
-			this.additional_notes = rs.getString("additional_notes");
-			this.song_url = rs.getString("uri");
-			
-		} catch(SQLException e) {
-			e.printStackTrace();
-		}		
+			this.isInflated = true;
+		}
 	}
 	
 	/**
@@ -84,245 +114,230 @@ public class Song {
 	 * @return float 0 <= f <= 1
 	 */
 	public float percentMatch(Song other) {
-		int characteristics_compared_on = 0;
-		float current_sum = 0.0f;
+		int characteristicsComparedOn = 0;
+		float currentSum = 0.0f;
 		
-		if(this.song_name != null || other.song_name != null)
-			characteristics_compared_on++;
-		if(this.song_name != null && other.song_name != null)
-			current_sum += DISTANCE_CALCULATOR.apply(this.song_name, other.song_name);
+		if(this.songName != null || other.songName != null)
+			characteristicsComparedOn++;
+		if(this.songName != null && other.songName != null)
+			currentSum += DISTANCE_CALCULATOR.apply(this.songName, other.songName);
 		
-		if(this.artist_name != null || other.artist_name != null)
-			characteristics_compared_on++;
-		if(this.artist_name != null && other.artist_name != null)
-			current_sum += DISTANCE_CALCULATOR.apply(this.artist_name, other.artist_name);
+		if(this.artistName != null || other.artistName != null)
+			characteristicsComparedOn++;
+		if(this.artistName != null && other.artistName != null)
+			currentSum += DISTANCE_CALCULATOR.apply(this.artistName, other.artistName);
 		
-		if(this.album_name != null || other.album_name != null)
-			characteristics_compared_on++;
-		if(this.album_name != null && other.album_name != null)
-			current_sum += DISTANCE_CALCULATOR.apply(this.album_name, other.album_name);
+		if(this.albumName != null || other.albumName != null)
+			characteristicsComparedOn++;
+		if(this.albumName != null && other.albumName != null)
+			currentSum += DISTANCE_CALCULATOR.apply(this.albumName, other.albumName);
 		
-		if(this.song_length != null || other.song_length != null)
-			characteristics_compared_on++;
-		if(this.song_length != null && other.song_length != null && 
-				this.song_length.shortValue() == other.song_length.shortValue())
-			current_sum += 1.0f;
+		if(this.songLength != null || other.songLength != null)
+			characteristicsComparedOn++;
+		if(this.songLength != null && other.songLength != null && 
+				this.songLength.shortValue() == other.songLength.shortValue())
+			currentSum += 1.0f;
 		
-		if(this.song_year != null || other.song_year != null)
-			characteristics_compared_on++;
-		if(this.song_year != null && other.song_year != null && 
-				this.song_year.shortValue() == other.song_year.shortValue())
-			current_sum += 1.0f;
+		if(this.songYear != null || other.songYear != null)
+			characteristicsComparedOn++;
+		if(this.songYear != null && other.songYear != null && 
+				this.songYear.shortValue() == other.songYear.shortValue())
+			currentSum += 1.0f;
 		
 		if(this.bpm != null || other.bpm != null) 
-			characteristics_compared_on++;
+			characteristicsComparedOn++;
 		if(this.bpm != null && other.bpm != null && 
 				this.bpm.shortValue() == other.bpm.shortValue())
-			current_sum += 1.0f;
+			currentSum += 1.0f;
 		
-		if(this.additional_notes != null || other.additional_notes != null)
-			characteristics_compared_on++;
-		if(this.additional_notes != null && other.additional_notes != null)
-			current_sum += DISTANCE_CALCULATOR.apply(this.additional_notes, other.additional_notes);
+		if(this.additionalNotes != null || other.additionalNotes != null)
+			characteristicsComparedOn++;
+		if(this.additionalNotes != null && other.additionalNotes != null)
+			currentSum += DISTANCE_CALCULATOR.apply(this.additionalNotes, other.additionalNotes);
 		
 		
-		if(this.genre_id != null || other.genre_id != null)
-			characteristics_compared_on++;
-		if(this.genre_id != null && other.genre_id != null && 
-				(this.genre_id == other.genre_id)) {
-				current_sum += 1.0f;
+		if(this.genreID != null || other.genreID != null)
+			characteristicsComparedOn++;
+		if(this.genreID != null && other.genreID != null && 
+				(this.genreID == other.genreID)) {
+				currentSum += 1.0f;
 		}
 		
-		if (characteristics_compared_on == 0) {
+		if (characteristicsComparedOn == 0) {
 			return 0.0f;
 		} else {
-			return current_sum / characteristics_compared_on;
+			return currentSum / characteristicsComparedOn;
 		}
 	}
 
 	
 	public void deleteSong() {
-		try {
-			Song.deleteStatement.setInt(1, this.song_pk);
-						
-			Song.deleteStatement.executeUpdate();
-			
-			// Mark this song Object as having been deleted. 
-			this.song_pk = -1;
-		} catch(SQLException e) {
-			e.printStackTrace();
+		
+		if(Song.DB_DRIVER.removeSong(this.songKey)) {
+			this.songKey = -1;
+			// TODO: successful delete
+		} else {
+			// TODO: failed delete
 		}
+
 	}
 	
 	public boolean isDeleted() {
-		return (this.song_pk < 0);
+		return (this.songKey < 0);
 	}
 	
 	/*
 	 * Getter methods
+	 * 
+	 * All but getKey() will auto-inflate the Song object before returning
 	 */
 	
-	public int getKey() {
-		return song_pk;
+	public long getKey() {
+		return songKey;
 	}
 	
 	public String getSongName() {
-		return song_name;
+		this.inflate();
+		return songName;
 	}
 
 	public String getArtistName() {
-		return artist_name;
+		this.inflate();
+		return artistName;
 	}
 
 	public String getAlbumName() {
-		return album_name;
+		this.inflate();
+		return albumName;
 	}
 
 	public Integer getSongLength() {
-		return song_length;
+		this.inflate();
+		return songLength;
 	}
 
 	public Integer getGenreId() {
-		return genre_id;
+		this.inflate();
+		return genreID;
 	}
 
 	public Integer getSongYear() {
-		return song_year;
+		this.inflate();
+		return songYear;
 	}
 
 	public Integer getBpm() {
+		this.inflate();
 		return bpm;
 	}
 
 	public String getAdditionalNotes() {
-		return additional_notes;
+		this.inflate();
+		return additionalNotes;
 	}
 
 	public String getSongUrl() {
-		return song_url;
+		this.inflate();
+		return songURL;
 	}
 
 	
 	/*
 	 * Setter methods
+	 * 
 	 * All setters will trigger an update to the database.
+	 * Song object does not necessarily have to be inflated to set the database
 	 */
 	
-	public void setSongName(String song_name) {
-		try {
-			Song.updateStatement.setString(1, "name");
-			Song.updateStatement.setString(2, song_name);
-			Song.updateStatement.setInt(3, this.song_pk);
-						
-			Song.updateStatement.executeUpdate();
-			this.song_name = song_name;	
-		} catch(Exception e) {
-			e.printStackTrace();
+	public void setSongName(String songName) {
+		
+		if(Song.DB_DRIVER.updateSong("name", songName, this.songKey)) {
+			this.songName = songName;
+			// TODO: successful update
+		} else {
+			// TODO: failed update
 		}
 	}
 
-	public void setArtistName(String artist_name) {
-		try {
-			Song.updateStatement.setString(1, "artist_name");
-			Song.updateStatement.setString(2, artist_name);
-			Song.updateStatement.setInt(3, this.song_pk);
-						
-			Song.updateStatement.executeUpdate();
-			this.artist_name = artist_name;	
-		} catch(Exception e) {
-			e.printStackTrace();
+	public void setArtistName(String artistName) {
+		
+		if(Song.DB_DRIVER.updateSong("artist_name", artistName, this.songKey)) {
+			this.artistName = artistName;
+			// TODO: successful update
+		} else {
+			// TODO: failed update
 		}
 	}
 
-	public void setAlbumName(String album_name) {
-		try {
-			Song.updateStatement.setString(1, "album_name");
-			Song.updateStatement.setString(2, album_name);
-			Song.updateStatement.setInt(3, this.song_pk);
-						
-			Song.updateStatement.executeUpdate();
-			this.album_name = album_name;	
-		} catch(Exception e) {
-			e.printStackTrace();
+	public void setAlbumName(String albumName) {
+		
+		if(Song.DB_DRIVER.updateSong("album_name", albumName, this.songKey)) {
+			this.albumName = albumName;
+			// TODO: successful update
+		} else {
+			// TODO: failed update
 		}
 	}
 
-	public void setSongLength(Integer song_length) {
-		try {
-			Song.updateStatement.setString(1, "song_length");
-			Song.updateStatement.setInt(2, song_length);
-			Song.updateStatement.setInt(3, this.song_pk);
-						
-			Song.updateStatement.executeUpdate();
-			this.song_length = song_length;	
-		} catch(Exception e) {
-			e.printStackTrace();
+	public void setSongLength(Integer songLength) {
+		
+		if(Song.DB_DRIVER.updateSong("song_length", songLength, this.songKey)) {
+			this.songLength = songLength;
+			// TODO: successful update
+		} else {
+			// TODO: failed update
 		}
 	}
 
-	public void setGenreList(Integer genre_id) {
-		try {
-			Song.updateStatement.setString(1, "genre_id");
-			Song.updateStatement.setInt(2, genre_id);
-			Song.updateStatement.setInt(3, this.song_pk);
-						
-			Song.updateStatement.executeUpdate();
-			this.genre_id = genre_id;	
-		} catch(Exception e) {
-			e.printStackTrace();
+	public void setGenreList(Integer genreID) {
+		
+		if(Song.DB_DRIVER.updateSong("genre_id", genreID, this.songKey)) {
+			this.genreID = genreID;
+			// TODO: successful update
+		} else {
+			// TODO: failed update
 		}
 	}
 
-	public void setSongYear(Integer song_year) {
-		try {
-			Song.updateStatement.setString(1, "song_year");
-			Song.updateStatement.setInt(2, song_year);
-			Song.updateStatement.setInt(3, this.song_pk);
-						
-			Song.updateStatement.executeUpdate();
-			this.song_year = song_year;	
-		} catch(Exception e) {
-			e.printStackTrace();
+	public void setSongYear(Integer songYear) {
+		
+		if(Song.DB_DRIVER.updateSong("song_year", songYear, this.songKey)) {
+			this.songYear = songYear;
+			// TODO: successful update
+		} else {
+			// TODO: failed update
 		}
 	}
 
 	public void setBpm(Integer bpm) {
-		try {
-			Song.updateStatement.setString(1, "bpm");
-			Song.updateStatement.setInt(2, bpm);
-			Song.updateStatement.setInt(3, this.song_pk);
-						
-			Song.updateStatement.executeUpdate();
-			this.bpm = bpm;	
-		} catch(Exception e) {
-			e.printStackTrace();
+		
+		if(Song.DB_DRIVER.updateSong("bpm", bpm, this.songKey)) {
+			this.bpm = bpm;
+			// TODO: successful update
+		} else {
+			// TODO: failed update
 		}
 	}
-
-	public void setAdditionalNotes(String additional_notes) {
-		try {
-			Song.updateStatement.setString(1, "additional_notes");
-			Song.updateStatement.setString(2, additional_notes);
-			Song.updateStatement.setInt(3, this.song_pk);
-						
-			Song.updateStatement.executeUpdate();
-			this.additional_notes = additional_notes;	
-		} catch(Exception e) {
-			e.printStackTrace();
+	
+	public void setAdditionalNotes(String additionalNotes) {
+		
+		if(Song.DB_DRIVER.updateSong("additional_notes", additionalNotes, this.songKey)) {
+			this.additionalNotes = additionalNotes;
+			// TODO: successful update
+		} else {
+			// TODO: failed update
 		}
 	}
-
-	public void setSongUrl(String song_url) {
-		try {
-			Song.updateStatement.setString(1, "song_url");
-			Song.updateStatement.setString(2, song_url);
-			Song.updateStatement.setInt(3, this.song_pk);
-						
-			Song.updateStatement.executeUpdate();
-			this.song_url = song_url;	
-		} catch(Exception e) {
-			e.printStackTrace();
+	
+	public void setSongUrl(String songURL) {
+		
+		if(Song.DB_DRIVER.updateSong("song_url", songURL, this.songKey)) {
+			this.songURL = songURL;
+			// TODO: successful update
+		} else {
+			// TODO: failed update
 		}
 	}
+	
 }
 

@@ -1,121 +1,62 @@
-	package com.github.se307;
+package com.github.se307;
 
-	import java.util.ArrayList;
-	import java.util.HashMap;
-	import java.sql.Connection;
-	import java.sql.PreparedStatement;
-	import java.sql.ResultSet;
-	import java.sql.SQLException;
+import java.util.List;
+import java.util.logging.Logger;
 
-	public class SongSet {
-		
-		private int song_set_pk;
-		private String song_set_name;
-		
-		private ArrayList<Integer> song_list;
-		
-		
-		private static boolean statementsCreated = false;
-		private static final String UPDATE_SONG_SET_CONST = "UPDATE song_set SET ? = ? WHERE id = ?";
-		private static final String ADD_SONG_TO_SET_CONST = "INSERT INTO song_to_set('song_id', 'song_set_id') VALUES(?, ?)";
-		private static final String REMOVE_SONG_FROM_SET_CONST = "DELETE FROM song_to_set WHERE song_id = ? AND song_set_id = ?";
-	 	private static final String REMOVE_SONG_SET_CONST = "DELETE FROM song_set WHERE id = ?";	
-		
-	 	private static PreparedStatement updateSongSet;
-	 	private static PreparedStatement addSongToSongSet;
-	 	private static PreparedStatement removeSongFromSet;
-	 	private static PreparedStatement removeSongSet;
-	 	
-	 	
-		public SongSet(ResultSet songSet, ResultSet manyToManyMapping) {
-			song_list = new ArrayList<Integer>();
-			
-			try {
-				// Set up the prepared statements if they have not already been created.
-				if(!SongSet.statementsCreated) {
-					Connection dbConnection = DatabaseDriver.getConnection();
-					
-					SongSet.updateSongSet = dbConnection.prepareStatement(SongSet.UPDATE_SONG_SET_CONST);
-					SongSet.addSongToSongSet = dbConnection.prepareStatement(SongSet.ADD_SONG_TO_SET_CONST);
-					SongSet.removeSongFromSet = dbConnection.prepareStatement(SongSet.REMOVE_SONG_FROM_SET_CONST);
-					SongSet.removeSongSet = dbConnection.prepareStatement(SongSet.REMOVE_SONG_SET_CONST);
-
-				}			
-				
-				song_set_pk = songSet.getInt("id");
-				song_set_name = songSet.getString("name");
-				
-				// Load all songs in this set into the arraylist (keep track of song ids)
-				while(!manyToManyMapping.isAfterLast()) {
-					
-					int song_id = manyToManyMapping.getInt("song_id");
-					song_list.add(song_id);
-					
-					manyToManyMapping.next();
-				}
-			} catch(SQLException e) {
-				e.printStackTrace();
-			}
-		}
-		
-
-		public String getSongSetName() {
-			return song_set_name;
-		}
-
-		public void setSongSetName(String song_set_name) {
-			try {
-				SongSet.updateSongSet.setString(1, "name");
-				SongSet.updateSongSet.setString(2, song_set_name);
-				SongSet.updateSongSet.setInt(3, this.song_set_pk);
-				
-				SongSet.updateSongSet.executeUpdate();
-				this.song_set_name = song_set_name;
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
-		public void addSongToSet(Song added_song) {
-			try {
-				SongSet.addSongToSongSet.setInt(1, added_song.getKey());
-				SongSet.addSongToSongSet.setInt(2, this.song_set_pk);
-							
-				SongSet.addSongToSongSet.executeUpdate();
-				this.song_list.add(added_song.getKey());
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
-		public void removeFromSet(Song song_to_remove) {
-			try {
-				SongSet.removeSongFromSet.setInt(1, song_to_remove.getKey());
-				SongSet.removeSongFromSet.setInt(2, this.song_set_pk);
-							
-				SongSet.removeSongFromSet.executeUpdate();
-				
-				// cast to ensure that remove(element) is used, not remove(index)
-				this.song_list.remove((Object)(song_to_remove.getKey()));
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
-		public void deleteSongSet() {
-			try {
-				SongSet.removeSongSet.setInt(1, this.song_set_pk);
-						
-				SongSet.removeSongSet.executeUpdate();	
-				// Mark this song set as having been deleted
-				this.song_set_pk = -1;
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-		
-		public boolean isDeleted() {
-			return (this.song_set_pk < 0);
-		}
-		
+public abstract class SongSet {
+	
+	protected static final SongSetDatabaseDriver DB_DRIVER = SongSetDatabaseDriver.getInstance();
+	protected static final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	
+	/*
+	 * SongSet pk: 
+	 * > 0 is a PK to a set in the database
+	 * 0 is the default PK assigned when a set is not stored to the db
+	 * < 0 is the PK assigned to a set that has been deleted (or should no longer be available)
+	 */
+	protected long songSetKey;
+	protected String songSetName;
+	
+	/**
+	 * Create a new (empty) SongSet with no connection to the database
+	 */
+	public SongSet() {
+		songSetKey = 0;
+		songSetName = "Untitled";
 	}
+	
+	/**
+	 * Create a SongSet using the database values
+	 * @param songSet		the key of the entry into the database table for SongSets
+	 */
+	public SongSet(long databasePrimaryKey) {
+		songSetKey = databasePrimaryKey;
+		songSetName = (String)SongSet.DB_DRIVER.querySongSet("name", databasePrimaryKey);
+	}
+	
+	
+	/**
+	 * Get all the songs from the Song Set
+	 * 
+	 * If the list is not already loaded, this will hit the database and create the Song objects.
+	 * @return 	list containing all the songs
+	 */
+	public abstract List<Song> getSongs();
+	
+
+	
+	/**
+	 * Saves the Song Set to the database
+	 * A name is automatically chosen if not given.
+	 * TODO: consider requiring user to input the song set title
+	 */
+	public abstract void save();
+	
+	
+	/**
+	 * Not implemented, but ideas on what song sets could contain
+	 */
+	// public void reverse();
+	// public void sortBy();
+		
+}
