@@ -21,7 +21,7 @@ public class Browser extends Region {
         getStyleClass().add("browser");
         
         // load the web page
-        URL url = this.getClass().getResource("/com/github/se307/search.html");
+        URL url = this.getClass().getResource("/com/github/se307/searchPage.html");
         webEngine.load(url.toString());
 
         //add the web view to the scene
