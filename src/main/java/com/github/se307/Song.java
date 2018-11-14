@@ -12,10 +12,10 @@
 
 package com.github.se307;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 
 import org.apache.commons.text.similarity.JaroWinklerDistance;
 
@@ -33,10 +33,14 @@ public class Song {
 	private Integer song_year;
 	private Integer bpm;
 	private String additional_notes;
-	private URL song_url;
-	private Byte song_user_rating;
-	private String song_lyrics;
+	private String song_url;
 	
+
+	private static final String UPDATE_STATEMENT_CONST = "UPDATE song SET ? = ? WHERE id = ?;";
+	private static final String DELETE_STATEMENT_CONST = "DELETE FROM song WHERE id = ?";
+	
+	private static PreparedStatement updateStatement;
+	private static PreparedStatement deleteStatement;
 	
 	/**
 	 * Create a song object from the Result Set given.
@@ -46,7 +50,15 @@ public class Song {
 	 * @param set SQL query response from which to build this Song Object
 	 */
 	public Song(ResultSet rs) {
-		try {
+		try {	
+			
+			if (Song.updateStatement == null || Song.deleteStatement == null) {
+				Connection dbConnection = DatabaseDriver.getConnection();
+				
+				Song.updateStatement = dbConnection.prepareStatement(Song.UPDATE_STATEMENT_CONST);
+				Song.deleteStatement = dbConnection.prepareStatement(Song.DELETE_STATEMENT_CONST);
+			}
+			
 			this.song_pk = rs.getInt("id");
 			this.song_name = rs.getString("name");
 			this.artist_name = rs.getString("artist_name");
@@ -56,15 +68,7 @@ public class Song {
 			this.song_year = rs.getInt("song_year");
 			this.bpm = rs.getInt("bpm");
 			this.additional_notes = rs.getString("additional_notes");
-			
-			try {
-				this.song_url = new URL(rs.getString("uri"));
-			} catch (MalformedURLException e) {
-				this.song_url = null;
-			}
-			
-			this.song_user_rating = rs.getByte("USER_RATING");
-			this.song_lyrics = rs.getString("SONG_LYRICS");
+			this.song_url = rs.getString("uri");
 			
 		} catch(SQLException e) {
 			e.printStackTrace();
@@ -121,11 +125,6 @@ public class Song {
 		if(this.additional_notes != null && other.additional_notes != null)
 			current_sum += DISTANCE_CALCULATOR.apply(this.additional_notes, other.additional_notes);
 		
-		if(this.song_user_rating != null || other.song_user_rating != null)
-			characteristics_compared_on++;
-		if(this.song_user_rating != null && other.song_user_rating != null &&
-				this.song_user_rating.byteValue() == other.song_user_rating.byteValue())
-			current_sum += 1.0f;
 		
 		if(this.genre_id != null || other.genre_id != null)
 			characteristics_compared_on++;
@@ -141,6 +140,23 @@ public class Song {
 		}
 	}
 
+	
+	public void deleteSong() {
+		try {
+			Song.deleteStatement.setInt(1, this.song_pk);
+						
+			Song.deleteStatement.executeUpdate();
+			
+			// Mark this song Object as having been deleted. 
+			this.song_pk = -1;
+		} catch(SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public boolean isDeleted() {
+		return (this.song_pk < 0);
+	}
 	
 	/*
 	 * Getter methods
@@ -182,71 +198,131 @@ public class Song {
 		return additional_notes;
 	}
 
-	public URL getSongUrl() {
+	public String getSongUrl() {
 		return song_url;
 	}
 
-	public Byte getSongUserRating() {
-		return song_user_rating;
-	}
-
-	public String getSongLyrics() {
-		return song_lyrics;
-	}
 	
 	/*
 	 * Setter methods
 	 * All setters will trigger an update to the database.
 	 */
-
-	private void triggerDBUpdate(String field_name) {
-		//Insert code here that update the database 
-	}
-	
 	
 	public void setSongName(String song_name) {
-		this.song_name = song_name;
-		triggerDBUpdate("name");
+		try {
+			Song.updateStatement.setString(1, "name");
+			Song.updateStatement.setString(2, song_name);
+			Song.updateStatement.setInt(3, this.song_pk);
+						
+			Song.updateStatement.executeUpdate();
+			this.song_name = song_name;	
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setArtistName(String artist_name) {
-		this.artist_name = artist_name;
-		triggerDBUpdate("artist_name");
+		try {
+			Song.updateStatement.setString(1, "artist_name");
+			Song.updateStatement.setString(2, artist_name);
+			Song.updateStatement.setInt(3, this.song_pk);
+						
+			Song.updateStatement.executeUpdate();
+			this.artist_name = artist_name;	
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setAlbumName(String album_name) {
-		this.album_name = album_name;
-		triggerDBUpdate("album_name");
+		try {
+			Song.updateStatement.setString(1, "album_name");
+			Song.updateStatement.setString(2, album_name);
+			Song.updateStatement.setInt(3, this.song_pk);
+						
+			Song.updateStatement.executeUpdate();
+			this.album_name = album_name;	
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setSongLength(Integer song_length) {
-		this.song_length = song_length;
-		triggerDBUpdate("song_length");
+		try {
+			Song.updateStatement.setString(1, "song_length");
+			Song.updateStatement.setInt(2, song_length);
+			Song.updateStatement.setInt(3, this.song_pk);
+						
+			Song.updateStatement.executeUpdate();
+			this.song_length = song_length;	
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setGenreList(Integer genre_id) {
-		this.genre_id = genre_id;
-		triggerDBUpdate("genre_id");
+		try {
+			Song.updateStatement.setString(1, "genre_id");
+			Song.updateStatement.setInt(2, genre_id);
+			Song.updateStatement.setInt(3, this.song_pk);
+						
+			Song.updateStatement.executeUpdate();
+			this.genre_id = genre_id;	
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setSongYear(Integer song_year) {
-		this.song_year = song_year;
-		triggerDBUpdate("song_year");
+		try {
+			Song.updateStatement.setString(1, "song_year");
+			Song.updateStatement.setInt(2, song_year);
+			Song.updateStatement.setInt(3, this.song_pk);
+						
+			Song.updateStatement.executeUpdate();
+			this.song_year = song_year;	
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setBpm(Integer bpm) {
-		this.bpm = bpm;
-		triggerDBUpdate("bpm");
+		try {
+			Song.updateStatement.setString(1, "bpm");
+			Song.updateStatement.setInt(2, bpm);
+			Song.updateStatement.setInt(3, this.song_pk);
+						
+			Song.updateStatement.executeUpdate();
+			this.bpm = bpm;	
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	public void setAdditionalNotes(String additional_notes) {
-		this.additional_notes = additional_notes;
-		triggerDBUpdate("additional_notes");
+		try {
+			Song.updateStatement.setString(1, "additional_notes");
+			Song.updateStatement.setString(2, additional_notes);
+			Song.updateStatement.setInt(3, this.song_pk);
+						
+			Song.updateStatement.executeUpdate();
+			this.additional_notes = additional_notes;	
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
 
-	public void setSongUrl(URL song_url) {
-		this.song_url = song_url;
-		triggerDBUpdate("uri");
+	public void setSongUrl(String song_url) {
+		try {
+			Song.updateStatement.setString(1, "song_url");
+			Song.updateStatement.setString(2, song_url);
+			Song.updateStatement.setInt(3, this.song_pk);
+						
+			Song.updateStatement.executeUpdate();
+			this.song_url = song_url;	
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
 	}
-
 }
+
