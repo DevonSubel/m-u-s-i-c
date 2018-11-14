@@ -1,42 +1,62 @@
 package com.github.se307;
 
+import java.util.Collections;
 import java.util.List;
 
 public class DynamicSongSet extends SongSet {
 
 	
-	/**
-	 * Add the specified song to the Song Set
-	 * Dynamic Song Sets are implementation specific and may either throw
-	 * an exception or add the song to the set, even if it does not match with the dynamic query
-	 * @param newSong
-	 * @return true if the song was not in the set and was successfully added
-	 */
-	public boolean addSong(Song newSong) {
-		return false;
+	String dbQuery;
+	
+	public DynamicSongSet() {
+		super();
+		this.dbQuery = "";
+	}
+	
+	public DynamicSongSet(long songSetKey) {
+		throw new UnsupportedOperationException("Dynamic SongSets cannot be instatiated from the database (yet).");
+	}
+	
+	public DynamicSongSet(String query) {
+		super();
+		this.dbQuery = query;
 	}
 	
 	/**
-	 * Remove the song from the Song Set.
-	 * Dynamic Song Sets are implementation specific and may either throw
-	 * an exception or remove the song from the set, even if it matches with the dynamic query
-	 * @param removeSong
-	 * @return true on success, regardless whether the song was removed or not
+	 * Get all the songs from the Song Set. The Song objects are not inflated by default.
+	 * 
+	 * @return 		list containing all the songs. List is not modifiable.
 	 */
-	public boolean removeSong(Song removeSong) {
-		return false;
-	}
-
 	@Override
 	public List<Song> getSongs() {
-		// TODO Auto-generated method stub
-		return null;
+		return Collections.unmodifiableList(SongSet.DB_DRIVER.querySong(this.dbQuery));
 	}
 
+	/**
+	 * Converts the DynamicSongSet to a StaticSongSet and saves it to the database.
+	 * This is because DynamicSongSets cannot be saved to the database (yet)
+	 */
 	@Override
 	public void save() {
-		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Dynamic SongSets cannot be saved from the database (yet).\nConvert to a StaticSongSet then save");
+	}
+	
+	/**
+	 * Converts the DynamicSongSet to a new StaticSongSet.
+	 * 
+	 * @return 		the new StaticSongSet
+	 */
+	public StaticSongSet toStaticSongSet() {
+		StaticSongSet staticSet = new StaticSongSet();
 		
+		staticSet.setSongSetName(super.songSetName);
+		
+		List<Song> songsInSet = getSongs();
+		for(Song s : songsInSet) {
+			staticSet.addSong(s);
+		}
+		
+		return staticSet;
 	}
 	
 	

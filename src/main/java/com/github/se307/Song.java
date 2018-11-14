@@ -37,8 +37,6 @@ public class Song {
 	private Integer bpm;
 	private String additionalNotes;
 	private String songURL;
-	
-	
 
 	/**
 	 * Create a Song object with the given unique key identifier.
@@ -50,7 +48,6 @@ public class Song {
 		this.songKey = songKey;
 		this.isInflated = false;
 	}
-	
 	
 	/**
 	 * Flatten does the opposite of inflate by removing the fields, 
@@ -117,6 +114,9 @@ public class Song {
 		int characteristicsComparedOn = 0;
 		float currentSum = 0.0f;
 		
+		this.inflate();
+		other.inflate();
+		
 		if(this.songName != null || other.songName != null)
 			characteristicsComparedOn++;
 		if(this.songName != null && other.songName != null)
@@ -169,7 +169,6 @@ public class Song {
 			return currentSum / characteristicsComparedOn;
 		}
 	}
-
 	
 	public void deleteSong() {
 		

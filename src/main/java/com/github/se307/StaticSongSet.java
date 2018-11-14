@@ -23,7 +23,6 @@ public class StaticSongSet extends SongSet {
 	 */
 	public StaticSongSet(long songSetKey) {
 		super(songSetKey);
-		
 		this.songList = SongSet.DB_DRIVER.querySong(super.songSetKey);
 	}
 
@@ -37,13 +36,13 @@ public class StaticSongSet extends SongSet {
 		
 		// Create a new table if it does not exist in the database
 		if(super.songSetKey == 0) {
-			super.songSetKey = SongSet.DB_DRIVER.createSongSet(this.songSetName);
+			super.songSetKey = SongSet.DB_DRIVER.createSongSet(super.songSetName);
 			
 			if(super.songSetKey > 0) {
 				// Save all songs in the set to the database
 				
 				for(Song song : this.songList) {
-					if(SongSet.DB_DRIVER.addSongToSongSet(song.getKey(), this.songSetKey)) {
+					if(SongSet.DB_DRIVER.addSongToSongSet(song.getKey(), super.songSetKey)) {
 						// TODO: handle if the song was successfully added
 					} else {
 						// TODO: alert user that the change was not successful
@@ -63,64 +62,43 @@ public class StaticSongSet extends SongSet {
 		return Collections.unmodifiableList(this.songList);
 	}
 	
-	
-	/*
-	 *  Getter Methods 
-	 */
-	
-	public String getSongSetName() {
-		return songSetName;
-	}
-
-	public boolean isDeleted() {
-		return (this.songSetKey < 0);
-	}
-	
-	
 	/* 
 	 * Setter Methods 
 	 */
 	
-	public void setSongSetName(String songSetName) {
+	/**
+	 * Add the specified song to the Song Set
+	 * @param 		newSong
+	 * @return 		true if the song was not in the set and was successfully added
+	 */
+	public boolean addSong(Song addedSong) {
 		
-		if(super.songSetKey == 0 || SongSet.DB_DRIVER.updateSongSet("name", songSetName, this.songSetKey)) {
-			this.songSetName = songSetName;
-		} else {
-			// TODO: alert user that the change was not successful
-		}
-	}
-	
-	public void addSong(Song addedSong) {
-		
-		if(super.songSetKey == 0 || SongSet.DB_DRIVER.addSongToSongSet(addedSong.getKey(), this.songSetKey)) {
+		if(super.songSetKey == 0 || SongSet.DB_DRIVER.addSongToSongSet(addedSong.getKey(), super.songSetKey)) {
 			this.songList.add(addedSong);
 			// TODO: handle if the song was successfully added
+			return true;
 		} else {
 			// TODO: alert user that the change was not successful
+			return false;
 		}
 		
 	}
 	
-	public void removeSong(Song songToRemove) {
+	/**
+	 * Remove the song from the Song Set.
+	 * @param 		removeSong
+	 * @return 		true on success; even if song was not in database 
+	 */
+	public boolean removeSong(Song songToRemove) {
 		
-		if(super.songSetKey == 0 || SongSet.DB_DRIVER.removeSongFromSet(songToRemove.getKey(), this.songSetKey)) {
+		if(super.songSetKey == 0 || SongSet.DB_DRIVER.removeSongFromSet(songToRemove.getKey(), super.songSetKey)) {
 			this.songList.remove(songToRemove);
 			// TODO: handle when change was successful
+			return true;
 		} else {
 			// TODO: alert user that change was not successful
+			return false;
 		}
 		
-	}
-	
-	public void deleteSongSet() {
-		
-		if(super.songSetKey == 0 || SongSet.DB_DRIVER.removeSongSet(this.songSetKey)) {
-			// Mark this song as having been deleted
-			this.songSetKey = -1;
-			// TODO: handle when the change was successful
-		} else {
-			// TODO: alert user that change was not successful
-		}
-
 	}
 }
