@@ -1,3 +1,4 @@
+/* ----------------- app ------------------ */
 html,
 body {
   height: 100%;
@@ -6,7 +7,6 @@ body {
 body {
   background-color: #211E1E;
   color: #FFFFFF;
-  font-family: Arial;
 }
 
 .container-fluid {
@@ -41,6 +41,8 @@ body {
   background-color: red;
 }*/
 
+/* ----------------- search-page ------------------ */
+
 .search-page {
   padding-top: 7rem;
 }
@@ -57,4 +59,17 @@ body {
 .search-page .search-bar {
   width: 80%;
   margin: 0 auto;
+}
+
+/* ----------------- results-page ------------------ */
+.sort-tabs .row {
+  background-color: grey; /* dev setting */
+}
+
+.tabs label {
+  text-align: center;
+}
+
+.tabs input {
+  display: none;
 }

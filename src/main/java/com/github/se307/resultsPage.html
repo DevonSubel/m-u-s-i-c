@@ -1,10 +1,11 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-<link rel="stylesheet" href="index.css">
-<title>M-U-S-I-C</title>
+  <meta charset="UTF-8">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+  <link rel="stylesheet" href="index.css">
+  <title>M-U-S-I-C</title>
 </head>
 
 <body>
@@ -18,8 +19,7 @@
       <div class="w-100"></div>
       <div class="col navigation">
         <label class="btn">
-          <input type="radio" name="options" id="search" autocomplete="off">
-          Search
+          <input type="radio" name="options" id="search" autocomplete="off"> Search
         </label>
       </div>
       <div class="col navigation">
@@ -43,20 +43,40 @@
         </label>
       </div>
     </div>
-    <div class="row search-page">
+    <div class="row results-page">
+      <div class="col sort-tabs">
+        <div class="row">
+          <div class="col tabs">
+            <label class="btn">
+              <input type="radio" name="options" id="etc" autocomplete="off"> Song
+            </label>
+          </div>
+          <div class="col tabs">
+            <label class="btn">
+              <input type="radio" name="options" id="etc" autocomplete="off"> Artist
+            </label>
+          </div>
+          <div class="col tabs">
+            <label class="btn">
+              <input type="radio" name="options" id="etc" autocomplete="off"> Album
+            </label>
+          </div>
+          <div class="col tabs">
+            <label class="btn">
+              <input type="radio" name="options" id="etc" autocomplete="off">
+              <i class="fas fa-heart"></i>
+            </label>
+          </div>
+          <div class="col tabs">
+            <label class="btn">
+              <input type="radio" name="options" id="etc" autocomplete="off">
+              <i class="fas fa-plus"></i>
+            </label>
+          </div>
+        </div>
+      </div>
       <div class="col">
-        <div class="start-search">
-          <h1>Start your search here</h1>
-        </div>
-        <div class="input-group mt-4 mb-3 search-bar">
-          <div class="input-group-prepend">
-            <span class="input-group-text">By Song</span>
-          </div>
-          <input type="text" class="form-control search" aria-label="Search">
-          <div class="input-group-append">
-            <span class="input-group-text">Search</span>
-          </div>
-        </div>
+        
       </div>
     </div>
   </div>
