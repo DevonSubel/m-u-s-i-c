@@ -1,4 +1,6 @@
-/* ----------------- app ------------------ */
+/* ================================================== */
+/*                        App                         */
+/* ================================================== */
 html,
 body {
   height: 100%;
@@ -7,6 +9,7 @@ body {
 body {
   background-color: #211E1E;
   color: #FFFFFF;
+  font-family: Arial, sans-serif;
 }
 
 .container-fluid {
@@ -17,31 +20,67 @@ body {
   background-color: #000000;
 }
 
+.navigation .col,
+.tabs .col {
+  padding: 0;
+}
+
 .navigation .logo {
   font-size: 3rem;
 }
 
-.navigation .btn {
-  width: 100%;
-  
-  background-color: #000000;
-  border-radius: 0;
+.navigation .no-show {
+	color: #000000;
 }
 
-.navigation label {
+.navigation .menu {
+  height: 100%;
+  text-align: center;
   font-size: 1.5rem;
 }
 
-.navigation input {
+.navigation a,
+.tabs a,
+.search-page .advanced-search a {
+  color: #FFFFFF;
+  text-decoration: none;
+}
+
+.navigation a:hover,
+.navigation .active {
+  background-color: #211E1E;
+}
+
+.navigation a {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  padding-top: 0.9375rem;
+}
+
+.navigation a#etc {
+  height: 4.2rem;
+}
+
+.navigation #etc::after {
   display: none;
 }
 
-/*
-.navigation input:checked + label {
-  background-color: red;
-}*/
+.navigation .dropdown-menu {
+  background-color: #000000;
+  border: 0;
+  border-top-left-radius: 0;
+  font-size: 1.25rem;
+  transform: translate3d(0px, 65px, 0px) !important;
+}
 
-/* ----------------- search-page ------------------ */
+.navigation .dropdown-item:hover {
+  color: #FFFFFF;
+}
+
+/* ================================================== */
+/*                     Search-page                    */
+/* ================================================== */
 
 .search-page {
   padding-top: 7rem;
@@ -56,20 +95,119 @@ body {
   font-size: 6rem;
 }
 
-.search-page .search-bar {
+.search-page .search-bar,
+.search-page .advanced-search {
   width: 80%;
   margin: 0 auto;
 }
 
-/* ----------------- results-page ------------------ */
-.sort-tabs .row {
-  background-color: grey; /* dev setting */
+.search-page #search-dropdown .custom-select {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
-.tabs label {
+.search-page #search-button button {
+  background-color: #FFFFFF;
+  color: #000000;
+  border: 1px solid #ced4da;
+  z-index: 0;
+}
+
+.search-page .advanced-search {
+  text-align: right;
+}
+
+.search-page #adv-btn {
+  border-radius: 0.25rem;
+  border: none;
+  background-color: #211E1E;
+  color: #FFFFFF;
+}
+
+/* ----------------- modal css ------------------ */
+
+.search-page .modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+
+  padding-top: 15rem;
+}
+
+.search-page .modal-content {
+  position: relative; 
+  
+  background-color: #000000;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border-radius: 0.5rem;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.search-page .adv-title {
+  padding-left: 1rem;
+  font-size: 2rem;
+}
+
+.search-page .close-btn {
+  color: #FFFFFF;
+  float: right;
+  font-size: 2rem;
+  font-weight: bold;
+    
+  position: absolute;
+  right: 1rem;
+  top: 0.5rem;
+}
+
+.search-page .close-btn:hover,
+.search-page .close-btn:focus {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.search-page form {
+  padding-top: 1rem;
+}
+
+.search-page .labels {
+  width: 11rem;
+}
+
+.search-page label {
+  font-size: 1.5rem;
+  padding-left: 2rem;
+}
+
+.search-page .modal button {
+  float: right;
+  font-size: 1.25rem;
+} 
+/* ----------------- end modal css ------------------ */
+
+/* ================================================== */
+/*                    Results-page                    */
+/* ================================================== */
+.sort .row {
+  background-color: grey;
+  /* dev setting. change color later. */
+}
+
+.tabs .result-tabs {
+  height: 100%;
+  padding-top: 0.9375rem;
   text-align: center;
+  font-size: 1.25rem;
 }
 
-.tabs input {
-  display: none;
+
+/* ================================================== */
+/*                    Credits-page                    */
+/* ================================================== */
+.credits-page {
+  padding-top: 7rem;
 }
