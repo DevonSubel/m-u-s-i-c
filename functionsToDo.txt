@@ -1,0 +1,19 @@
+Search Page:
+- “search by” button 
+ -- sets search filter for song, artist, album
+- “search” button
+ -- searches using given input
+- “advanced search” search button
+ -- searches using all the given inputs
+
+Settings Page:
+- “change color” 
+ -- sends a message to js to switch the colors
+- “import csv”
+ -- import csv
+- “export csv”
+ -- export csv
+
+Add Song Page: 
+- “save” button
+ -- takes all inputs and adds song to the database
