@@ -135,7 +135,7 @@ body {
   width: 100%; /* Full width */
   height: 100%; /* Full height */
 
-  padding-top: 15rem;
+  padding-top: 8rem;
 }
 
 .search-page .modal-content {
@@ -204,10 +204,90 @@ body {
   font-size: 1.25rem;
 }
 
-
 /* ================================================== */
 /*                    Credits-page                    */
 /* ================================================== */
-.credits-page {
-  padding-top: 7rem;
+.credits-page .credit {
+  padding-top: 3rem;
+  padding-left: 3rem;
+}
+
+.credits-page .names {
+  padding-top: 5rem;
+}
+
+.credits-page .h4 {
+  font-size: 2rem;
+}
+
+.credits-page .copyright {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+/* ================================================== */
+/*                   Settings-page                    */
+/* ================================================== */
+.settings {
+  padding-top: 3rem;
+}
+
+/* ================================================== */
+/*                    AddSong-page                    */
+/* ================================================== */
+.add-song {
+  padding-top: 3rem;
+  padding-left: 3rem;
+}
+
+.add-song .col {
+  padding-right: 3rem;
+}
+
+.add-song form {
+  width: 70%;
+  margin: 0 auto;
+  padding-top: 2rem;
+  padding-left: 3rem;
+  font-size: 1.25rem;
+}
+
+.add-song .album {
+  height: 9rem;
+  padding-bottom: 12rem;
+}
+
+.add-song .album input {
+  margin-bottom: 1rem;
+}
+
+.add-song .album img {
+  height: 9rem;
+  width: 9rem;
+  margin-right: 2rem;
+  float: right;
+  background-color: #000000;
+}
+
+.add-song .set-1 {
+  margin-bottom: 0rem;
+}
+
+.add-song .set-1 .row {
+  padding-bottom: 1rem;
+}
+
+.add-song label {
+  width: 9rem;
+}
+
+.add-song .set-2 {
+  padding-right: 0;
+}
+
+.add-song button.save-song {
+  width: 6rem;
+  margin-right: 2rem;
+  float: right;
 }
