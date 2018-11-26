@@ -4,6 +4,8 @@
 html,
 body {
   height: 100%;
+  cursor: default;
+  -webkit-user-select: none;
 }
 
 body {
@@ -14,6 +16,10 @@ body {
 
 .container-fluid {
   height: 100%;
+}
+
+button {
+  background-color: #FFFFFF;
 }
 
 .navigation {
@@ -122,6 +128,7 @@ body {
   border: none;
   background-color: #211E1E;
   color: #FFFFFF;
+  cursor: pointer;
 }
 
 /* ----------------- modal css ------------------ */
@@ -230,7 +237,23 @@ body {
 /*                   Settings-page                    */
 /* ================================================== */
 .settings {
-  padding-top: 3rem;
+  padding: 3rem 3rem 0 3rem;
+}
+
+.settings form {
+  width: 65%;
+  margin: 0 auto;
+  padding-top: 2rem;
+  font-size: 1.25rem;
+}
+
+.settings .form-row .col,
+.settings .form-row .col-md-4 {
+  padding: 0 3rem;
+}
+
+.settings .form-row {
+  padding: 1rem 0;
 }
 
 /* ================================================== */
