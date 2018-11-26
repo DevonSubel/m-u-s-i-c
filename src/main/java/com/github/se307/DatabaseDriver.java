@@ -46,8 +46,7 @@ public class DatabaseDriver {
 			throw new RuntimeException("Unable to get table definitions");
 		}
 
-		try {
-			Statement createTables = connection.createStatement();
+		try (Statement createTables = connection.createStatement()){
 
 			String tableDefinitions = readFile(tableDefinitionsLocation.getFile(), Charset.forName("UTF-8"));
 			createTables.executeUpdate(tableDefinitions);

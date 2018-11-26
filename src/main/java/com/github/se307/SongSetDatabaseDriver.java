@@ -77,11 +77,10 @@ public class SongSetDatabaseDriver {
 	 */
 	public synchronized Object querySongSet(String colName, long key) {
 		Object returnValue = null;
-		try {
+		try (ResultSet rs = this.querySongSetField.executeQuery()) {
 			this.querySongSetField.setString(1, colName);
 			this.querySongSetField.setLong(2, key);
 			
-			ResultSet rs = this.querySongSetField.executeQuery();
 			if(rs.next()) 
 				returnValue = rs.getObject(1);
 		} catch(SQLException e) {
@@ -180,12 +179,11 @@ public class SongSetDatabaseDriver {
 	 */
 	public synchronized long createSongSet(String name) {
 		long songSetKey = 0;
-		try {
+		try (ResultSet keys = this.updateSongSet.getGeneratedKeys()) {
 			this.createSongSet.setString(1, name);
 			
 			this.updateSongSet.executeUpdate();
 			
-			ResultSet keys = this.updateSongSet.getGeneratedKeys();
 			if(keys.next()) {
 				songSetKey = keys.getLong(1);
 			}
@@ -204,11 +202,10 @@ public class SongSetDatabaseDriver {
 	 */
 	public synchronized List<Song> querySong(long songSetKey) {
 		ArrayList<Song> songs = null;
-		try {
+		try (ResultSet rs = this.querySongsFromSet.executeQuery()) {
 			songs = new ArrayList<Song>();
 			
 			this.querySongsFromSet.setLong(1, songSetKey);
-			ResultSet rs = this.querySongsFromSet.executeQuery();
 			
 			while(rs.next()) {
 				songs.add(new Song(rs.getLong(1)));
@@ -248,7 +245,14 @@ public class SongSetDatabaseDriver {
 			
 		} catch(SQLException e) {
 			logger.severe("Failed to query the song set: " + e.getMessage());
-		} 
+		} finally {
+			if (rs != null) {
+				rs = null;
+			}
+			if (stmt != null) {
+				stmt = null;
+			}
+		}
 		return songs;
 	}
 	
