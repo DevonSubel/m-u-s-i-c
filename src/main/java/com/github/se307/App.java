@@ -1,8 +1,6 @@
 package com.github.se307;
 
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.io.IOException;
 import java.nio.file.Path;
 
