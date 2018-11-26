@@ -73,8 +73,6 @@ public class App extends Application {
         scene = new Scene(new Browser(),2560,1600, Color.web("#211E1E"));
         stage.setScene(scene);
         
-//        URL css = this.getClass().getResource("/com/github/se307/App.css");
-//        scene.getStylesheets().add(css.toString());
         stage.show();
     }
 	

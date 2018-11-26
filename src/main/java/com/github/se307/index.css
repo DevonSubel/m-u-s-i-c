@@ -1,0 +1,293 @@
+/* ================================================== */
+/*                        App                         */
+/* ================================================== */
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background-color: #211E1E;
+  color: #FFFFFF;
+  font-family: Arial, sans-serif;
+}
+
+.container-fluid {
+  height: 100%;
+}
+
+.navigation {
+  background-color: #000000;
+}
+
+.navigation .col,
+.tabs .col {
+  padding: 0;
+}
+
+.navigation .logo {
+  font-size: 3rem;
+}
+
+.navigation .no-show {
+	color: #000000;
+}
+
+.navigation .menu {
+  height: 100%;
+  text-align: center;
+  font-size: 1.5rem;
+}
+
+.navigation a,
+.tabs a,
+.search-page .advanced-search a {
+  color: #FFFFFF;
+  text-decoration: none;
+}
+
+.navigation a:hover,
+.navigation .active {
+  background-color: #211E1E;
+}
+
+.navigation a {
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+  padding-top: 0.9375rem;
+}
+
+.navigation a#etc {
+  height: 4.2rem;
+}
+
+.navigation #etc::after {
+  display: none;
+}
+
+.navigation .dropdown-menu {
+  background-color: #000000;
+  border: 0;
+  border-top-left-radius: 0;
+  font-size: 1.25rem;
+  transform: translate3d(0px, 65px, 0px) !important;
+}
+
+.navigation .dropdown-item:hover {
+  color: #FFFFFF;
+}
+
+/* ================================================== */
+/*                     Search-page                    */
+/* ================================================== */
+
+.search-page {
+  padding-top: 7rem;
+}
+
+.search-page .start-search {
+  padding-top: 5rem;
+  text-align: center;
+}
+
+.search-page .start-search h1 {
+  font-size: 6rem;
+}
+
+.search-page .search-bar,
+.search-page .advanced-search {
+  width: 80%;
+  margin: 0 auto;
+}
+
+.search-page #search-dropdown .custom-select {
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.search-page #search-button button {
+  background-color: #FFFFFF;
+  color: #000000;
+  border: 1px solid #ced4da;
+  z-index: 0;
+}
+
+.search-page .advanced-search {
+  text-align: right;
+}
+
+.search-page #adv-btn {
+  border-radius: 0.25rem;
+  border: none;
+  background-color: #211E1E;
+  color: #FFFFFF;
+}
+
+/* ----------------- modal css ------------------ */
+
+.search-page .modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+
+  padding-top: 8rem;
+}
+
+.search-page .modal-content {
+  position: relative; 
+  
+  background-color: #000000;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border-radius: 0.5rem;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.search-page .adv-title {
+  padding-left: 1rem;
+  font-size: 2rem;
+}
+
+.search-page .close-btn {
+  color: #FFFFFF;
+  float: right;
+  font-size: 2rem;
+  font-weight: bold;
+    
+  position: absolute;
+  right: 1rem;
+  top: 0.5rem;
+}
+
+.search-page .close-btn:hover,
+.search-page .close-btn:focus {
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.search-page form {
+  padding-top: 1rem;
+}
+
+.search-page .labels {
+  width: 11rem;
+}
+
+.search-page label {
+  font-size: 1.5rem;
+  padding-left: 2rem;
+}
+
+.search-page .modal button {
+  float: right;
+  font-size: 1.25rem;
+} 
+/* ----------------- end modal css ------------------ */
+
+/* ================================================== */
+/*                    Results-page                    */
+/* ================================================== */
+.sort .row {
+  background-color: grey;
+  /* dev setting. change color later. */
+}
+
+.tabs .result-tabs {
+  height: 100%;
+  padding-top: 0.9375rem;
+  text-align: center;
+  font-size: 1.25rem;
+}
+
+/* ================================================== */
+/*                    Credits-page                    */
+/* ================================================== */
+.credits-page .credit {
+  padding-top: 3rem;
+  padding-left: 3rem;
+}
+
+.credits-page .names {
+  padding-top: 5rem;
+}
+
+.credits-page .h4 {
+  font-size: 2rem;
+}
+
+.credits-page .copyright {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+/* ================================================== */
+/*                   Settings-page                    */
+/* ================================================== */
+.settings {
+  padding-top: 3rem;
+}
+
+/* ================================================== */
+/*                    AddSong-page                    */
+/* ================================================== */
+.add-song {
+  padding-top: 3rem;
+  padding-left: 3rem;
+}
+
+.add-song .col {
+  padding-right: 3rem;
+}
+
+.add-song form {
+  width: 70%;
+  margin: 0 auto;
+  padding-top: 2rem;
+  padding-left: 3rem;
+  font-size: 1.25rem;
+}
+
+.add-song .album {
+  height: 9rem;
+  padding-bottom: 12rem;
+}
+
+.add-song .album input {
+  margin-bottom: 1rem;
+}
+
+.add-song .album img {
+  height: 9rem;
+  width: 9rem;
+  margin-right: 2rem;
+  float: right;
+  background-color: #000000;
+}
+
+.add-song .set-1 {
+  margin-bottom: 0rem;
+}
+
+.add-song .set-1 .row {
+  padding-bottom: 1rem;
+}
+
+.add-song label {
+  width: 9rem;
+}
+
+.add-song .set-2 {
+  padding-right: 0;
+}
+
+.add-song button.save-song {
+  width: 6rem;
+  margin-right: 2rem;
+  float: right;
+}
