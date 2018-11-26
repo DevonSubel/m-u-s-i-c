@@ -4,6 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author Maxence Weyrich
+ *
+ */
 public class StaticSongSet extends SongSet {
 	
 	private List<Song> songList;

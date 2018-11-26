@@ -3,6 +3,10 @@ package com.github.se307;
 import java.util.List;
 import java.util.logging.Logger;
 
+/**
+ * @author Maxence Weyrich
+ *
+ */
 public abstract class SongSet {
 	
 	protected static final SongSetDatabaseDriver DB_DRIVER = SongSetDatabaseDriver.getInstance();

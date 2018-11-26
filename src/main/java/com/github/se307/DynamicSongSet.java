@@ -3,10 +3,14 @@ package com.github.se307;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * @author Maxence Weyrich
+ *
+ */
 public class DynamicSongSet extends SongSet {
 
 	
-	String dbQuery;
+	private String dbQuery;
 	
 	public DynamicSongSet() {
 		super();

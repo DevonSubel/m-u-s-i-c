@@ -17,6 +17,10 @@ import java.sql.SQLException;
 
 import org.apache.commons.text.similarity.JaroWinklerDistance;
 
+/**
+ * @author Maxence Weyrich
+ *
+ */
 public class Song {
 	
 	public static final JaroWinklerDistance DISTANCE_CALCULATOR = new JaroWinklerDistance();
