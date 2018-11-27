@@ -7,7 +7,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.logging.Logger;
+
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * @author Maxence Weyrich
@@ -31,13 +33,12 @@ public class SongDatabaseDriver {
 	private PreparedStatement queryStatement;
 	
 	
- 	private Logger logger;
+ 	private static final Logger logger = LogManager.getLogger();
  	
  	/**
  	 * Initialize the Singleton by creating all the prepared statements that are used inside the SongSet classes
  	 */
 	private SongDatabaseDriver() {
-		logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 		try {
 			dbConnection = DatabaseDriver.getConnection();
 			
@@ -47,7 +48,7 @@ public class SongDatabaseDriver {
 					
 			
 		} catch(SQLException e) {
-			logger.severe("Failed to load prepared statements for SongDatabaseDriver: " + e.getMessage());
+			logger.error("Failed to load prepared statements for SongDatabaseDriver: " + e.getMessage());
 		}
 	}
 	
@@ -68,7 +69,7 @@ public class SongDatabaseDriver {
 			
 			this.updateStatement.executeUpdate();
 		} catch(SQLException e) {
-			logger.severe("Failed to execute updateSong prepared statement: " + e.getMessage());
+			logger.error("Failed to execute updateSong prepared statement: " + e.getMessage());
 			return false;
 		}
 		return true;
@@ -86,7 +87,7 @@ public class SongDatabaseDriver {
 			
 			this.deleteStatement.executeUpdate();
 		} catch(SQLException e) {
-			logger.severe("Failed to execute removeSong prepared statement: " + e.getMessage());
+			logger.error("Failed to execute removeSong prepared statement: " + e.getMessage());
 			return false;
 		}
 		return true;
@@ -100,12 +101,14 @@ public class SongDatabaseDriver {
 	 */
 	public synchronized ResultSet getSong(long songKey) {
 		ResultSet returnValue = null;
+
 		try {
 			this.queryStatement.setLong(1, songKey);
 			returnValue = this.queryStatement.executeQuery();
 		} catch(SQLException e) {
-			logger.severe("Failed to execute getSong prepared statement: " + e.getMessage());
+			logger.error("Failed to execute getSong prepared statement: " + e.getMessage());
 		}
+
 		return returnValue;
 	}
 	
@@ -118,6 +121,7 @@ public class SongDatabaseDriver {
 		if(SongDatabaseDriver.singleton == null) {
 			SongDatabaseDriver.singleton = new SongDatabaseDriver();
 		}
+
 		return SongDatabaseDriver.singleton;
 	}
 }
