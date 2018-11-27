@@ -64,30 +64,37 @@
                 <div class="col-md-4">
                   <select class="form-control" id="change-style">
                     <option>Default</option>
-                    <option>2</option>
+                    <option>Light</option>
+<!--
                     <option>3</option>
                     <option>4</option>
                     <option>5</option>
+-->
                   </select>
                 </div>
               </div>
             </div>
           </div>
           <div class="h3">Import/Export Song Files</div>
-          <div class="form-row">
+          <div class="form-row import">
             <div class="form-group col">
               <div class="row">
                 <div class="labels"><label for="import-file">Import:</label></div>
                 <div class="col">
-                  <input type="file" class="form-control-file" id="import-file">
+                  <label class="btn style-input-file">
+                     Import CSV
+                    <input type="file" id="import-file">
+                  </label>
                 </div>
               </div>
             </div>
+          </div>
+          <div class="form-row export">
             <div class="form-group col">
               <div class="row">
                 <div class="labels"><label for="export-file">Export:</label></div>
                 <div class="col">
-                  <button type="submit" class="btn btn-secondary-primary">Export Songs</button>
+                  <button type="submit" class="btn btn-secondary-primary">Export CSV</button>
                 </div>
               </div>
             </div>
