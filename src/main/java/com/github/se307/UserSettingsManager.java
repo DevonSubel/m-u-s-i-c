@@ -18,13 +18,29 @@ import org.apache.logging.log4j.Logger;
 
 import javafx.scene.paint.Color;
 
+/**
+ * The UserSettingsManager class is responsible for loading, saving, and
+ * refreshing the in memory version of the user's settings. The settings are
+ * persisted to disk at the "~/.m-u-s-i-c/settings.xml" path.
+ * 
+ * @author Declan
+ *
+ */
 public class UserSettingsManager {
 
 	private static final String USER_SETTINGS_FILENAME = "settings.xml";
-	
+
 	private static Logger logger = LogManager.getLogger();
 	private static UserSettings instance;
 
+	/**
+	 * Get the user's settings, loading from disk if necessary.
+	 * 
+	 * If the settings file does not exist, then it is created with the default
+	 * settings, written to disk, and returned.
+	 * 
+	 * @return An up to date version of the user's settings
+	 */
 	public static UserSettings getUserSettings() {
 		if (instance == null) {
 			loadSettings();
@@ -33,10 +49,12 @@ public class UserSettingsManager {
 		return instance;
 	}
 
-	public static void refreshUserSettings() {
-		loadSettings();
-	}
-
+	/**
+	 * Save the user's settings to disk.
+	 * 
+	 * If the file does not exist it will be created, if the file does exist it
+	 * will be overwritten.
+	 */
 	public static void saveUserSettings() {
 		Path settingsPath = getSettingsPath();
 
@@ -77,36 +95,73 @@ public class UserSettingsManager {
 		}
 	}
 
+	/**
+	 * The user's settings.
+	 * 
+	 * @author Declan
+	 *
+	 */
 	public static class UserSettings implements Serializable {
 		private static final long serialVersionUID = 1920819660163308L;
 
 		private String guiColor;
 
+		/**
+		 * Create a user's settings with the default value: - Color is black
+		 */
 		public UserSettings() {
 			// visible no argument constructor for java bean
-			
+
 			setGuiColor("black");
 		}
 
+		/**
+		 * Create a user's settings with the provided fields.
+		 * 
+		 * @param guiColor
+		 *            a string representation of a color
+		 */
 		public UserSettings(String guiColor) {
 			this.guiColor = guiColor;
 		}
 
-		public UserSettings(Color guiColor) {
-			this.guiColor = String.format("#%02X%02X%02X", (int) (guiColor.getRed() * 255),
-					(int) (guiColor.getGreen() * 255), (int) (guiColor.getBlue() * 255));
-		}
-
+		/**
+		 * Get the user's gui color setting
+		 * 
+		 * @return a string representing the appropriate color of the gui
+		 */
 		public String getGuiColor() {
 			return guiColor;
 		}
 
+		/**
+		 * Get the user's gui color setting as a JavaFX color
+		 * 
+		 * @return the gui color setting
+		 */
 		public Color getFXColor() {
 			return Color.web(guiColor);
 		}
 
+		/**
+		 * Set the gui color to an appropriate string representation
+		 * 
+		 * @param guiColor the new gui color 
+		 */
 		public void setGuiColor(String guiColor) {
 			this.guiColor = guiColor;
+		}
+
+		/**
+		 * Set the gui color directly.
+		 * 
+		 * The Color object is converted to the web hex format (#rrggbb)
+		 * 
+		 * @param guiColor the new gui color
+		 */
+		public void setGuiColor(Color guiColor) {
+			this.guiColor = String.format("#%02X%02X%02X", (int) (guiColor.getRed() * 255),
+					(int) (guiColor.getGreen() * 255), (int) (guiColor.getBlue() * 255));
 		}
 	}
 }

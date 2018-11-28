@@ -35,7 +35,7 @@ public class App extends Application {
 		// Load user settings
 		// TODO: read settings from file
 		logger.info("Loading settings file");
-		UserSettingsManager.refreshUserSettings();
+		UserSettingsManager.getUserSettings();
 	}
 	
 	
