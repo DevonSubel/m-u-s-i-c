@@ -17,7 +17,7 @@ public class StaticSongSet extends SongSet {
 	 */
 	public StaticSongSet() {
 		super();
-		this.songList = new ArrayList<Song>();
+		this.songList = new ArrayList<>();
 	}
 
 	/**

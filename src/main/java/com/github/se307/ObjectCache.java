@@ -24,8 +24,7 @@ public class ObjectCache<K, E> {
 
 	public ObjectCache(int itemsToCache) {
 		this.maxItems = itemsToCache;
-		tableRef = new HashMap<K, Node>(itemsToCache);
-		this.maxItems = itemsToCache;
+		tableRef = new HashMap<>(itemsToCache);
 		this.itemCount = 0;
 
 		this.head = new Node(null, null);
@@ -102,7 +101,7 @@ public class ObjectCache<K, E> {
 		return n.item;
 	}
 
-	class Node {
+	private class Node {
 		public E item;
 		public K key;
 		public Node next;
