@@ -183,9 +183,9 @@ public class SongSetDatabaseDriver {
 		try {
 			this.createSongSet.setString(1, name);
 			
-			this.updateSongSet.executeUpdate();
+			this.createSongSet.executeUpdate();
 			
-			ResultSet keys = this.updateSongSet.getGeneratedKeys();
+			ResultSet keys = this.createSongSet.getGeneratedKeys();
 			if(keys.next()) {
 				songSetKey = keys.getLong(1);
 			}
