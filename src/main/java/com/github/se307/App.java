@@ -6,6 +6,8 @@ import java.nio.file.Path;
 
 import java.util.logging.*;
 
+import com.github.se307.UserSettingsManager.UserSettings;
+
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.paint.Color;
@@ -60,6 +62,7 @@ public class App extends Application {
 		
 		// Load user settings
 		// TODO: read settings from file
+		UserSettingsManager.refreshUserSettings();
 	}
 	
 	
