@@ -22,15 +22,15 @@ public class SongSetDatabaseDriver {
 
 	private static SongSetDatabaseDriver singleton;
 
-	private final String CREATE_SONG_SET_CONST = "INSERT INTO song_set('name') VALUES(?)";
-	private final String UPDATE_SONG_SET_CONST = "UPDATE song_set SET ? = ? WHERE id = ?";
-	private final String REMOVE_SONG_SET_CONST = "DELETE FROM song_set WHERE id = ?";
-	private final String QUERY_FIELD_SONG_SET_CONST = "SELECT ? FROM song_set WHERE id = ?";
+	private static final String CREATE_SONG_SET_CONST = "INSERT INTO song_set('name') VALUES(?)";
+	private static final String UPDATE_SONG_SET_CONST = "UPDATE song_set SET ? = ? WHERE id = ?";
+	private static final String REMOVE_SONG_SET_CONST = "DELETE FROM song_set WHERE id = ?";
+	private static final String QUERY_FIELD_SONG_SET_CONST = "SELECT ? FROM song_set WHERE id = ?";
 
-	private final String ADD_SONG_TO_SET_CONST = "INSERT INTO song_to_set('song_id', 'song_set_id') VALUES(?, ?)";
-	private final String REMOVE_SONG_FROM_SET_CONST = "DELETE FROM song_to_set WHERE song_id = ? AND song_set_id = ?";
+	private static final String ADD_SONG_TO_SET_CONST = "INSERT INTO song_to_set('song_id', 'song_set_id') VALUES(?, ?)";
+	private static final String REMOVE_SONG_FROM_SET_CONST = "DELETE FROM song_to_set WHERE song_id = ? AND song_set_id = ?";
 
-	private final String QUERY_SONG_FROM_SET_CONST = "SELECT sts.song_id FROM song_to_set AS sts WHERE sts.song_set_id = ?";
+	private static final String QUERY_SONG_FROM_SET_CONST = "SELECT sts.song_id FROM song_to_set AS sts WHERE sts.song_set_id = ?";
 
 	private Connection dbConnection;
 
@@ -66,24 +66,25 @@ public class SongSetDatabaseDriver {
 	}
 
 	/**
-	 * Get the requested column for the SongSet identified by the key. This
-	 * method is synchronized (thread-safe).
+	 * Get the requested column for the SongSet identified by the key. This method
+	 * is synchronized (thread-safe).
 	 * 
-	 * @param colName
-	 *            the name of the column being queried
-	 * @param key
-	 *            the key identifying the SongSet to query
-	 * @return Object containing the resulting value null is returned on error
-	 *         or if the database entry was null
+	 * @param colName the name of the column being queried
+	 * @param key     the key identifying the SongSet to query
+	 * @return Object containing the resulting value null is returned on error or if
+	 *         the database entry was null
 	 */
 	public synchronized Object querySongSet(String colName, long key) {
 		Object returnValue = null;
-		try (ResultSet rs = this.querySongSetField.executeQuery()) {
+		try {
 			this.querySongSetField.setString(1, colName);
 			this.querySongSetField.setLong(2, key);
-			
-			if(rs.next()) 
+
+			ResultSet rs = this.querySongSetField.executeQuery();
+			if (rs.next())
 				returnValue = rs.getObject(1);
+
+			rs.close();
 		} catch (SQLException e) {
 			logger.error("Failed to execute querySongSet prepared statement: " + e.getMessage());
 		}
@@ -92,15 +93,12 @@ public class SongSetDatabaseDriver {
 	}
 
 	/**
-	 * Update the SongSet with the provided column with the specified value.
-	 * This method is synchronized (thread-safe).
+	 * Update the SongSet with the provided column with the specified value. This
+	 * method is synchronized (thread-safe).
 	 * 
-	 * @param colName
-	 *            the name of the column being updated
-	 * @param value
-	 *            the value to update the database with
-	 * @param key
-	 *            the key identifying the SongSet to update
+	 * @param colName the name of the column being updated
+	 * @param value   the value to update the database with
+	 * @param key     the key identifying the SongSet to update
 	 * @return true if the update was successful
 	 */
 	public synchronized boolean updateSongSet(String colName, Object value, long key) {
@@ -122,10 +120,8 @@ public class SongSetDatabaseDriver {
 	 * Add the song identified by the key to the SongSet in the database. This
 	 * method is synchronized (thread-safe).
 	 * 
-	 * @param songKey
-	 *            the key identifier of the song being added
-	 * @param songSetKey
-	 *            the key identifier of the SongSet
+	 * @param songKey    the key identifier of the song being added
+	 * @param songSetKey the key identifier of the SongSet
 	 * @return true if the update was successful
 	 */
 	public synchronized boolean addSongToSongSet(long songKey, long songSetKey) {
@@ -143,13 +139,11 @@ public class SongSetDatabaseDriver {
 	}
 
 	/**
-	 * Remove the song identified by the key from the SongSet in the database.
-	 * This method is synchronized (thread-safe).
+	 * Remove the song identified by the key from the SongSet in the database. This
+	 * method is synchronized (thread-safe).
 	 * 
-	 * @param songKey
-	 *            the key identifier of the song being removed
-	 * @param songSetKey
-	 *            the key identifier of the SongSet
+	 * @param songKey    the key identifier of the song being removed
+	 * @param songSetKey the key identifier of the SongSet
 	 * @return true if the update was successful
 	 */
 	public synchronized boolean removeSongFromSet(long songKey, long songSetKey) {
@@ -167,11 +161,10 @@ public class SongSetDatabaseDriver {
 	}
 
 	/**
-	 * Remove the SongSet identified by the key from the database. This method
-	 * is synchronized (thread-safe).
+	 * Remove the SongSet identified by the key from the database. This method is
+	 * synchronized (thread-safe).
 	 * 
-	 * @param songSetKey
-	 *            key of the SongSet to remove
+	 * @param songSetKey key of the SongSet to remove
 	 * @return true if the update was successful
 	 */
 	public synchronized boolean removeSongSet(long songSetKey) {
@@ -196,14 +189,17 @@ public class SongSetDatabaseDriver {
 	 */
 	public synchronized long createSongSet(String name) {
 		long songSetKey = 0;
-		try (ResultSet keys = this.updateSongSet.getGeneratedKeys()) {
+		try {
 			this.createSongSet.setString(1, name);
 
-			this.updateSongSet.executeUpdate();
-			
+			this.createSongSet.executeUpdate();
+
+			ResultSet keys = this.createSongSet.getGeneratedKeys();
 			if (keys.next()) {
 				songSetKey = keys.getLong(1);
 			}
+
+			keys.close();
 		} catch (SQLException e) {
 			logger.error("Failed to insert a new SongSet into the database: " + e.getMessage());
 		}
@@ -212,29 +208,29 @@ public class SongSetDatabaseDriver {
 	}
 
 	/**
-	 * Queries the database and creates the Song objects for the SongSet
-	 * specified by the given key. This method is synchronized (thread-safe).
+	 * Queries the database and creates the Song objects for the SongSet specified
+	 * by the given key. This method is synchronized (thread-safe).
 	 * 
-	 * @param songSetKey
-	 *            the key of the SongSet
+	 * @param songSetKey the key of the SongSet
 	 * @return a list containing the Song objects inside the SongSet. null is
 	 *         returned if the query fails.
 	 */
 	public synchronized List<Song> querySong(long songSetKey) {
 		ArrayList<Song> songs = null;
-		try (ResultSet rs = this.querySongsFromSet.executeQuery()) {
+		try {
 			songs = new ArrayList<Song>();
 
 			this.querySongsFromSet.setLong(1, songSetKey);
-			
+			ResultSet rs = this.querySongsFromSet.executeQuery();
+      
 			while (rs.next()) {
 				songs.add(new Song(rs.getLong(1)));
 			}
 
+			rs.close();
 		} catch (SQLException e) {
 			logger.error("Failed to query the SongSet: " + e.getMessage());
 		}
-
 		return songs;
 	}
 
@@ -243,26 +239,28 @@ public class SongSetDatabaseDriver {
 	 * construct a list of Song objects.
 	 * 
 	 * 
-	 * The query must return a result set that contains the primary keys of the
-	 * Song entries in the song table. The best way to do this is to only select
-	 * the song keys (e.g. SELECT sg.id FROM song AS sg ... ). Note: Only the
-	 * first column is observed to find the key for the Song object.
+	 * The query must return a result set that contains the primary keys of the Song
+	 * entries in the song table. The best way to do this is to only select the song
+	 * keys (e.g. SELECT sg.id FROM song AS sg ... ). Note: Only the first column is
+	 * observed to find the key for the Song object.
 	 * 
-	 * @param query
-	 *            the query to execute
-	 * @return a list containing the Song objects from the query. null is
-	 *         returned if the query fails
+	 * @param query the query to execute
+	 * @return a list containing the Song objects from the query. null is returned
+	 *         if the query fails
 	 */
 	public List<Song> querySong(String query) {
 		ArrayList<Song> songs = null;
-		try (Statement stmt = dbConnection.createStatement();
-			ResultSet rs = stmt.executeQuery(query)) {
+		try {
 			songs = new ArrayList<Song>();
+
+			Statement stmt = dbConnection.createStatement();
+			ResultSet rs = stmt.executeQuery(query);
 
 			while (rs.next()) {
 				songs.add(new Song(rs.getLong(1)));
 			}
 
+			rs.close();
 		} catch (SQLException e) {
 			logger.error("Failed to query the song set: " + e.getMessage());
 		}

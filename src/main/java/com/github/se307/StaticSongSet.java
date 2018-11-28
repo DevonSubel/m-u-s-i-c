@@ -17,7 +17,7 @@ public class StaticSongSet extends SongSet {
 	 */
 	public StaticSongSet() {
 		super();
-		this.songList = new ArrayList<Song>();
+		this.songList = new ArrayList<>();
 	}
 
 	/**
@@ -44,7 +44,6 @@ public class StaticSongSet extends SongSet {
 
 			if (super.songSetKey > 0) {
 				// Save all songs in the set to the database
-
 				for (Song song : this.songList) {
 					if (SongSet.DB_DRIVER.addSongToSongSet(song.getKey(), super.songSetKey)) {
 						// TODO: handle if the song was successfully added
