@@ -411,14 +411,33 @@ button {
 .songinfo
 {
 	width: 100%;
+	padding-right: 2rem;
+}
+
+.space 
+{ 
+	margin:0;
+	padding:0;
+	height:50px;
 }
 
 .albumart img {
-  height: 9rem;
-  width: 9rem;
-  margin-right: 2rem;
-  float: right;
+  height: 10rem;
+  width: 100%;
+  margin-right: auto;
+  margin-left: auto;
+  float: center;
   background-color: #000000;
+  margin: auto;    
+  display: block;
+  text-align: center;
+}
+
+.header
+{
+	height: 6.45%;
+  padding-top: 0.9375rem;
+  
 }
 
 .songinfo img
