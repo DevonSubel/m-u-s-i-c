@@ -10,7 +10,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
+
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * @author Maxence Weyrich
@@ -40,14 +42,13 @@ public class SongSetDatabaseDriver {
 	private PreparedStatement removeSongFromSet;
 	private PreparedStatement querySongsFromSet;
 
-	private Logger logger;
+	private static final Logger logger = LogManager.getLogger();
 
 	/**
 	 * Initialize the Singleton by creating all the prepared statements that are
 	 * used inside the SongSet classes
 	 */
 	private SongSetDatabaseDriver() {
-		logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
 		try {
 			dbConnection = DatabaseDriver.getConnection();
 
@@ -60,7 +61,7 @@ public class SongSetDatabaseDriver {
 			querySongsFromSet = dbConnection.prepareStatement(QUERY_SONG_FROM_SET_CONST);
 
 		} catch (SQLException e) {
-			logger.severe("Failed to load prepared statements for SongSetDatabaseDriver: " + e.getMessage());
+			logger.error("Failed to load prepared statements for SongSetDatabaseDriver: " + e.getMessage());
 		}
 	}
 
@@ -85,8 +86,9 @@ public class SongSetDatabaseDriver {
 
 			rs.close();
 		} catch (SQLException e) {
-			logger.severe("Failed to execute querySongSet prepared statement: " + e.getMessage());
+			logger.error("Failed to execute querySongSet prepared statement: " + e.getMessage());
 		}
+
 		return returnValue;
 	}
 
@@ -107,9 +109,10 @@ public class SongSetDatabaseDriver {
 
 			this.updateSongSet.executeUpdate();
 		} catch (SQLException e) {
-			logger.severe("Failed to execute updateSongSet prepared statement: " + e.getMessage());
+			logger.error("Failed to execute updateSongSet prepared statement: " + e.getMessage());
 			return false;
 		}
+
 		return true;
 	}
 
@@ -128,9 +131,10 @@ public class SongSetDatabaseDriver {
 
 			this.addSongToSongSet.executeUpdate();
 		} catch (SQLException e) {
-			logger.severe("Failed to execute addSongToSongSet prepared statement: " + e.getMessage());
+			logger.error("Failed to execute addSongToSongSet prepared statement: " + e.getMessage());
 			return false;
 		}
+
 		return true;
 	}
 
@@ -149,9 +153,10 @@ public class SongSetDatabaseDriver {
 
 			this.removeSongFromSet.executeUpdate();
 		} catch (SQLException e) {
-			logger.severe("Failed to execute removeSongFromSet prepared statement: " + e.getMessage());
+			logger.error("Failed to execute removeSongFromSet prepared statement: " + e.getMessage());
 			return false;
 		}
+
 		return true;
 	}
 
@@ -168,9 +173,10 @@ public class SongSetDatabaseDriver {
 
 			this.removeSongSet.executeUpdate();
 		} catch (SQLException e) {
-			logger.severe("Failed to execute removeSongSet prepared statement: " + e.getMessage());
+			logger.error("Failed to execute removeSongSet prepared statement: " + e.getMessage());
 			return false;
 		}
+
 		return true;
 	}
 
@@ -195,8 +201,9 @@ public class SongSetDatabaseDriver {
 
 			keys.close();
 		} catch (SQLException e) {
-			logger.severe("Failed to insert a new SongSet into the database: " + e.getMessage());
+			logger.error("Failed to insert a new SongSet into the database: " + e.getMessage());
 		}
+
 		return songSetKey;
 	}
 
@@ -215,14 +222,14 @@ public class SongSetDatabaseDriver {
 
 			this.querySongsFromSet.setLong(1, songSetKey);
 			ResultSet rs = this.querySongsFromSet.executeQuery();
-
+      
 			while (rs.next()) {
 				songs.add(new Song(rs.getLong(1)));
 			}
 
 			rs.close();
 		} catch (SQLException e) {
-			logger.severe("Failed to query the SongSet: " + e.getMessage());
+			logger.error("Failed to query the SongSet: " + e.getMessage());
 		}
 		return songs;
 	}
@@ -255,8 +262,9 @@ public class SongSetDatabaseDriver {
 
 			rs.close();
 		} catch (SQLException e) {
-			logger.severe("Failed to query the song set: " + e.getMessage());
+			logger.error("Failed to query the song set: " + e.getMessage());
 		}
+
 		return songs;
 	}
 
