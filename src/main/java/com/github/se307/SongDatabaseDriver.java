@@ -160,17 +160,44 @@ public class SongDatabaseDriver {
 	 * contains all the fields for an entry in the song table
 	 * 
 	 * @param songKey the key of the song being retrieved
-	 * @return the ResultSet of the query. null is returned on error.
+	 * @return a SongBuilder with the values pre-populated with the results of the query. 
+	 *			null is returned on error.
 	 */
-	public synchronized ResultSet getSong(long songKey) {
-		ResultSet returnValue = null;
+	public synchronized Song.SongBuilder getSong(long songKey) {
+		Song.SongBuilder sb = new Song.SongBuilder();
 		try {
 			this.queryStatement.setLong(1, songKey);
-			returnValue = this.queryStatement.executeQuery();
+			ResultSet rs = this.queryStatement.executeQuery();
+			
+			sb.songName = rs.getString(NAME_F);
+			sb.artistName = rs.getString(ARTIST_NAME_F);
+			sb.albumName = rs.getString(ALBUM_NAME_F);
+
+			sb.songLength = rs.getInt(SONG_LENGTH_F);
+			if (rs.wasNull())
+				sb.songLength = null;
+
+			sb.genreID = rs.getInt(GENRE_ID_F);
+			if (rs.wasNull())
+				sb.genreID = null;
+
+			sb.songYear = rs.getInt(SONG_YEAR_F);
+			if (rs.wasNull())
+				sb.songYear = null;
+
+			sb.bpm = rs.getInt(BPM_F);
+			if (rs.wasNull())
+				sb.bpm = null;
+
+			sb.additionalNotes = rs.getString(ADDITIONAL_NOTES_F);
+			sb.songURL = rs.getString(URI_F);
+			
+			rs.close();
 		} catch (SQLException e) {
 			logger.severe("Failed to execute getSong prepared statement: " + e.getMessage());
+			return null;
 		}
-		return returnValue;
+		return sb;
 	}
 
 	/**
@@ -188,6 +215,7 @@ public class SongDatabaseDriver {
 				songKeys.add(returnValue.getLong(0));
 			}
 
+			returnValue.close();
 		} catch (SQLException e) {
 			logger.severe("Failed to execute getSong prepared statement: " + e.getMessage());
 			return null;

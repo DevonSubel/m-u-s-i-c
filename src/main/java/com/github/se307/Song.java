@@ -12,9 +12,6 @@
 
 package com.github.se307;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 /**
  * @author Maxence Weyrich
  *
@@ -64,6 +61,8 @@ public class Song {
 		this.bpm = bpm;
 		this.additionalNotes = additionalNotes;
 		this.songURL = songURL;
+
+		this.isInflated = true;
 	}
 
 	/**
@@ -85,38 +84,24 @@ public class Song {
 	 * accessed, it is not necessary for inflate to run when setting fields.
 	 */
 	public void inflate() {
-		if (!this.isInflated) {
+		if (!this.isInflated && this.songKey > 0) {
 
-			ResultSet rs = Song.DB_DRIVER.getSong(this.songKey);
-			try {
-				this.songName = rs.getString(SongDatabaseDriver.NAME_F);
-				this.artistName = rs.getString(SongDatabaseDriver.ARTIST_NAME_F);
-				this.albumName = rs.getString(SongDatabaseDriver.ALBUM_NAME_F);
+			SongBuilder sb = Song.DB_DRIVER.getSong(this.songKey);
 
-				this.songLength = rs.getInt(SongDatabaseDriver.SONG_LENGTH_F);
-				if (rs.wasNull())
-					this.songLength = null;
+			if (sb != null) {
+							
+				this.songName = sb.songName;
+				this.artistName = sb.artistName;
+				this.albumName = sb.albumName;
+				this.songLength = sb.songLength;
+				this.genreID = sb.genreID;
+				this.songYear = sb.songYear;
+				this.bpm = sb.bpm;
+				this.additionalNotes = sb.additionalNotes;
+				this.songURL = sb.songURL;
 
-				this.genreID = rs.getInt(SongDatabaseDriver.GENRE_ID_F);
-				if (rs.wasNull())
-					this.genreID = null;
-
-				this.songYear = rs.getInt(SongDatabaseDriver.SONG_YEAR_F);
-				if (rs.wasNull())
-					this.songYear = null;
-
-				this.bpm = rs.getInt(SongDatabaseDriver.BPM_F);
-				if (rs.wasNull())
-					this.bpm = null;
-
-				this.additionalNotes = rs.getString(SongDatabaseDriver.ADDITIONAL_NOTES_F);
-				this.songURL = rs.getString(SongDatabaseDriver.URI_F);
-
-			} catch (SQLException e) {
-				e.printStackTrace();
+				this.isInflated = true;
 			}
-
-			this.isInflated = true;
 		}
 	}
 
@@ -287,7 +272,7 @@ public class Song {
 		}
 	}
 
-	public class SongBuilder {
+	public static class SongBuilder {
 
 		public String songName;
 		public String artistName;
@@ -303,7 +288,7 @@ public class Song {
 		}
 
 		/**
-		 * Creates a new Song using the specified fields 
+		 * Creates a new Song using the specified fields
 		 * 
 		 * @return
 		 * @throws IllegalArgumentException
