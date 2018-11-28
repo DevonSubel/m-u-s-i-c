@@ -7,6 +7,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
 
@@ -75,7 +78,7 @@ public class SongDatabaseDriver {
 		long songPrimaryKey = 0;
 
 		if (fieldList.length != paramList.length || fieldList.length <= 0) {
-			logger.severe("Number of fields is empty or not matching with number of values");
+			logger.error("Number of fields is empty or not matching with number of values");
 			return songPrimaryKey;
 		}
 
@@ -105,7 +108,7 @@ public class SongDatabaseDriver {
 				songPrimaryKey = keys.getLong(1);
 			}
 		} catch (SQLException e) {
-			logger.severe("Failed to execute createSong prepared statement: " + e.getMessage());
+			logger.error("Failed to execute createSong prepared statement: " + e.getMessage());
 			return songPrimaryKey;
 		}
 		return songPrimaryKey;
