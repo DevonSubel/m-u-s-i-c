@@ -199,9 +199,24 @@ body {
 
 .tabs .result-tabs {
   height: 100%;
+  width: 50%;
   padding-top: 0.9375rem;
   text-align: center;
   font-size: 1.25rem;
+}
+
+.btn-group.special {
+  display: flex;
+}
+
+.special .btn {
+  flex: 1
+}
+
+.songresults
+{
+	height: 40rem;
+	overflow-y: scroll;
 }
 
 /* ================================================== */
@@ -291,3 +306,40 @@ body {
   margin-right: 2rem;
   float: right;
 }
+
+/* ================================================== */
+/*                  nowPlaying-page                   */
+/* ================================================== */
+
+.nowplaying-page 
+{
+	padding-top: 2rem;
+}
+
+.lyrics
+{
+	height: 40rem;
+	overflow-y: scroll;
+}
+
+.songinfo
+{
+	width: 100%;
+}
+
+.albumart img {
+  height: 9rem;
+  width: 9rem;
+  margin-right: 2rem;
+  float: right;
+  background-color: #000000;
+}
+
+.songinfo img
+{
+	height: 10rem;
+  width: 10rem;
+  margin-right: 2rem;
+  background-color: #000000;
+}
+
