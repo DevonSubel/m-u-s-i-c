@@ -9,6 +9,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.logging.log4j.LogManager;
@@ -31,11 +33,11 @@ public class SongDatabaseDriver {
 	public static final String ADDITIONAL_NOTES_F = "additional_notes";
 	public static final String URI_F = "uri";
 
-	private final String UPDATE_STATEMENT_CONST = "UPDATE song SET ? = ? WHERE id = ?;";
-	private final String DELETE_STATEMENT_CONST = "DELETE FROM song WHERE id = ?";
-	private final String QUERY_FIELDS_CONST = "SELECT * FROM song WHERE id = ?";
-	private final String CREATE_STATEMENT_CONST = "INSERT INTO song(%s) VALUES(%s)";
-	private final String QUERY_ALL_SONG_KEYS_CONST = "SELECT key FROM song";
+	private static final String UPDATE_STATEMENT_CONST = "UPDATE song SET ? = ? WHERE id = ?;";
+	private static final String DELETE_STATEMENT_CONST = "DELETE FROM song WHERE id = ?";
+	private static final String QUERY_FIELDS_CONST = "SELECT * FROM song WHERE id = ?";
+	private static final String CREATE_STATEMENT_CONST = "INSERT INTO song(%s) VALUES(%s)";
+	private static final String QUERY_ALL_SONG_KEYS_CONST = "SELECT key FROM song";
 
 	private Connection dbConnection;
 
@@ -83,13 +85,14 @@ public class SongDatabaseDriver {
 		}
 
 		// Insert the correct number of ? characters
-		String qMarkString = "";
+		StringBuilder qMarkString = new StringBuilder();
 		for (int i = 0; i < fieldList.length - 1; i++) {
-			qMarkString = qMarkString + "?, ";
+			qMarkString.append("?, ");
 		}
-		qMarkString = qMarkString + "?";
-		String createSongStatement = String.format(CREATE_STATEMENT_CONST, qMarkString, qMarkString);
+		qMarkString.append("?");
+		String createSongStatement = String.format(CREATE_STATEMENT_CONST, qMarkString.toString(), qMarkString.toString());
 
+		ResultSet keys = null;
 		try {
 			// Create the prepared statement
 			PreparedStatement creationStatement = dbConnection.prepareStatement(createSongStatement,
@@ -103,13 +106,20 @@ public class SongDatabaseDriver {
 
 			// execute the statement and save the primary key
 			creationStatement.executeUpdate();
-			ResultSet keys = creationStatement.getGeneratedKeys();
+			keys = creationStatement.getGeneratedKeys();
 			if (keys.next()) {
 				songPrimaryKey = keys.getLong(1);
 			}
 		} catch (SQLException e) {
 			logger.error("Failed to execute createSong prepared statement: " + e.getMessage());
 			return songPrimaryKey;
+		} finally {
+			try {
+				if (keys != null)
+					keys.close();
+			} catch (SQLException e) {
+				logger.error("Failed to close result set " + e.getMessage());
+			}
 		}
 		return songPrimaryKey;
 	}
@@ -170,28 +180,32 @@ public class SongDatabaseDriver {
 			this.queryStatement.setLong(1, songKey);
 			ResultSet rs = this.queryStatement.executeQuery();
 			
-			sb.songName = rs.getString(NAME_F);
-			sb.artistName = rs.getString(ARTIST_NAME_F);
-			sb.albumName = rs.getString(ALBUM_NAME_F);
+			sb.setSongName(rs.getString(NAME_F))
+			  .setArtistName(rs.getString(ARTIST_NAME_F))
+			  .setAlbumName(rs.getString(ALBUM_NAME_F));
 
-			sb.songLength = rs.getInt(SONG_LENGTH_F);
+			Integer songLength = rs.getInt(SONG_LENGTH_F);
 			if (rs.wasNull())
-				sb.songLength = null;
+				songLength = null;
 
-			sb.genreID = rs.getInt(GENRE_ID_F);
+			Integer genreID = rs.getInt(GENRE_ID_F);
 			if (rs.wasNull())
-				sb.genreID = null;
+				genreID = null;
 
-			sb.songYear = rs.getInt(SONG_YEAR_F);
+			Integer songYear = rs.getInt(SONG_YEAR_F);
 			if (rs.wasNull())
-				sb.songYear = null;
+				songYear = null;
 
-			sb.bpm = rs.getInt(BPM_F);
+			Integer bpm = rs.getInt(BPM_F);
 			if (rs.wasNull())
-				sb.bpm = null;
+				bpm = null;
 
-			sb.additionalNotes = rs.getString(ADDITIONAL_NOTES_F);
-			sb.songURL = rs.getString(URI_F);
+			sb.setSongLength(songLength)
+			  .setGenreID(genreID)
+			  .setSongYear(songYear)
+			  .setBPM(bpm)
+			  .setNotes(rs.getString(ADDITIONAL_NOTES_F))
+			  .setURL(rs.getString(URI_F));
 			
 			rs.close();
 		} catch (SQLException e) {
@@ -205,10 +219,10 @@ public class SongDatabaseDriver {
 	 * Returns a list of the keys of every song in the database. This method is
 	 * thread-safe.
 	 * 
-	 * @return ArrayList containing all the keys.
+	 * @return List containing all the keys. An empty list is returned if an error was encountered.
 	 */
-	public ArrayList<Long> getAllSongs() {
-		ArrayList<Long> songKeys = new ArrayList<Long>();
+	public List<Long> getAllSongs() {
+		List<Long> songKeys = new ArrayList<Long>();
 
 		try {
 			ResultSet returnValue = this.queryAllStatement.executeQuery();
@@ -219,7 +233,7 @@ public class SongDatabaseDriver {
 			returnValue.close();
 		} catch (SQLException e) {
 			logger.error("Failed to execute getSong prepared statement: " + e.getMessage());
-			return null;
+			return Collections.emptyList();
 		}
 		return songKeys;
 	}

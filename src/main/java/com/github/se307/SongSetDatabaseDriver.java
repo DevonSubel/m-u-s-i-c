@@ -22,15 +22,15 @@ public class SongSetDatabaseDriver {
 
 	private static SongSetDatabaseDriver singleton;
 
-	private final String CREATE_SONG_SET_CONST = "INSERT INTO song_set('name') VALUES(?)";
-	private final String UPDATE_SONG_SET_CONST = "UPDATE song_set SET ? = ? WHERE id = ?";
-	private final String REMOVE_SONG_SET_CONST = "DELETE FROM song_set WHERE id = ?";
-	private final String QUERY_FIELD_SONG_SET_CONST = "SELECT ? FROM song_set WHERE id = ?";
+	private static final String CREATE_SONG_SET_CONST = "INSERT INTO song_set('name') VALUES(?)";
+	private static final String UPDATE_SONG_SET_CONST = "UPDATE song_set SET ? = ? WHERE id = ?";
+	private static final String REMOVE_SONG_SET_CONST = "DELETE FROM song_set WHERE id = ?";
+	private static final String QUERY_FIELD_SONG_SET_CONST = "SELECT ? FROM song_set WHERE id = ?";
 
-	private final String ADD_SONG_TO_SET_CONST = "INSERT INTO song_to_set('song_id', 'song_set_id') VALUES(?, ?)";
-	private final String REMOVE_SONG_FROM_SET_CONST = "DELETE FROM song_to_set WHERE song_id = ? AND song_set_id = ?";
+	private static final String ADD_SONG_TO_SET_CONST = "INSERT INTO song_to_set('song_id', 'song_set_id') VALUES(?, ?)";
+	private static final String REMOVE_SONG_FROM_SET_CONST = "DELETE FROM song_to_set WHERE song_id = ? AND song_set_id = ?";
 
-	private final String QUERY_SONG_FROM_SET_CONST = "SELECT sts.song_id FROM song_to_set AS sts WHERE sts.song_set_id = ?";
+	private static final String QUERY_SONG_FROM_SET_CONST = "SELECT sts.song_id FROM song_to_set AS sts WHERE sts.song_set_id = ?";
 
 	private Connection dbConnection;
 

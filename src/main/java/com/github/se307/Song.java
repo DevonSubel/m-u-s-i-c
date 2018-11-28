@@ -50,17 +50,16 @@ public class Song {
 	 * constructor should not be called directly, use the SongBuilder object
 	 * instead.
 	 */
-	private Song(String songName, String artistName, String albumName, Integer songLength, Integer genreID,
-			Integer songYear, Integer bpm, String additionalNotes, String songURL) {
-		this.songName = songName;
-		this.artistName = artistName;
-		this.albumName = albumName;
-		this.songLength = songLength;
-		this.genreID = genreID;
-		this.songYear = songYear;
-		this.bpm = bpm;
-		this.additionalNotes = additionalNotes;
-		this.songURL = songURL;
+	private Song(SongBuilder sb) {
+		this.songName = sb.songName;
+		this.artistName = sb.artistName;
+		this.albumName = sb.albumName;
+		this.songLength = sb.songLength;
+		this.genreID = sb.genreID;
+		this.songYear = sb.songYear;
+		this.bpm = sb.bpm;
+		this.additionalNotes = sb.additionalNotes;
+		this.songURL = sb.songURL;
 
 		this.isInflated = true;
 	}
@@ -89,7 +88,7 @@ public class Song {
 			SongBuilder sb = Song.DB_DRIVER.getSong(this.songKey);
 
 			if (sb != null) {
-							
+
 				this.songName = sb.songName;
 				this.artistName = sb.artistName;
 				this.albumName = sb.albumName;
@@ -183,7 +182,10 @@ public class Song {
 	 */
 
 	public void setSongName(String songName) {
-
+		if(songName == null) {
+			throw new IllegalArgumentException("Song name cannot be null");
+		}
+		
 		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.NAME_F, songName, this.songKey)) {
 			this.songName = songName;
 			// TODO: successful update
@@ -193,7 +195,10 @@ public class Song {
 	}
 
 	public void setArtistName(String artistName) {
-
+		if(artistName == null) {
+			throw new IllegalArgumentException("Artist name cannot be null");
+		}
+		
 		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.ARTIST_NAME_F, artistName, this.songKey)) {
 			this.artistName = artistName;
 			// TODO: successful update
@@ -203,7 +208,10 @@ public class Song {
 	}
 
 	public void setAlbumName(String albumName) {
-
+		if(albumName == null) {
+			throw new IllegalArgumentException("Album name cannot be null");
+		}
+		
 		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.ALBUM_NAME_F, albumName, this.songKey)) {
 			this.albumName = albumName;
 			// TODO: successful update
@@ -274,31 +282,81 @@ public class Song {
 
 	public static class SongBuilder {
 
-		public String songName;
-		public String artistName;
-		public String albumName;
-		public Integer songLength;
-		public Integer genreID;
-		public Integer songYear;
-		public Integer bpm;
-		public String additionalNotes;
-		public String songURL;
+		private String songName;
+		private String artistName;
+		private String albumName;
+		private Integer songLength;
+		private Integer genreID;
+		private Integer songYear;
+		private Integer bpm;
+		private String additionalNotes;
+		private String songURL;
 
 		public SongBuilder() {
+			// No operation/setup necessary for the builder pattern
+		}
+
+		/*
+		 * Builder pattern allows for setting the values of object by chaining setter
+		 * methods together.
+		 */
+
+		public SongBuilder setSongName(String v) {
+			this.songName = v;
+			return this;
+		}
+
+		public SongBuilder setArtistName(String v) {
+			this.artistName = v;
+			return this;
+		}
+
+		public SongBuilder setAlbumName(String v) {
+			this.albumName = v;
+			return this;
+		}
+
+		public SongBuilder setSongLength(Integer v) {
+			this.songLength = v;
+			return this;
+		}
+
+		public SongBuilder setGenreID(Integer v) {
+			this.genreID = v;
+			return this;
+		}
+
+		public SongBuilder setSongYear(Integer v) {
+			this.songYear = v;
+			return this;
+		}
+
+		public SongBuilder setBPM(Integer v) {
+			this.bpm = v;
+			return this;
+		}
+
+		public SongBuilder setNotes(String v) {
+			this.additionalNotes = v;
+			return this;
+		}
+
+		public SongBuilder setURL(String v) {
+			this.songURL = v;
+			return this;
 		}
 
 		/**
 		 * Creates a new Song using the specified fields
 		 * 
-		 * @return
-		 * @throws IllegalArgumentException
+		 * @return newly build song object
+		 * @throws IllegalArgumentException if required fields are not set
 		 */
-		public Song build() throws IllegalArgumentException {
+		public Song build() {
 			if (songName == null || artistName == null || albumName == null) {
 				throw new IllegalArgumentException("Song name, artist name, and album name must be defined.");
 			}
-			return new Song(songName, artistName, albumName, songLength, genreID, songYear, bpm, additionalNotes,
-					songURL);
+			return new Song(this);
 		}
 	}
 }
