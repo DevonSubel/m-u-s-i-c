@@ -4,6 +4,8 @@
 html,
 body {
   height: 100%;
+  cursor: default;
+  -webkit-user-select: none;
 }
 
 body {
@@ -14,6 +16,35 @@ body {
 
 .container-fluid {
   height: 100%;
+}
+
+button {
+  background-color: #FFFFFF;
+}
+
+.style-input-file {
+  overflow: hidden;
+  position: relative;
+
+  background-color: #FFFFFF;
+  color: #000000;
+  float: left;
+}
+
+.style-input-file [type=file] {
+  cursor: inherit;
+  display: block;
+  font-size: 999px;
+  filter: alpha(opacity=0);
+  min-height: 100%;
+  min-width: 100%;
+  opacity: 0;
+  position: absolute;
+  right: 0;
+  text-align: right;
+  top: 0;
+
+  cursor: pointer;
 }
 
 .navigation {
@@ -30,7 +61,7 @@ body {
 }
 
 .navigation .no-show {
-	color: #000000;
+  color: #000000;
 }
 
 .navigation .menu {
@@ -122,30 +153,38 @@ body {
   border: none;
   background-color: #211E1E;
   color: #FFFFFF;
+  cursor: pointer;
 }
 
 /* ----------------- modal css ------------------ */
 
 .search-page .modal {
-  display: none; /* Hidden by default */
-  position: fixed; /* Stay in place */
-  z-index: 1; /* Sit on top */
+  display: none;
+  /* Hidden by default */
+  position: fixed;
+  /* Stay in place */
+  z-index: 1;
+  /* Sit on top */
   left: 0;
   top: 0;
-  width: 100%; /* Full width */
-  height: 100%; /* Full height */
+  width: 100%;
+  /* Full width */
+  height: 100%;
+  /* Full height */
 
   padding-top: 8rem;
 }
 
 .search-page .modal-content {
-  position: relative; 
-  
+  position: relative;
+
   background-color: #000000;
-  margin: 15% auto; /* 15% from the top and centered */
+  margin: 15% auto;
+  /* 15% from the top and centered */
   padding: 20px;
   border-radius: 0.5rem;
-  width: 80%; /* Could be more or less, depending on screen size */
+  width: 80%;
+  /* Could be more or less, depending on screen size */
 }
 
 .search-page .adv-title {
@@ -158,7 +197,7 @@ body {
   float: right;
   font-size: 2rem;
   font-weight: bold;
-    
+
   position: absolute;
   right: 1rem;
   top: 0.5rem;
@@ -186,7 +225,8 @@ body {
 .search-page .modal button {
   float: right;
   font-size: 1.25rem;
-} 
+}
+
 /* ----------------- end modal css ------------------ */
 
 /* ================================================== */
@@ -245,7 +285,39 @@ body {
 /*                   Settings-page                    */
 /* ================================================== */
 .settings {
-  padding-top: 3rem;
+  padding: 3rem 3rem 0 3rem;
+}
+
+.settings form {
+  width: 65%;
+  margin: 0 auto;
+  padding-top: 2rem;
+  font-size: 1.25rem;
+}
+
+.settings .form-row .col {
+  padding: 0 3rem;
+}
+
+.settings .form-row .col-md-4 {
+  padding-left: 3.5rem;
+}
+
+.settings .form-row {
+  padding: 1rem 0;
+}
+
+.settings select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  background: url(caret-down-solid.svg) 90% / 10% no-repeat #eee;
+  background-color: #FFFFFF;
+  color: #000000;
+}
+
+.settings .export {
+  padding: 0;
 }
 
 /* ================================================== */
@@ -273,6 +345,7 @@ body {
   padding-bottom: 12rem;
 }
 
+.add-song .album label,
 .add-song .album input {
   margin-bottom: 1rem;
 }
@@ -293,8 +366,21 @@ body {
   padding-bottom: 1rem;
 }
 
+.add-song .set-1 .row:first-child {
+  padding-bottom: 0.5rem;
+}
+
+.add-song #album-cover,
+.add-song .set-1:first-child label.style-input-file {
+  height: 100%;
+}
+
 .add-song label {
   width: 9rem;
+}
+
+.add-song .style-input-file {
+  width: 100%;
 }
 
 .add-song .set-2 {
@@ -342,4 +428,5 @@ body {
   margin-right: 2rem;
   background-color: #000000;
 }
+
 
