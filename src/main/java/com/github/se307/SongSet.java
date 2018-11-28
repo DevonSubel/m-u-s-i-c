@@ -1,7 +1,9 @@
 package com.github.se307;
 
 import java.util.List;
-import java.util.logging.Logger;
+
+import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
 
 /**
  * @author Maxence Weyrich
@@ -10,7 +12,7 @@ import java.util.logging.Logger;
 public abstract class SongSet {
 	
 	protected static final SongSetDatabaseDriver DB_DRIVER = SongSetDatabaseDriver.getInstance();
-	protected static final Logger logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
+	protected static final Logger logger = LogManager.getLogger();
 	
 	/*
 	 * SongSet pk: 
@@ -64,6 +66,7 @@ public abstract class SongSet {
 			this.songSetName = songSetName;
 			return true;
 		} else {
+			logger.info("Failed to set song name to %s", songSetName);
 			// TODO: alert user that the change was not successful
 			return false;
 		}
@@ -80,6 +83,7 @@ public abstract class SongSet {
 			// TODO: handle when the change was successful
 			return true;
 		} else {
+			logger.info("Failed to delete song set: %ld", songSetKey);
 			// TODO: alert user that change was not successful
 			return false;
 		}

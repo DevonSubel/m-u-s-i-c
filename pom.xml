@@ -9,7 +9,6 @@
   <version>0.1.0-SNAPSHOT</version>
 
   <name>m-u-s-i-c</name>
-  <!-- FIXME change it to the project's website -->
   <url>https://github.com/declanvk/m-u-s-i-c</url>
 
   <properties>
@@ -42,6 +41,16 @@
 	  <scope>system</scope>
 	  <systemPath>${project.basedir}/lib/jfxrt.jar</systemPath>
 	</dependency>
+    <dependency>
+    	<groupId>org.apache.logging.log4j</groupId>
+    	<artifactId>log4j-api</artifactId>
+    	<version>2.11.1</version>
+    </dependency>
+    <dependency>
+    	<groupId>org.apache.logging.log4j</groupId>
+    	<artifactId>log4j-core</artifactId>
+    	<version>2.11.1</version>
+    </dependency>
   </dependencies>
 
   <build>
