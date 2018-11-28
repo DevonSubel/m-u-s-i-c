@@ -13,12 +13,16 @@ import java.io.OutputStream;
 import java.io.Serializable;
 import java.nio.file.Path;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import javafx.scene.paint.Color;
 
 public class UserSettingsManager {
 
 	private static final String USER_SETTINGS_FILENAME = "settings.xml";
-
+	
+	private static Logger logger = LogManager.getLogger();
 	private static UserSettings instance;
 
 	public static UserSettings getUserSettings() {
@@ -41,9 +45,9 @@ public class UserSettingsManager {
 
 			e.writeObject((Object) instance);
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+			logger.error("Settings file not found at %s", settingsPath.toString());
 		} catch (IOException e) {
-			e.printStackTrace();
+			logger.error("Settings IO exception: %s", e.getMessage());
 		}
 	}
 
@@ -68,7 +72,7 @@ public class UserSettingsManager {
 				instance = (UserSettings) d.readObject();
 
 			} catch (IOException e) {
-				e.printStackTrace();
+				logger.error("Settings IO exception: %s", e.getMessage());
 			}
 		}
 	}
