@@ -11,7 +11,12 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class DatabaseDriver {
+	private static final Logger logger = LogManager.getLogger();
+	
 	private static final String DB_FILE_NAME = "music.db";
 	private static final String TABLE_DEF_FILE_NAME = "../../../table_definitions.sql";
 	private static Connection connection;
@@ -27,7 +32,7 @@ public class DatabaseDriver {
 
 			connection = DriverManager.getConnection(String.format("jdbc:sqlite:%s", musicDB.toString()));
 		} catch (SQLException e) {
-			System.err.println(e.getMessage());
+			logger.error("Failed to connect to database: %s", e.getMessage());
 
 			throw new RuntimeException(e);
 		}
@@ -42,7 +47,8 @@ public class DatabaseDriver {
 		URL tableDefinitionsLocation = DatabaseDriver.class.getResource(TABLE_DEF_FILE_NAME);
 
 		if (tableDefinitionsLocation == null) {
-			System.out.println(DatabaseDriver.class.getResource("DatabaseDriver.class"));
+			logger.error("Unable to load table definition file resource: %s", DatabaseDriver.class.getResource("DatabaseDriver.class"));
+
 			throw new RuntimeException("Unable to get table definitions");
 		}
 
@@ -51,7 +57,7 @@ public class DatabaseDriver {
 			String tableDefinitions = readFile(tableDefinitionsLocation.getFile(), Charset.forName("UTF-8"));
 			createTables.executeUpdate(tableDefinitions);
 		} catch (IOException | SQLException e) {
-			e.printStackTrace();
+			logger.error("Unable to create tables: %s", e.getMessage());
 
 			throw new RuntimeException(e);
 		}

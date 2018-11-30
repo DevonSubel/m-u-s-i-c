@@ -1,10 +1,7 @@
 package com.github.se307;
 
-import java.sql.Connection;
-import java.io.IOException;
-import java.nio.file.Path;
-
-import java.util.logging.*;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -13,8 +10,8 @@ import javafx.stage.Stage;
 
 public class App extends Application {
 	public static final String LOG_FILE_OUTPUT = "music.log";
-	
-	private Logger logger;
+	private static final Logger logger = LogManager.getLogger();
+
 	private Scene scene;
 	
 	
@@ -26,40 +23,19 @@ public class App extends Application {
 	 */
 	@Override 
 	public void init() {
-
-		Path resourcesDir = LocalResources.getResources().getUserResourcesDir();
-		
-		
-		// Set up the logger for the MUSIC program 
-		// All classes can access the logger using the getLogger()
-		Path logFilePath = resourcesDir.resolve(LOG_FILE_OUTPUT);
-		
-		logger = Logger.getLogger(Logger.GLOBAL_LOGGER_NAME);
-		FileHandler file_handler;
-		
-		try {
-			file_handler = new FileHandler(logFilePath.toString(), false);
-			logger.addHandler(file_handler);
-			SimpleFormatter simple_formatter = new SimpleFormatter();
-			file_handler.setFormatter(simple_formatter);
-			
-			logger.info("Logger has been successfully initialized...");
-			
-		} catch(IOException | SecurityException e) {
-			e.printStackTrace();
-			
-			throw new RuntimeException();
-		}
-
+		// Pre loading resources before UI starts
+		LocalResources.getResources().getUserResourcesDir();
 
 		// Set up the database
-		// TODO: change to do the load checking, followed by data initialization if necessary
+		// TODO: followed by data initialization if necessary
 		logger.info("Loading database...");
-		Connection connection = DatabaseDriver.getConnection();
+		DatabaseDriver.getConnection();
 		
 		
 		// Load user settings
 		// TODO: read settings from file
+		logger.info("Loading settings file");
+		UserSettingsManager.getUserSettings();
 	}
 	
 	
@@ -70,7 +46,7 @@ public class App extends Application {
     public void start(Stage stage) {
         // create the scene
         stage.setTitle("Web View");
-        scene = new Scene(new Browser(),2560,1600, Color.web("#211E1E"));
+        scene = new Scene(new Browser(), 2560, 1600, Color.web("#211E1E"));
         stage.setScene(scene);
         
         stage.show();
@@ -78,7 +54,7 @@ public class App extends Application {
 	
 	
 	
-	public static void main(String[] args) {
+	public static void main(String[] args) {		
 		launch(args);
 	}
 }
