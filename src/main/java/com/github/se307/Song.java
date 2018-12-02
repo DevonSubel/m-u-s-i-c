@@ -57,17 +57,7 @@ public class Song {
 	 * instead.
 	 */
 	private Song(SongBuilder sb) {
-		this.songName = sb.songName;
-		this.artistName = sb.artistName;
-		this.albumName = sb.albumName;
-		this.songLength = sb.songLength;
-		this.genreID = sb.genreID;
-		this.songYear = sb.songYear;
-		this.bpm = sb.bpm;
-		this.additionalNotes = sb.additionalNotes;
-		this.songURL = sb.songURL;
-
-		this.isInflated = true;
+		populateFromSongBuilder(sb);
 	}
 
 	/**
@@ -104,26 +94,35 @@ public class Song {
 	 */
 	public void inflate() {
 		if (!this.isInflated && this.songKey > 0) {
+			populateFromSongBuilder(Song.DB_DRIVER.getSong(this.songKey));
+		}
+	}
+	
+	/**
+	 * Uses a SongBuilder to populate the fields. Marks the object as inflated
+	 * 
+	 * @param sb SongBuilder used to populate the Song object
+	 */
+	private void populateFromSongBuilder(SongBuilder sb)  {
+		if (sb != null) {
 
-			SongBuilder sb = Song.DB_DRIVER.getSong(this.songKey);
+			this.songName = sb.songName;
+			this.artistName = sb.artistName;
+			this.albumName = sb.albumName;
+			this.songLength = sb.songLength;
+			this.genreID = sb.genreID;
+			this.songYear = sb.songYear;
+			this.bpm = sb.bpm;
+			this.additionalNotes = sb.additionalNotes;
+			this.songURL = sb.songURL;
 
-			if (sb != null) {
-
-				this.songName = sb.songName;
-				this.artistName = sb.artistName;
-				this.albumName = sb.albumName;
-				this.songLength = sb.songLength;
-				this.genreID = sb.genreID;
-				this.songYear = sb.songYear;
-				this.bpm = sb.bpm;
-				this.additionalNotes = sb.additionalNotes;
-				this.songURL = sb.songURL;
-
-				this.isInflated = true;
-			}
+			this.isInflated = true;
 		}
 	}
 
+	/**
+	 * Delete the current song from the database by setting its key to be flagged as having been deleted
+	 */
 	public void deleteSong() {
 
 		if (Song.DB_DRIVER.removeSong(this.songKey)) {
