@@ -92,10 +92,11 @@ public class SongDatabaseDriver {
 		qMarkString.append("?");
 		String createSongStatement = String.format(CREATE_STATEMENT_CONST, qMarkString.toString(), qMarkString.toString());
 
+		PreparedStatement creationStatement = null;
 		ResultSet keys = null;
 		try {
 			// Create the prepared statement
-			PreparedStatement creationStatement = dbConnection.prepareStatement(createSongStatement,
+			creationStatement = dbConnection.prepareStatement(createSongStatement,
 					Statement.RETURN_GENERATED_KEYS);
 
 			// Insert the values into the prepared statement
@@ -114,11 +115,19 @@ public class SongDatabaseDriver {
 			logger.error("Failed to execute createSong prepared statement: " + e.getMessage());
 			return songPrimaryKey;
 		} finally {
+			// Attempt to close the PreparedStatement resource
+			try {
+				if (creationStatement != null)
+					creationStatement.close();
+			} catch (SQLException e) {
+				logger.error("Failed to close the PreparedStatment " + e.getMessage());
+			}
+			// Attempt to close the ResultSet resource
 			try {
 				if (keys != null)
 					keys.close();
 			} catch (SQLException e) {
-				logger.error("Failed to close result set " + e.getMessage());
+				logger.error("Failed to close ResultSet resource " + e.getMessage());
 			}
 		}
 		return songPrimaryKey;
@@ -176,9 +185,10 @@ public class SongDatabaseDriver {
 	 */
 	public synchronized Song.SongBuilder getSong(long songKey) {
 		Song.SongBuilder sb = new Song.SongBuilder();
+		ResultSet rs = null;
 		try {
 			this.queryStatement.setLong(1, songKey);
-			ResultSet rs = this.queryStatement.executeQuery();
+			rs = this.queryStatement.executeQuery();
 			
 			sb.setSongName(rs.getString(NAME_F))
 			  .setArtistName(rs.getString(ARTIST_NAME_F))
@@ -211,6 +221,14 @@ public class SongDatabaseDriver {
 		} catch (SQLException e) {
 			logger.error("Failed to execute getSong prepared statement: " + e.getMessage());
 			return null;
+		} finally {
+			// Attempt to close the ResultSet resource
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (SQLException e) {
+				logger.error("Failed to close ResultSet resource " + e.getMessage());
+			}
 		}
 		return sb;
 	}
@@ -224,16 +242,23 @@ public class SongDatabaseDriver {
 	public List<Long> getAllSongs() {
 		List<Long> songKeys = new ArrayList<Long>();
 
+		ResultSet returnedValue = null;
 		try {
-			ResultSet returnValue = this.queryAllStatement.executeQuery();
-			while (returnValue.next()) {
-				songKeys.add(returnValue.getLong(0));
+			returnedValue = this.queryAllStatement.executeQuery();
+			while (returnedValue.next()) {
+				songKeys.add(returnedValue.getLong(1));
 			}
-
-			returnValue.close();
 		} catch (SQLException e) {
 			logger.error("Failed to execute getSong prepared statement: " + e.getMessage());
 			return Collections.emptyList();
+		} finally {
+			// Attempt to close the ResultSet resource
+			try {
+				if (returnedValue != null)
+					returnedValue.close();
+			} catch (SQLException e) {
+				logger.error("Failed to close ResultSet resource " + e.getMessage());
+			}
 		}
 		return songKeys;
 	}
