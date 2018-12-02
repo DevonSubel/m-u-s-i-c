@@ -238,7 +238,7 @@ public class SongDatabaseDriver {
 	 * @return List containing all the keys. An empty list is returned if an error was encountered.
 	 */
 	public List<Long> getAllSongs() {
-		List<Long> songKeys = new ArrayList<Long>();
+		List<Long> songKeys = new ArrayList<>();
 
 		ResultSet returnedValue = null;
 		try {

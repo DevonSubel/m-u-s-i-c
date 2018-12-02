@@ -232,7 +232,7 @@ public class SongSetDatabaseDriver {
 		ArrayList<Song> songs = null;
 		ResultSet rs = null;
 		try {
-			songs = new ArrayList<Song>();
+			songs = new ArrayList<>();
 
 			this.querySongsFromSet.setLong(1, songSetKey);
 			rs = this.querySongsFromSet.executeQuery();

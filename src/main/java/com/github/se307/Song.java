@@ -128,9 +128,8 @@ public class Song {
 
 		if (Song.DB_DRIVER.removeSong(this.songKey)) {
 			this.songKey = -1;
-			// TODO: successful delete
 		} else {
-			// TODO: failed delete
+			logger.error("Unable to remove the song (songkey: %ld) from the database", this.songKey);
 		}
 
 	}
