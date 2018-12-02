@@ -100,6 +100,14 @@ public class ObjectCache<K, E> {
 		moveNodeToFront(n);
 		return n.item;
 	}
+	
+	public int capacity() {
+		return this.maxItems;
+	}
+	
+	public int size() {
+		return this.itemCount;
+	}
 
 	private class Node {
 		public E item;
