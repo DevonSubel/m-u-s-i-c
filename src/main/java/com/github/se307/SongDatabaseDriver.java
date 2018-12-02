@@ -216,8 +216,6 @@ public class SongDatabaseDriver {
 			  .setBPM(bpm)
 			  .setNotes(rs.getString(ADDITIONAL_NOTES_F))
 			  .setURL(rs.getString(URI_F));
-			
-			rs.close();
 		} catch (SQLException e) {
 			logger.error("Failed to execute getSong prepared statement: " + e.getMessage());
 			return null;
