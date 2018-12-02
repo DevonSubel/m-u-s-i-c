@@ -13,7 +13,7 @@
     <div class="row navigation">
       <div class="col">
         <nav class="navbar">
-          <span class="navbar-brand mb-0 h1 logo"> <img src="logo.png" alt="logo" width = 300> </span>
+          <span class="navbar-brand mb-0 h1 logo"> <img src="logo.png" alt = "logo" width = 300> </span>
         </nav>
       </div>
       <div class="w-100"></div>
@@ -23,7 +23,7 @@
          <div class="menu"><a href="searchPage.html" id="search"><p>Search</p></a></div>
       </div>
       <div class="col">
-         <div class="menu active"><a href="#" id="result"><p>Result</p></a></div>
+         <div class="menu active"><a href="resultsPage.html" id="result"><p>Result</p></a></div>
       </div>
        <div class="col">
          <div class="menu"><a href="#" id="playlist"><p>Playlist</p></a></div>
@@ -45,6 +45,7 @@
         </div>
       </div>
     </div>
+    
     <div class="row results-page">
       <div class="col-md-6 sort">
         <div class="row tabs">
@@ -74,38 +75,38 @@
         				<div class="col-md-12">
         					<div class="row bg-secondary">
         						<div class="col ">
-        							<a href="moreSongDetailPage.html" class="btn-md text-dark">I Didn't Mean To</a>
+        							<a href="nowPlayingPage.html" class="btn-md text-dark">I Didn't Mean To</a>
         						</div>
         						<div class="col ">
-        							<a href="moreSongDetailPage.html" class="btn-md text-dark">Casual</a>
+        							<a href="nowPlayingPage.html" class="btn-md text-dark">Casual</a>
         						</div>
         						<div class="col ">
-        							<a href="moreSongDetailPage.html" class="btn-md text-dark">NA</a>
+        							<a href="nowPlayingPage.html" class="btn-md text-dark">NA</a>
         						</div>
         						<div class="col ">
-        							<a href="moreSongDetailPage.html" class="btn btn-md text-dark fav">
+        							<a href="nowPlayingPage.html" class="btn btn-md text-dark fav">
           							<span class="fas fa-heart"></span></a>
           						</div>
           						<div class="col ">
-          							<a href="moreSongDetailPage.html" class="btn-md text-dark">Playlist</a>
+          							<a href="nowPlayingPage.html" class="btn-md text-dark">Playlist</a>
           						</div>
           					</div>
           					<div class="row bg-light">
         						<div class="col ">
-        							<a href="moreSongDetailPage.html" class="btn-md text-dark">Nashville Parthenon</a>
+        							<a href="nowPlayingPage.html" class="btn-md text-dark">Nashville Parthenon</a>
         						</div>
         						<div class="col ">
-        							<a href="moreSongDetailPage.html" class="btn-md text-dark">Casiotone For The Painfully Alone</a>
+        							<a href="nowPlayingPage.html" class="btn-md text-dark">Casiotone For The Painfully Alone</a>
         						</div>
         						<div class="col ">
-        							<a href="moreSongDetailPage.html" class="btn-md text-dark">NA</a>
+        							<a href="nowPlayingPage.html" class="btn-md text-dark">NA</a>
         						</div>
         						<div class="col ">
-        							<a href="moreSongDetailPage.html" class="btn btn-md text-dark fav">
+        							<a href="nowPlayingPage.html" class="btn btn-md text-dark fav">
           							<span class="far fa-heart"></span></a>
           						</div>
           						<div class="col ">
-          							<a href="moreSongDetailPage.html" class="btn-md text-dark">Playlist</a>
+          							<a href="nowPlayingPage.html" class="btn-md text-dark">Playlist</a>
           						</div>
           					</div>
           				</div>
@@ -113,6 +114,85 @@
           		</div>
         	</div>
        	</div>
+       	<div class="col">
+        		<div class = "container-fluid songinfo">
+        			<div class = "row justify-content">
+        				<div class = "col-md-5 text-left">
+        					<img class="img-responsive" src="https://i.scdn.co/image/36ef0fd799a1a1d7a4b4209d2815dce7f30243d5" alt = "albumcover" id="album-cover-img" >
+        				</div>
+        				<div class = "col-md-7 text-left">
+        					<div class = "row">
+        						<div class="col">
+        							<h3>Song: Temporary Song Name</h3>
+        						</div>
+        					</div>
+        					<div class="row">
+        						<div class="col">
+        							<h3>Artist: Temporary Artist Name</h3>
+        						</div>
+        					</div>
+        				</div>
+        			</div>
+        			<div class ="row">
+        				<div class = "col-md-5">
+        					<div class="space"></div>
+        					<div class = "row">
+        						<div class="col">
+        							<h4>Album: Temporary Album Name</h4>
+        						</div>
+        					</div>
+        					<div class = "row">
+        						<div class="col">
+        							<h4>Genre: Temporary Genre</h4>
+        						</div>
+        					</div>
+        					<div class = "row">
+        						<div class="col">
+        							<h4>Length: Temporary Song Length</h4>
+        						</div>
+        					</div>
+        					<div class = "row">
+        						<div class="col">
+        							<h4>Year: Temporary Year</h4>
+        						</div>
+        					</div>
+        					<div class = "row">
+        						<div class="col">
+        							<h4>Tempo: Temporary Tempo</h4>
+        						</div>
+        					</div>
+        					<div class = "row">
+        						<div class="col">
+        							<h4>Key: Temporary Key</h4>
+        						</div>
+        					</div>
+        					<div class = "row">
+        						<div class="col">
+        							<h4>Notes: Temporary Notes on Song</h4>
+        						</div>
+        					</div>
+        					<div class="row justify-content-center">
+        					
+        						<div class="col">
+        							<a href="#" class="btn btn-secondary btn-md fav">
+          							<span class="fas fa-heart"></span></a>
+          						</div>
+          						<div class="col">
+          							<a href="addSongPage.html" class="btn btn-secondary btn-md edit">Edit Song Details</a>
+          						</div>
+          						
+          				</div>
+        				</div>
+        					
+        				<div class ="col-md-7">
+          					<div class="embed-responsive embed-responsive-1by1">
+          						<iframe class="embed-responsive-item" title= "songplayer" src= "https://open.spotify.com/track/01TR6aAKrA2cI3Z0gnCOsu?si=i0Uzi_jqSSSauY4bYT6KTA" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+          					</div>
+          				<div class="col"></div>
+        			</div>
+        				
+          			</div>
+
       </div>
     </div>
   </div>
