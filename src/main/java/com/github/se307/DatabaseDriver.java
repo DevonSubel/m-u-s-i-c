@@ -3,6 +3,7 @@ package com.github.se307;
 import java.io.IOException;
 import java.net.URL;
 import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -34,7 +35,7 @@ public class DatabaseDriver {
 		} catch (SQLException e) {
 			logger.error("Failed to connect to database: %s", e.getMessage());
 
-			throw new RuntimeException(e);
+			throw new IllegalStateException(e);
 		}
 	}
 
@@ -49,17 +50,17 @@ public class DatabaseDriver {
 		if (tableDefinitionsLocation == null) {
 			logger.error("Unable to load table definition file resource: %s", DatabaseDriver.class.getResource("DatabaseDriver.class"));
 
-			throw new RuntimeException("Unable to get table definitions");
+			throw new IllegalStateException("Unable to get table definitions");
 		}
 
 		try (Statement createTables = connection.createStatement()){
 
-			String tableDefinitions = readFile(tableDefinitionsLocation.getFile(), Charset.forName("UTF-8"));
+			String tableDefinitions = readFile(tableDefinitionsLocation.getFile(), StandardCharsets.UTF_8);
 			createTables.executeUpdate(tableDefinitions);
 		} catch (IOException | SQLException e) {
 			logger.error("Unable to create tables: %s", e.getMessage());
 
-			throw new RuntimeException(e);
+			throw new IllegalStateException(e);
 		}
 	}
 

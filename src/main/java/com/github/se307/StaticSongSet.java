@@ -46,8 +46,9 @@ public class StaticSongSet extends SongSet {
 				// Save all songs in the set to the database
 				for (Song song : this.songList) {
 					if (SongSet.DB_DRIVER.addSongToSongSet(song.getKey(), super.songSetKey)) {
-						// TODO: handle if the song was successfully added
+						logger.info("Song Set was successfully saved to the database");
 					} else {
+						logger.warn("An error was encountered while saving " + song.getSongName() + " to the database.");
 						// TODO: alert user that the change was not successful
 					}
 				}
