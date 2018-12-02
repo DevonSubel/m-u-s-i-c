@@ -120,14 +120,14 @@ public class SongDatabaseDriver {
 				if (creationStatement != null)
 					creationStatement.close();
 			} catch (SQLException e) {
-				logger.error("Failed to close the PreparedStatment " + e.getMessage());
+				logger.error("createSong Failed to close the PreparedStatment resource " + e.getMessage());
 			}
 			// Attempt to close the ResultSet resource
 			try {
 				if (keys != null)
 					keys.close();
 			} catch (SQLException e) {
-				logger.error("Failed to close ResultSet resource " + e.getMessage());
+				logger.error("createSong Failed to close keys ResultSet resource " + e.getMessage());
 			}
 		}
 		return songPrimaryKey;
@@ -225,7 +225,7 @@ public class SongDatabaseDriver {
 				if (rs != null)
 					rs.close();
 			} catch (SQLException e) {
-				logger.error("Failed to close ResultSet resource " + e.getMessage());
+				logger.error("getSong Failed to close query ResultSet resource " + e.getMessage());
 			}
 		}
 		return sb;
@@ -255,7 +255,7 @@ public class SongDatabaseDriver {
 				if (returnedValue != null)
 					returnedValue.close();
 			} catch (SQLException e) {
-				logger.error("Failed to close ResultSet resource " + e.getMessage());
+				logger.error("getAllSongs Failed to close query ResultSet resource " + e.getMessage());
 			}
 		}
 		return songKeys;

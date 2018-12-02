@@ -92,7 +92,7 @@ public class SongSetDatabaseDriver {
 				if (rs != null)
 					rs.close();
 			} catch (SQLException e) {
-				logger.error("Failed to close ResultSet resource " + e.getMessage());
+				logger.error("QuerySongSet failed to close query ResultSet resource " + e.getMessage());
 			}
 		}
 		return returnValue;
@@ -213,7 +213,7 @@ public class SongSetDatabaseDriver {
 				if (keys != null) 
 					keys.close();
 			} catch (SQLException e) {
-				logger.error("Failed to close ResultSet resource " + e.getMessage());
+				logger.error("Create song failed to close keys ResultSet resource " + e.getMessage());
 			}
 		}
 
@@ -248,7 +248,7 @@ public class SongSetDatabaseDriver {
 				if (rs != null)
 					rs.close();
 			} catch (SQLException e) {
-				logger.error("Failed to close ResultSet resource " + e.getMessage());
+				logger.error("QuerySong failed to close query ResultSet resource " + e.getMessage());
 			}
 		}
 		return songs;
@@ -273,7 +273,7 @@ public class SongSetDatabaseDriver {
 		Statement stmt = null;
 		ResultSet rs = null;
 		try {
-			songs = new ArrayList<Song>();
+			songs = new ArrayList<>();
 
 			stmt = dbConnection.createStatement();
 			rs = stmt.executeQuery(query);
@@ -290,14 +290,14 @@ public class SongSetDatabaseDriver {
 				if (stmt != null)
 					stmt.close();
 			} catch (SQLException e) {
-				logger.error("Failed to close Statement resource " + e.getMessage());
+				logger.error("Query song failed to close the Statement resource " + e.getMessage());
 			}
 			// Attempt to close the ResultSet resource
 			try {
 				if (rs != null)
 					rs.close();
 			} catch (SQLException e) {
-				logger.error("Failed to close ResultSet resource " + e.getMessage());
+				logger.error("Query song failed to close query ResultSet resource " + e.getMessage());
 			}
 		}
 

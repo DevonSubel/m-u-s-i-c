@@ -34,6 +34,14 @@ public class UserSettingsManager {
 	private static UserSettings instance;
 
 	/**
+	 * Private constructor to prevent initialization of the class
+	 */
+	private UserSettingsManager() {
+		throw new IllegalArgumentException("UserSettingsManager cannot be instantiated");
+	}
+	
+	
+	/**
 	 * Get the user's settings, loading from disk if necessary.
 	 * 
 	 * If the settings file does not exist, then it is created with the default

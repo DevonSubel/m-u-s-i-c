@@ -50,7 +50,7 @@ public abstract class SongSet {
 
 	/**
 	 * Saves the Song Set to the database A name is automatically chosen if not
-	 * given. TODO: consider requiring user to input the song set title
+	 * given.
 	 */
 	public abstract void save();
 
@@ -65,8 +65,7 @@ public abstract class SongSet {
 			this.songSetName = songSetName;
 			return true;
 		} else {
-			logger.info("Failed to set song name to %s", songSetName);
-			// TODO: alert user that the change was not successful
+			logger.error("Failed to set song name to %s", songSetName);
 			return false;
 		}
 	}
@@ -80,11 +79,9 @@ public abstract class SongSet {
 		if (songSetKey == 0 || SongSet.DB_DRIVER.removeSongSet(songSetKey)) {
 			// Mark this song as having been deleted
 			songSetKey = -1;
-			// TODO: handle when the change was successful
 			return true;
 		} else {
-			logger.info("Failed to delete song set: %ld", songSetKey);
-			// TODO: alert user that change was not successful
+			logger.error("Failed to delete song set: %ld", songSetKey);
 			return false;
 		}
 	}
@@ -106,11 +103,5 @@ public abstract class SongSet {
 	public boolean isDeleted() {
 		return (songSetKey < 0);
 	}
-
-	/*
-	 * Not implemented, but ideas on what song sets could contain
-	 */
-	// public void reverse();
-	// public void sortBy();
 
 }
