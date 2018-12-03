@@ -76,6 +76,10 @@ public class UserSettingsManager {
 			logger.error("Settings IO exception: %s", e.getMessage());
 		}
 	}
+	
+	public static void resetUserSettings() {
+		instance = null;
+	}
 
 	private static Path getSettingsPath() {
 		return LocalResources.getResources().getUserResourcesDir().resolve(USER_SETTINGS_FILENAME);
@@ -170,6 +174,11 @@ public class UserSettingsManager {
 		public void setGuiColor(Color guiColor) {
 			this.guiColor = String.format("#%02X%02X%02X", (int) (guiColor.getRed() * 255),
 					(int) (guiColor.getGreen() * 255), (int) (guiColor.getBlue() * 255));
+		}
+
+		@Override
+		public String toString() {
+			return "UserSettings [guiColor=" + guiColor + "]";
 		}
 	}
 }
