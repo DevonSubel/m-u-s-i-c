@@ -8,15 +8,18 @@ CREATE UNIQUE INDEX IF NOT EXISTS genre_name_uindex ON genre (name);
 CREATE TABLE IF NOT EXISTS song
 (
     id integer PRIMARY KEY AUTOINCREMENT NOT NULL,
-    name varchar(40) NOT NULL,
-    artist_name varchar(40) NOT NULL,
-    album_name varchar(40) NOT NULL,
-    song_length float,
+    name varchar(250) NOT NULL,
+    artist_name varchar(250) NOT NULL,
+    album_name varchar(250) NOT NULL,
+    song_length int,
     genre_id int,
     song_year int,
     bpm int,
-    additional_notes varchar(120),
-    uri varchar(60),
+    song_music_key int,
+    song_mode int,
+    additional_notes varchar(500),
+    uri varchar(250),
+    liked int,
     CONSTRAINT song_genre_id_fk FOREIGN KEY (genre_id) REFERENCES genre (id)
 );
 

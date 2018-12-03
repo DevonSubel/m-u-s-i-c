@@ -31,6 +31,9 @@ public class SongDatabaseDriver {
 	public static final String SONG_YEAR_F = "song_year";
 	public static final String BPM_F = "bpm";
 	public static final String ADDITIONAL_NOTES_F = "additional_notes";
+	public static final String SONG_MUSIC_KEY_F = "song_music_key";
+	public static final String SONG_MUSIC_KEY_MODE_F = "song_mode";
+	public static final String LIKED_F = "liked";
 	public static final String URI_F = "uri";
 
 	private static final String UPDATE_STATEMENT_CONST = "UPDATE song SET ? = ? WHERE id = ?;";
@@ -282,6 +285,6 @@ public class SongDatabaseDriver {
 	 */
 	public static String[] getFields() {
 		return new String[] { NAME_F, ARTIST_NAME_F, ALBUM_NAME_F, SONG_LENGTH_F, GENRE_ID_F, SONG_YEAR_F, BPM_F,
-				ADDITIONAL_NOTES_F, URI_F };
+				ADDITIONAL_NOTES_F, URI_F, SONG_MUSIC_KEY_F, SONG_MUSIC_KEY_MODE_F, LIKED_F };
 	}
 }
