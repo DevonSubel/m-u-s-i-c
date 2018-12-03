@@ -76,19 +76,25 @@ public class SongSetDatabaseDriver {
 	 */
 	public synchronized Object querySongSet(String colName, long key) {
 		Object returnValue = null;
+		ResultSet rs = null;
 		try {
 			this.querySongSetField.setString(1, colName);
 			this.querySongSetField.setLong(2, key);
 
-			ResultSet rs = this.querySongSetField.executeQuery();
+			rs = this.querySongSetField.executeQuery();
 			if (rs.next())
 				returnValue = rs.getObject(1);
 
-			rs.close();
 		} catch (SQLException e) {
 			logger.error("Failed to execute querySongSet prepared statement: " + e.getMessage());
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (SQLException e) {
+				logger.error("QuerySongSet failed to close query ResultSet resource " + e.getMessage());
+			}
 		}
-
 		return returnValue;
 	}
 
@@ -189,19 +195,26 @@ public class SongSetDatabaseDriver {
 	 */
 	public synchronized long createSongSet(String name) {
 		long songSetKey = 0;
+		ResultSet keys = null;
 		try {
 			this.createSongSet.setString(1, name);
 
 			this.createSongSet.executeUpdate();
 
-			ResultSet keys = this.createSongSet.getGeneratedKeys();
+			keys = this.createSongSet.getGeneratedKeys();
 			if (keys.next()) {
 				songSetKey = keys.getLong(1);
 			}
 
-			keys.close();
 		} catch (SQLException e) {
 			logger.error("Failed to insert a new SongSet into the database: " + e.getMessage());
+		} finally {
+			try {
+				if (keys != null) 
+					keys.close();
+			} catch (SQLException e) {
+				logger.error("Create song failed to close keys ResultSet resource " + e.getMessage());
+			}
 		}
 
 		return songSetKey;
@@ -217,19 +230,26 @@ public class SongSetDatabaseDriver {
 	 */
 	public synchronized List<Song> querySong(long songSetKey) {
 		ArrayList<Song> songs = null;
+		ResultSet rs = null;
 		try {
-			songs = new ArrayList<Song>();
+			songs = new ArrayList<>();
 
 			this.querySongsFromSet.setLong(1, songSetKey);
-			ResultSet rs = this.querySongsFromSet.executeQuery();
+			rs = this.querySongsFromSet.executeQuery();
       
 			while (rs.next()) {
 				songs.add(new Song(rs.getLong(1)));
 			}
 
-			rs.close();
 		} catch (SQLException e) {
 			logger.error("Failed to query the SongSet: " + e.getMessage());
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (SQLException e) {
+				logger.error("QuerySong failed to close query ResultSet resource " + e.getMessage());
+			}
 		}
 		return songs;
 	}
@@ -250,19 +270,35 @@ public class SongSetDatabaseDriver {
 	 */
 	public List<Song> querySong(String query) {
 		ArrayList<Song> songs = null;
+		Statement stmt = null;
+		ResultSet rs = null;
 		try {
-			songs = new ArrayList<Song>();
+			songs = new ArrayList<>();
 
-			Statement stmt = dbConnection.createStatement();
-			ResultSet rs = stmt.executeQuery(query);
+			stmt = dbConnection.createStatement();
+			rs = stmt.executeQuery(query);
 
 			while (rs.next()) {
 				songs.add(new Song(rs.getLong(1)));
 			}
 
-			rs.close();
 		} catch (SQLException e) {
 			logger.error("Failed to query the song set: " + e.getMessage());
+		} finally {
+			// Attempt to close the statement resource
+			try {
+				if (stmt != null)
+					stmt.close();
+			} catch (SQLException e) {
+				logger.error("Query song failed to close the Statement resource " + e.getMessage());
+			}
+			// Attempt to close the ResultSet resource
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (SQLException e) {
+				logger.error("Query song failed to close query ResultSet resource " + e.getMessage());
+			}
 		}
 
 		return songs;

@@ -34,6 +34,14 @@ public class UserSettingsManager {
 	private static UserSettings instance;
 
 	/**
+	 * Private constructor to prevent initialization of the class
+	 */
+	private UserSettingsManager() {
+		throw new IllegalArgumentException("UserSettingsManager cannot be instantiated");
+	}
+	
+	
+	/**
 	 * Get the user's settings, loading from disk if necessary.
 	 * 
 	 * If the settings file does not exist, then it is created with the default
@@ -67,6 +75,10 @@ public class UserSettingsManager {
 		} catch (IOException e) {
 			logger.error("Settings IO exception: %s", e.getMessage());
 		}
+	}
+	
+	public static void resetUserSettings() {
+		instance = null;
 	}
 
 	private static Path getSettingsPath() {
@@ -162,6 +174,11 @@ public class UserSettingsManager {
 		public void setGuiColor(Color guiColor) {
 			this.guiColor = String.format("#%02X%02X%02X", (int) (guiColor.getRed() * 255),
 					(int) (guiColor.getGreen() * 255), (int) (guiColor.getBlue() * 255));
+		}
+
+		@Override
+		public String toString() {
+			return "UserSettings [guiColor=" + guiColor + "]";
 		}
 	}
 }

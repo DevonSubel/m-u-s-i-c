@@ -12,6 +12,9 @@
 
 package com.github.se307;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * @author Maxence Weyrich
  *
@@ -34,6 +37,9 @@ public class Song {
 	private String additionalNotes;
 	private String songURL;
 
+	
+	private static final Logger logger = LogManager.getLogger();
+	
 	/**
 	 * Create a Song object with the given unique key identifier. The Song object is
 	 * not inflated, until requested.
@@ -51,17 +57,7 @@ public class Song {
 	 * instead.
 	 */
 	private Song(SongBuilder sb) {
-		this.songName = sb.songName;
-		this.artistName = sb.artistName;
-		this.albumName = sb.albumName;
-		this.songLength = sb.songLength;
-		this.genreID = sb.genreID;
-		this.songYear = sb.songYear;
-		this.bpm = sb.bpm;
-		this.additionalNotes = sb.additionalNotes;
-		this.songURL = sb.songURL;
-
-		this.isInflated = true;
+		populateFromSongBuilder(sb);
 	}
 
 	/**
@@ -72,7 +68,21 @@ public class Song {
 	 * not.
 	 */
 	public void flatten() {
-		// TODO: flatten object
+		// Only flatten if the Song is stored in the database!
+		if (this.songKey > 0) {
+			
+			this.songName = null;
+			this.artistName = null;
+			this.albumName = null;
+			this.songLength = null;
+			this.genreID = null;
+			this.songYear = null;
+			this.bpm = null;
+			this.additionalNotes = null;
+			this.songURL = null;
+			
+			this.isInflated = false;
+		}
 	}
 
 	/**
@@ -84,33 +94,41 @@ public class Song {
 	 */
 	public void inflate() {
 		if (!this.isInflated && this.songKey > 0) {
+			populateFromSongBuilder(Song.DB_DRIVER.getSong(this.songKey));
+		}
+	}
+	
+	/**
+	 * Uses a SongBuilder to populate the fields. Marks the object as inflated
+	 * 
+	 * @param sb SongBuilder used to populate the Song object
+	 */
+	private void populateFromSongBuilder(SongBuilder sb)  {
+		if (sb != null) {
 
-			SongBuilder sb = Song.DB_DRIVER.getSong(this.songKey);
+			this.songName = sb.songName;
+			this.artistName = sb.artistName;
+			this.albumName = sb.albumName;
+			this.songLength = sb.songLength;
+			this.genreID = sb.genreID;
+			this.songYear = sb.songYear;
+			this.bpm = sb.bpm;
+			this.additionalNotes = sb.additionalNotes;
+			this.songURL = sb.songURL;
 
-			if (sb != null) {
-
-				this.songName = sb.songName;
-				this.artistName = sb.artistName;
-				this.albumName = sb.albumName;
-				this.songLength = sb.songLength;
-				this.genreID = sb.genreID;
-				this.songYear = sb.songYear;
-				this.bpm = sb.bpm;
-				this.additionalNotes = sb.additionalNotes;
-				this.songURL = sb.songURL;
-
-				this.isInflated = true;
-			}
+			this.isInflated = true;
 		}
 	}
 
+	/**
+	 * Delete the current song from the database by setting its key to be flagged as having been deleted
+	 */
 	public void deleteSong() {
 
 		if (Song.DB_DRIVER.removeSong(this.songKey)) {
 			this.songKey = -1;
-			// TODO: successful delete
 		} else {
-			// TODO: failed delete
+			logger.error("Unable to remove the song (songkey: %ld) from the database", this.songKey);
 		}
 
 	}
@@ -188,9 +206,8 @@ public class Song {
 		
 		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.NAME_F, songName, this.songKey)) {
 			this.songName = songName;
-			// TODO: successful update
 		} else {
-			// TODO: failed update
+			logger.error("Error while updating 'song name' field to: " + songName);
 		}
 	}
 
@@ -201,9 +218,8 @@ public class Song {
 		
 		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.ARTIST_NAME_F, artistName, this.songKey)) {
 			this.artistName = artistName;
-			// TODO: successful update
 		} else {
-			// TODO: failed update
+			logger.error("Error while updating 'artist name' field to: " + artistName);
 		}
 	}
 
@@ -214,9 +230,8 @@ public class Song {
 		
 		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.ALBUM_NAME_F, albumName, this.songKey)) {
 			this.albumName = albumName;
-			// TODO: successful update
 		} else {
-			// TODO: failed update
+			logger.error("Error while updating 'album name' field to: " + albumName);
 		}
 	}
 
@@ -224,9 +239,8 @@ public class Song {
 
 		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.SONG_LENGTH_F, songLength, this.songKey)) {
 			this.songLength = songLength;
-			// TODO: successful update
 		} else {
-			// TODO: failed update
+			logger.error("Error while updating 'song length' field to: " + songLength);
 		}
 	}
 
@@ -234,9 +248,8 @@ public class Song {
 
 		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.GENRE_ID_F, genreID, this.songKey)) {
 			this.genreID = genreID;
-			// TODO: successful update
 		} else {
-			// TODO: failed update
+			logger.error("Error while updating 'genre ID' field to: " + genreID);
 		}
 	}
 
@@ -244,9 +257,8 @@ public class Song {
 
 		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.SONG_YEAR_F, songYear, this.songKey)) {
 			this.songYear = songYear;
-			// TODO: successful update
 		} else {
-			// TODO: failed update
+			logger.error("Error while updating 'song year' field to: " + songYear);
 		}
 	}
 
@@ -254,9 +266,8 @@ public class Song {
 
 		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.BPM_F, bpm, this.songKey)) {
 			this.bpm = bpm;
-			// TODO: successful update
 		} else {
-			// TODO: failed update
+			logger.error("Error while updating 'bpm' field to: " + bpm);
 		}
 	}
 
@@ -264,9 +275,8 @@ public class Song {
 
 		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.ADDITIONAL_NOTES_F, additionalNotes, this.songKey)) {
 			this.additionalNotes = additionalNotes;
-			// TODO: successful update
 		} else {
-			// TODO: failed update
+			logger.error("Error while updating 'additonal notes' field to: " + additionalNotes);
 		}
 	}
 
@@ -274,9 +284,8 @@ public class Song {
 
 		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.URI_F, songURL, this.songKey)) {
 			this.songURL = songURL;
-			// TODO: successful update
 		} else {
-			// TODO: failed update
+			logger.error("Error while updating 'song url' field to: " + songURL);
 		}
 	}
 
