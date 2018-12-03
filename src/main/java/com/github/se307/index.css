@@ -32,7 +32,6 @@ button {
 }
 
 .style-input-file [type=file] {
-  cursor: inherit;
   display: block;
   font-size: 999px;
   filter: alpha(opacity=0);
