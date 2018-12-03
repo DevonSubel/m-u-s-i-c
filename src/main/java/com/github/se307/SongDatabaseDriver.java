@@ -31,6 +31,9 @@ public class SongDatabaseDriver {
 	public static final String SONG_YEAR_F = "song_year";
 	public static final String BPM_F = "bpm";
 	public static final String ADDITIONAL_NOTES_F = "additional_notes";
+	public static final String SONG_MUSIC_KEY_F = "song_music_key";
+	public static final String SONG_MUSIC_KEY_MODE_F = "song_mode";
+	public static final String LIKED_F = "liked";
 	public static final String URI_F = "uri";
 
 	private static final String UPDATE_STATEMENT_CONST = "UPDATE song SET ? = ? WHERE id = ?;";
@@ -92,10 +95,11 @@ public class SongDatabaseDriver {
 		qMarkString.append("?");
 		String createSongStatement = String.format(CREATE_STATEMENT_CONST, qMarkString.toString(), qMarkString.toString());
 
+		PreparedStatement creationStatement = null;
 		ResultSet keys = null;
 		try {
 			// Create the prepared statement
-			PreparedStatement creationStatement = dbConnection.prepareStatement(createSongStatement,
+			creationStatement = dbConnection.prepareStatement(createSongStatement,
 					Statement.RETURN_GENERATED_KEYS);
 
 			// Insert the values into the prepared statement
@@ -114,11 +118,19 @@ public class SongDatabaseDriver {
 			logger.error("Failed to execute createSong prepared statement: " + e.getMessage());
 			return songPrimaryKey;
 		} finally {
+			// Attempt to close the PreparedStatement resource
+			try {
+				if (creationStatement != null)
+					creationStatement.close();
+			} catch (SQLException e) {
+				logger.error("createSong Failed to close the PreparedStatment resource " + e.getMessage());
+			}
+			// Attempt to close the ResultSet resource
 			try {
 				if (keys != null)
 					keys.close();
 			} catch (SQLException e) {
-				logger.error("Failed to close result set " + e.getMessage());
+				logger.error("createSong Failed to close keys ResultSet resource " + e.getMessage());
 			}
 		}
 		return songPrimaryKey;
@@ -176,9 +188,10 @@ public class SongDatabaseDriver {
 	 */
 	public synchronized Song.SongBuilder getSong(long songKey) {
 		Song.SongBuilder sb = new Song.SongBuilder();
+		ResultSet rs = null;
 		try {
 			this.queryStatement.setLong(1, songKey);
-			ResultSet rs = this.queryStatement.executeQuery();
+			rs = this.queryStatement.executeQuery();
 			
 			sb.setSongName(rs.getString(NAME_F))
 			  .setArtistName(rs.getString(ARTIST_NAME_F))
@@ -206,11 +219,17 @@ public class SongDatabaseDriver {
 			  .setBPM(bpm)
 			  .setNotes(rs.getString(ADDITIONAL_NOTES_F))
 			  .setURL(rs.getString(URI_F));
-			
-			rs.close();
 		} catch (SQLException e) {
 			logger.error("Failed to execute getSong prepared statement: " + e.getMessage());
 			return null;
+		} finally {
+			// Attempt to close the ResultSet resource
+			try {
+				if (rs != null)
+					rs.close();
+			} catch (SQLException e) {
+				logger.error("getSong Failed to close query ResultSet resource " + e.getMessage());
+			}
 		}
 		return sb;
 	}
@@ -222,18 +241,25 @@ public class SongDatabaseDriver {
 	 * @return List containing all the keys. An empty list is returned if an error was encountered.
 	 */
 	public List<Long> getAllSongs() {
-		List<Long> songKeys = new ArrayList<Long>();
+		List<Long> songKeys = new ArrayList<>();
 
+		ResultSet returnedValue = null;
 		try {
-			ResultSet returnValue = this.queryAllStatement.executeQuery();
-			while (returnValue.next()) {
-				songKeys.add(returnValue.getLong(0));
+			returnedValue = this.queryAllStatement.executeQuery();
+			while (returnedValue.next()) {
+				songKeys.add(returnedValue.getLong(1));
 			}
-
-			returnValue.close();
 		} catch (SQLException e) {
 			logger.error("Failed to execute getSong prepared statement: " + e.getMessage());
 			return Collections.emptyList();
+		} finally {
+			// Attempt to close the ResultSet resource
+			try {
+				if (returnedValue != null)
+					returnedValue.close();
+			} catch (SQLException e) {
+				logger.error("getAllSongs Failed to close query ResultSet resource " + e.getMessage());
+			}
 		}
 		return songKeys;
 	}
@@ -259,6 +285,6 @@ public class SongDatabaseDriver {
 	 */
 	public static String[] getFields() {
 		return new String[] { NAME_F, ARTIST_NAME_F, ALBUM_NAME_F, SONG_LENGTH_F, GENRE_ID_F, SONG_YEAR_F, BPM_F,
-				ADDITIONAL_NOTES_F, URI_F };
+				ADDITIONAL_NOTES_F, URI_F, SONG_MUSIC_KEY_F, SONG_MUSIC_KEY_MODE_F, LIKED_F };
 	}
 }

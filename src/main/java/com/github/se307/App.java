@@ -11,8 +11,6 @@ import javafx.stage.Stage;
 public class App extends Application {
 	public static final String LOG_FILE_OUTPUT = "music.log";
 	private static final Logger logger = LogManager.getLogger();
-
-	private Scene scene;
 	
 	
 	
@@ -27,13 +25,13 @@ public class App extends Application {
 		LocalResources.getResources().getUserResourcesDir();
 
 		// Set up the database
-		// TODO: followed by data initialization if necessary
+		// Followed by data initialization if necessary
 		logger.info("Loading database...");
 		DatabaseDriver.getConnection();
 		
 		
 		// Load user settings
-		// TODO: read settings from file
+		// Read settings from file
 		logger.info("Loading settings file");
 		UserSettingsManager.getUserSettings();
 	}
@@ -45,6 +43,8 @@ public class App extends Application {
 	@Override 
     public void start(Stage stage) {
         // create the scene
+		Scene scene;
+		
         stage.setTitle("Web View");
         scene = new Scene(new Browser(), 2560, 1600, Color.web("#211E1E"));
         stage.setScene(scene);

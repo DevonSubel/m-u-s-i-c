@@ -6,11 +6,12 @@
  * that the rest of the program can interface with a Java object rather than the database
  * directly.
  *
- * @author Maxence Weyrich
- *
  */
 
 package com.github.se307;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 /**
  * @author Maxence Weyrich
@@ -20,7 +21,7 @@ public class Song {
 
 	private static final SongDatabaseDriver DB_DRIVER = SongDatabaseDriver.getInstance();
 
-	private long songKey;
+	private long songId;
 
 	private boolean isInflated;
 
@@ -33,15 +34,21 @@ public class Song {
 	private Integer bpm;
 	private String additionalNotes;
 	private String songURL;
+	private Integer songMusicKey;
+	private Integer songMusicKeyMode;
+	private Boolean liked;
 
+	
+	private static final Logger logger = LogManager.getLogger();
+	
 	/**
 	 * Create a Song object with the given unique key identifier. The Song object is
 	 * not inflated, until requested.
 	 *
 	 * @param songKey the key of the Song entry
 	 */
-	public Song(long songKey) {
-		this.songKey = songKey;
+	public Song(long songId) {
+		this.songId = songId;
 		this.isInflated = false;
 	}
 
@@ -51,17 +58,7 @@ public class Song {
 	 * instead.
 	 */
 	private Song(SongBuilder sb) {
-		this.songName = sb.songName;
-		this.artistName = sb.artistName;
-		this.albumName = sb.albumName;
-		this.songLength = sb.songLength;
-		this.genreID = sb.genreID;
-		this.songYear = sb.songYear;
-		this.bpm = sb.bpm;
-		this.additionalNotes = sb.additionalNotes;
-		this.songURL = sb.songURL;
-
-		this.isInflated = true;
+		populateFromSongBuilder(sb);
 	}
 
 	/**
@@ -72,7 +69,24 @@ public class Song {
 	 * not.
 	 */
 	public void flatten() {
-		// TODO: flatten object
+		// Only flatten if the Song is stored in the database!
+		if (this.songId > 0) {
+			
+			this.songName = null;
+			this.artistName = null;
+			this.albumName = null;
+			this.songLength = null;
+			this.genreID = null;
+			this.songYear = null;
+			this.bpm = null;
+			this.additionalNotes = null;
+			this.songURL = null;
+			this.songMusicKey = null;
+			this.songMusicKeyMode = null;
+			this.liked = null;
+			
+			this.isInflated = false;
+		}
 	}
 
 	/**
@@ -83,40 +97,51 @@ public class Song {
 	 * accessed, it is not necessary for inflate to run when setting fields.
 	 */
 	public void inflate() {
-		if (!this.isInflated && this.songKey > 0) {
+		if (!this.isInflated && this.songId > 0) {
+			populateFromSongBuilder(Song.DB_DRIVER.getSong(this.songId));
+		}
+	}
+	
+	/**
+	 * Uses a SongBuilder to populate the fields. Marks the object as inflated
+	 * 
+	 * @param sb SongBuilder used to populate the Song object
+	 */
+	private void populateFromSongBuilder(SongBuilder sb)  {
+		if (sb != null) {
 
-			SongBuilder sb = Song.DB_DRIVER.getSong(this.songKey);
+			this.songName = sb.songName;
+			this.artistName = sb.artistName;
+			this.albumName = sb.albumName;
+			this.songLength = sb.songLength;
+			this.genreID = sb.genreID;
+			this.songYear = sb.songYear;
+			this.bpm = sb.bpm;
+			this.additionalNotes = sb.additionalNotes;
+			this.songURL = sb.songURL;
+			this.songMusicKey = sb.songMusicKey;
+			this.songMusicKeyMode = sb.songMusicKeyMode;
+			this.liked = sb.liked;
 
-			if (sb != null) {
-
-				this.songName = sb.songName;
-				this.artistName = sb.artistName;
-				this.albumName = sb.albumName;
-				this.songLength = sb.songLength;
-				this.genreID = sb.genreID;
-				this.songYear = sb.songYear;
-				this.bpm = sb.bpm;
-				this.additionalNotes = sb.additionalNotes;
-				this.songURL = sb.songURL;
-
-				this.isInflated = true;
-			}
+			this.isInflated = true;
 		}
 	}
 
+	/**
+	 * Delete the current song from the database by setting its key to be flagged as having been deleted
+	 */
 	public void deleteSong() {
 
-		if (Song.DB_DRIVER.removeSong(this.songKey)) {
-			this.songKey = -1;
-			// TODO: successful delete
+		if (Song.DB_DRIVER.removeSong(this.songId)) {
+			this.songId = -1;
 		} else {
-			// TODO: failed delete
+			logger.error("Unable to remove the song (songkey: %ld) from the database", this.songId);
 		}
 
 	}
 
 	public boolean isDeleted() {
-		return (this.songKey < 0);
+		return (this.songId < 0);
 	}
 
 	/*
@@ -125,8 +150,8 @@ public class Song {
 	 * All but getKey() will auto-inflate the Song object before returning
 	 */
 
-	public long getKey() {
-		return songKey;
+	public long getId() {
+		return songId;
 	}
 
 	public String getSongName() {
@@ -163,7 +188,22 @@ public class Song {
 		this.inflate();
 		return bpm;
 	}
+	
+	public Integer getSongKey() {
+		this.inflate();
+		return songMusicKey;
+	}
 
+	public Integer getSongKeyMode() {
+		this.inflate();
+		return songMusicKeyMode;
+	}
+	
+	public Boolean getLiked() {
+		this.inflate();
+		return liked;
+	}
+	
 	public String getAdditionalNotes() {
 		this.inflate();
 		return additionalNotes;
@@ -186,11 +226,10 @@ public class Song {
 			throw new IllegalArgumentException("Song name cannot be null");
 		}
 		
-		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.NAME_F, songName, this.songKey)) {
+		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.NAME_F, songName, this.songId)) {
 			this.songName = songName;
-			// TODO: successful update
 		} else {
-			// TODO: failed update
+			logger.error("Error while updating 'song name' field to: " + songName);
 		}
 	}
 
@@ -199,11 +238,10 @@ public class Song {
 			throw new IllegalArgumentException("Artist name cannot be null");
 		}
 		
-		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.ARTIST_NAME_F, artistName, this.songKey)) {
+		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.ARTIST_NAME_F, artistName, this.songId)) {
 			this.artistName = artistName;
-			// TODO: successful update
 		} else {
-			// TODO: failed update
+			logger.error("Error while updating 'artist name' field to: " + artistName);
 		}
 	}
 
@@ -212,71 +250,91 @@ public class Song {
 			throw new IllegalArgumentException("Album name cannot be null");
 		}
 		
-		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.ALBUM_NAME_F, albumName, this.songKey)) {
+		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.ALBUM_NAME_F, albumName, this.songId)) {
 			this.albumName = albumName;
-			// TODO: successful update
 		} else {
-			// TODO: failed update
+			logger.error("Error while updating 'album name' field to: " + albumName);
 		}
 	}
 
 	public void setSongLength(Integer songLength) {
 
-		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.SONG_LENGTH_F, songLength, this.songKey)) {
+		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.SONG_LENGTH_F, songLength, this.songId)) {
 			this.songLength = songLength;
-			// TODO: successful update
 		} else {
-			// TODO: failed update
+			logger.error("Error while updating 'song length' field to: " + songLength);
 		}
 	}
 
 	public void setGenreList(Integer genreID) {
 
-		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.GENRE_ID_F, genreID, this.songKey)) {
+		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.GENRE_ID_F, genreID, this.songId)) {
 			this.genreID = genreID;
-			// TODO: successful update
 		} else {
-			// TODO: failed update
+			logger.error("Error while updating 'genre ID' field to: " + genreID);
 		}
 	}
 
 	public void setSongYear(Integer songYear) {
 
-		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.SONG_YEAR_F, songYear, this.songKey)) {
+		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.SONG_YEAR_F, songYear, this.songId)) {
 			this.songYear = songYear;
-			// TODO: successful update
 		} else {
-			// TODO: failed update
+			logger.error("Error while updating 'song year' field to: " + songYear);
 		}
 	}
 
 	public void setBpm(Integer bpm) {
 
-		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.BPM_F, bpm, this.songKey)) {
+		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.BPM_F, bpm, this.songId)) {
 			this.bpm = bpm;
-			// TODO: successful update
 		} else {
-			// TODO: failed update
+			logger.error("Error while updating 'bpm' field to: " + bpm);
 		}
 	}
 
 	public void setAdditionalNotes(String additionalNotes) {
 
-		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.ADDITIONAL_NOTES_F, additionalNotes, this.songKey)) {
+		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.ADDITIONAL_NOTES_F, additionalNotes, this.songId)) {
 			this.additionalNotes = additionalNotes;
-			// TODO: successful update
 		} else {
-			// TODO: failed update
+			logger.error("Error while updating 'additonal notes' field to: " + additionalNotes);
+		}
+	}
+	
+	public void setSongMusicKey(Integer key) {
+
+		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.SONG_MUSIC_KEY_F, key, this.songId)) {
+			this.songMusicKey = key;
+		} else {
+			logger.error("Error while updating 'song music key' field to: " + key);
+		}
+	}
+	
+	public void setSongMusicKeyMode(Integer mode) {
+
+		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.SONG_MUSIC_KEY_MODE_F, mode, this.songId)) {
+			this.songMusicKeyMode = mode;
+		} else {
+			logger.error("Error while updating 'music key mode' field to: " + mode);
+		}
+	}
+	
+	public void setLiked(Boolean liked) {
+
+		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.LIKED_F, liked, this.songId)) {
+			this.liked = liked;
+		} else {
+			logger.error("Error while updating 'liked' field to: " + liked);
 		}
 	}
 
 	public void setSongUrl(String songURL) {
 
-		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.URI_F, songURL, this.songKey)) {
+		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.URI_F, songURL, this.songId)) {
 			this.songURL = songURL;
-			// TODO: successful update
 		} else {
-			// TODO: failed update
+			logger.error("Error while updating 'song url' field to: " + songURL);
 		}
 	}
 
@@ -291,6 +349,9 @@ public class Song {
 		private Integer bpm;
 		private String additionalNotes;
 		private String songURL;
+		private Integer songMusicKey;
+		private Integer songMusicKeyMode;
+		private Boolean liked;
 
 		public SongBuilder() {
 			// No operation/setup necessary for the builder pattern
@@ -341,6 +402,21 @@ public class Song {
 			return this;
 		}
 
+		public SongBuilder setMusicKey(Integer v) {
+			this.songMusicKey = v;
+			return this;
+		}
+		
+		public SongBuilder setMusicKeyMode(Integer v) {
+			this.songMusicKeyMode = v;
+			return this;
+		}
+		
+		public SongBuilder setLiked(Boolean v) {
+			this.liked = v;
+			return this;
+		}
+		
 		public SongBuilder setURL(String v) {
 			this.songURL = v;
 			return this;

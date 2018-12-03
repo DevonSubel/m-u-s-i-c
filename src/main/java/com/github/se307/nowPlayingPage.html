@@ -8,7 +8,7 @@
   <title>M-U-S-I-C</title>
 </head>
 
-<body>
+<body onload = "getlink();">
   <div class="container-fluid">
     <div class="row navigation">
       <div class="col">
@@ -57,7 +57,7 @@
       			<div class = "container-fluid lyrics">
         			<div class="row">
         				<div class = "col-md-9">
-        					<h3> these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics</h3>
+        					<p class="text-md" id="lyricstext"><h3> these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics these are the (temporary) lyrics</h3></p>
         				</div>
         			</div>
         		</div>
@@ -71,12 +71,12 @@
         				<div class = "col-md-7 text-left">
         					<div class = "row">
         						<div class="col">
-        							<h3>Song: Temporary Song Name</h3>
+									<h3 id="songname">Song: Temporary Song Name</h3>
         						</div>
         					</div>
         					<div class="row">
         						<div class="col">
-        							<h3>Artist: Temporary Artist Name</h3>
+        							<h3 id="artistname">Artist: Temporary Artist Name</h3>
         						</div>
         					</div>
         				</div>
@@ -86,55 +86,59 @@
         					<div class="space"></div>
         					<div class = "row">
         						<div class="col">
-        							<h4>Album: Temporary Album Name</h4>
+        							<h4 id="albumname">Album: Temporary Album Name</h4>
         						</div>
         					</div>
         					<div class = "row">
         						<div class="col">
-        							<h4>Genre: Temporary Genre</h4>
+        							<h4 id="genrename">Genre: Temporary Genre Name</h4>
         						</div>
         					</div>
         					<div class = "row">
         						<div class="col">
-        							<h4>Length: Temporary Song Length</h4>
+        							<h4 id="lengthname">Length: Temporary Length Name</h4>
         						</div>
         					</div>
         					<div class = "row">
         						<div class="col">
-        							<h4>Year: Temporary Year</h4>
+        							<h4 id="yearname">Year: Temporary Year Name</h4>
         						</div>
         					</div>
         					<div class = "row">
         						<div class="col">
-        							<h4>Tempo: Temporary Tempo</h4>
+        							<h4 id="temponame">Tempo: Temporary Tempo Name</h4>
         						</div>
         					</div>
         					<div class = "row">
         						<div class="col">
-        							<h4>Key: Temporary Key</h4>
+        							<h4 id="keyname">Key: Temporary Key Name</h4>
         						</div>
         					</div>
         					<div class = "row">
         						<div class="col">
-        							<h4>Notes: Temporary Notes on Song</h4>
+        							<h4 id="notesname">Notes: Temporary Notes</h4></p>
         						</div>
         					</div>
         					<div class="row justify-content-center">
         					
         						<div class="col">
-        							<a href="#" class="btn btn-secondary btn-md fav">
+        							<a href="#" class="btn btn-secondary btn-md fav" id ="fav">
           							<span class="fas fa-heart"></span></a>
           						</div>
           						<div class="col">
-          							<a href="addSongPage.html" class="btn btn-secondary btn-md edit">Edit Song Details</a>
+          							<a href="addSongPage.html" class="btn btn-secondary btn-md edit" id="edit">Edit Song Details</a>
           						</div>
           						
           				</div>
         				</div>
         					
         				<div class ="col-md-7">
+        					
+        						
           					<div class="embed-responsive embed-responsive-1by1">
-          						<iframe class="embed-responsive-item" title= "songplayer" src= "https://open.spotify.com/track/01TR6aAKrA2cI3Z0gnCOsu?si=i0Uzi_jqSSSauY4bYT6KTA" width="100%" height="100%" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+
+          						<iframe class="embed-responsive-item" title= "songplayer" id="song-player" src="" width="100%" height="100%" webkitallowfullscreen mozallowfullscreen allowfullscreen></iframe>
+
           					</div>
           				<div class="col"></div>
         			</div>
@@ -148,6 +152,12 @@
     
   </div>
   
+  <script type="text/javascript">
+  	function getlink() {
+  		document.getElementById("song-player").src = "https://open.spotify.com/track/2NAgGdF2Gfs8Cx1CN4jplg?si=pNzZR9zERduWIjbZThOLxw";
+  		};
+  								
+  </script>
 
 	
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
