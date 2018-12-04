@@ -52,6 +52,9 @@ public class StaticSongSet extends SongSet {
 						// alert user that the change was not successful
 					}
 				}
+				
+				// Save Song Set name to database
+				SongSet.DB_DRIVER.updateSongSet("name", songSetName, songSetKey);
 			}
 		}
 	}

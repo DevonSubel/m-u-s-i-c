@@ -96,6 +96,15 @@ public abstract class SongSet {
 	}
 
 	/**
+	 * Get the song set key
+	 * 
+	 * @return
+	 */
+	public long getSongSetKey() {
+		return this.songSetKey;
+	}
+	
+	/**
 	 * Get whether this SongSet has been deleted
 	 * 
 	 * @return

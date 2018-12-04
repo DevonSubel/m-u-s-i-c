@@ -23,9 +23,10 @@ public class SongSetDatabaseDriver {
 	private static SongSetDatabaseDriver singleton;
 
 	private static final String CREATE_SONG_SET_CONST = "INSERT INTO song_set('name') VALUES(?)";
-	private static final String UPDATE_SONG_SET_CONST = "UPDATE song_set SET ? = ? WHERE id = ?";
+	private static final String UPDATE_SONG_SET_CONST = "UPDATE song_set SET %s = '%s' WHERE id = %d";
 	private static final String REMOVE_SONG_SET_CONST = "DELETE FROM song_set WHERE id = ?";
-	private static final String QUERY_FIELD_SONG_SET_CONST = "SELECT ? FROM song_set WHERE id = ?";
+	private static final String REMOVE_SONG_TO_SET_CONST = "DELETE FROM song_to_set WHERE song_set_id = ?";
+	private static final String QUERY_FIELD_SONG_SET_CONST = "SELECT * FROM song_set WHERE id = ?";
 
 	private static final String ADD_SONG_TO_SET_CONST = "INSERT INTO song_to_set('song_id', 'song_set_id') VALUES(?, ?)";
 	private static final String REMOVE_SONG_FROM_SET_CONST = "DELETE FROM song_to_set WHERE song_id = ? AND song_set_id = ?";
@@ -34,12 +35,12 @@ public class SongSetDatabaseDriver {
 
 	private Connection dbConnection;
 
-	private PreparedStatement updateSongSet;
 	private PreparedStatement removeSongSet;
 	private PreparedStatement createSongSet;
 	private PreparedStatement querySongSetField;
 	private PreparedStatement addSongToSongSet;
 	private PreparedStatement removeSongFromSet;
+	private PreparedStatement removeSongToSetMapping;
 	private PreparedStatement querySongsFromSet;
 
 	private static final Logger logger = LogManager.getLogger();
@@ -52,7 +53,7 @@ public class SongSetDatabaseDriver {
 		try {
 			dbConnection = DatabaseDriver.getConnection();
 
-			updateSongSet = dbConnection.prepareStatement(UPDATE_SONG_SET_CONST);
+			removeSongToSetMapping = dbConnection.prepareStatement(REMOVE_SONG_TO_SET_CONST);
 			removeSongSet = dbConnection.prepareStatement(REMOVE_SONG_SET_CONST);
 			createSongSet = dbConnection.prepareStatement(CREATE_SONG_SET_CONST, Statement.RETURN_GENERATED_KEYS);
 			querySongSetField = dbConnection.prepareStatement(QUERY_FIELD_SONG_SET_CONST);
@@ -78,12 +79,11 @@ public class SongSetDatabaseDriver {
 		Object returnValue = null;
 		ResultSet rs = null;
 		try {
-			this.querySongSetField.setString(1, colName);
-			this.querySongSetField.setLong(2, key);
+			this.querySongSetField.setLong(1, key);
 
 			rs = this.querySongSetField.executeQuery();
-			if (rs.next())
-				returnValue = rs.getObject(1);
+			while (rs.next())
+				returnValue = rs.getObject(colName);
 
 		} catch (SQLException e) {
 			logger.error("Failed to execute querySongSet prepared statement: " + e.getMessage());
@@ -108,15 +108,25 @@ public class SongSetDatabaseDriver {
 	 * @return true if the update was successful
 	 */
 	public synchronized boolean updateSongSet(String colName, Object value, long key) {
+		Statement stmt = null;
 		try {
-			this.updateSongSet.setString(1, colName);
-			this.updateSongSet.setObject(2, value);
-			this.updateSongSet.setLong(3, key);
+			String query = String.format(UPDATE_SONG_SET_CONST, colName, value.toString(), key);
+			
+			stmt = dbConnection.createStatement();
+			stmt.execute(query);
 
-			this.updateSongSet.executeUpdate();
 		} catch (SQLException e) {
 			logger.error("Failed to execute updateSongSet prepared statement: " + e.getMessage());
 			return false;
+		} finally {
+			try {
+				if (stmt != null) {
+					stmt.close();
+				}
+			} catch (SQLException e) {
+				logger.error("Failed to close updateSongSet statement resource: " + e.getMessage());
+				return false;
+			}
 		}
 
 		return true;
@@ -176,8 +186,10 @@ public class SongSetDatabaseDriver {
 	public synchronized boolean removeSongSet(long songSetKey) {
 		try {
 			this.removeSongSet.setLong(1, songSetKey);
+			this.removeSongToSetMapping.setLong(1, songSetKey);
 
 			this.removeSongSet.executeUpdate();
+			this.removeSongToSetMapping.executeUpdate();
 		} catch (SQLException e) {
 			logger.error("Failed to execute removeSongSet prepared statement: " + e.getMessage());
 			return false;
