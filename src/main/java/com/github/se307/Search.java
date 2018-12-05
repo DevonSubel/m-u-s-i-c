@@ -149,10 +149,7 @@ public class Search {
    }
    
    public boolean equals(SongWrapper other) {
-	   if(this.compareTo(other) == 0)
-		   return true;
-	   else
-		   return false;
+	   return this.compareTo(other) == 0;
    }
 
    public int compareTo(SongWrapper other) {
