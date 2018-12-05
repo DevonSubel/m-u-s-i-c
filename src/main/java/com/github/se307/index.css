@@ -447,4 +447,23 @@ button {
   background-color: #000000;
 }
 
+.tabs .playlist-tabs {
+  height: 100%;
+  width: 50%;
+  padding-top: 0.9375rem;
+  text-align: left;
+  font-size: 1.25rem;
+  padding-left: 1.3rem;
+}
 
+.odd {
+	height: 100%rem;
+}
+
+.even {
+	height: 100% rem;
+}
+
+.plsearch{
+	width: 50%;
+}
