@@ -45,11 +45,11 @@ public class StaticSongSet extends SongSet {
 			if (super.songSetKey > 0) {
 				// Save all songs in the set to the database
 				for (Song song : this.songList) {
-					if (SongSet.DB_DRIVER.addSongToSongSet(song.getKey(), super.songSetKey)) {
+					if (SongSet.DB_DRIVER.addSongToSongSet(song.getId(), super.songSetKey)) {
 						logger.info("Song Set was successfully saved to the database");
 					} else {
 						logger.warn("An error was encountered while saving " + song.getSongName() + " to the database.");
-						// TODO: alert user that the change was not successful
+						// alert user that the change was not successful
 					}
 				}
 			}
@@ -79,12 +79,12 @@ public class StaticSongSet extends SongSet {
 	 */
 	public boolean addSong(Song addedSong) {
 
-		if (super.songSetKey == 0 || SongSet.DB_DRIVER.addSongToSongSet(addedSong.getKey(), super.songSetKey)) {
+		if (super.songSetKey == 0 || SongSet.DB_DRIVER.addSongToSongSet(addedSong.getId(), super.songSetKey)) {
 			this.songList.add(addedSong);
-			// TODO: handle if the song was successfully added
+			// handle if the song was successfully added
 			return true;
 		} else {
-			// TODO: alert user that the change was not successful
+			// alert user that the change was not successful
 			return false;
 		}
 
@@ -98,12 +98,12 @@ public class StaticSongSet extends SongSet {
 	 */
 	public boolean removeSong(Song songToRemove) {
 
-		if (super.songSetKey == 0 || SongSet.DB_DRIVER.removeSongFromSet(songToRemove.getKey(), super.songSetKey)) {
+		if (super.songSetKey == 0 || SongSet.DB_DRIVER.removeSongFromSet(songToRemove.getId(), super.songSetKey)) {
 			this.songList.remove(songToRemove);
-			// TODO: handle when change was successful
+			// handle when change was successful
 			return true;
 		} else {
-			// TODO: alert user that change was not successful
+			// alert user that change was not successful
 			return false;
 		}
 
