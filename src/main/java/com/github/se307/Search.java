@@ -148,12 +148,14 @@ public class Search {
       comp = 0;
    }
    
+   @Override
    public boolean equals(Object other) {
 	   if(!other.getClass().equals(SongWrapper.class))
 		   return false;
 	   return this.compareTo((SongWrapper)other) == 0;
    }
 
+   @Override
    public int compareTo(SongWrapper other) {
       if(this.comp < other.comp)
          return 1;
