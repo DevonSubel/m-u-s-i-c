@@ -66,7 +66,7 @@ public class Search {
      * Compares how similar each genre is (MAX ADDITION: 20) 
      */
    private int compGenre(int g1, int g2) {
-	 ArrayList<Integer> genres = new ArrayList<Integer>();
+	 ArrayList<Integer> genres = new ArrayList<>();
 
 	 /*
 	  * Adding genre IDs to the ArrayList. Definitions of the genre IDs can be found in the DB File
@@ -88,6 +88,25 @@ public class Search {
      return 12-(Math.abs(genres.indexOf(g1)-genres.indexOf(g2)));
    }
    
+   private void compSongs(Song test, SongWrapper sw, boolean[] tags) {
+	   if(tags[0] && test.getSongKey().equals(sw.s.getSongKey()) && sw.s.getSongKeyMode().equals(sw.s.getSongKeyMode()))
+      	 sw.comp += 16;
+       if(test.getArtistName().equals(sw.s.getArtistName()) && tags[1]) /*Comparing artist name (ADDITION IS 25)*/
+          sw.comp += 25;
+       if(test.getAlbumName().equals(sw.s.getAlbumName()) && tags[2]) /*Comparing Album name (ADDITION IS 30)*/
+          sw.comp += 30;
+       if(test.getSongKeyMode().equals(sw.s.getSongKeyMode()) && tags[3]) 
+          sw.comp += 15;
+       if(tags[4])
+          sw.comp += compSongLength(test.getSongLength(), sw.s.getSongLength()); /*Comapring song length*/
+       if(tags[5])
+          sw.comp += compGenre(test.getGenreId(),sw.s.getGenreId()); 
+       if(tags[6])
+          sw.comp += compSongYear(test.getSongYear(), sw.s.getSongYear()); /*Compare song year*/
+       if(tags[7])
+         sw.comp += compBPM(test.getBpm(), sw.s.getBpm()); /*Compare BPM*/
+   }
+   
    /**
     * Will find the 25 most "similar" songs to the provided one based on song charactersitics
     *
@@ -102,27 +121,12 @@ public class Search {
     * tag[7] = Song BPM
     */
    public PriorityQueue<SongWrapper> matchingAlg(Song test, boolean[] tags) {
-      PriorityQueue<SongWrapper> queue = new PriorityQueue<SongWrapper>(25);
+      PriorityQueue<SongWrapper> queue = new PriorityQueue<>(25);
       List<Long> songList = SongDatabaseDriver.getInstance().getAllSongs();
       for(int i = 0; i < songList.size(); i++) /*Always does the same number of steps*/
       {
          SongWrapper sw = new SongWrapper(new Song(songList.get(i)));
-         if(tags[0] && test.getSongKey().equals(sw.s.getSongKey()) && sw.s.getSongKeyMode().equals(sw.s.getSongKeyMode()))
-        	 sw.comp += 16;
-         if(test.getArtistName().equals(sw.s.getArtistName()) && tags[1]) /*Comparing artist name (ADDITION IS 25)*/
-            sw.comp += 25;
-         if(test.getAlbumName().equals(sw.s.getAlbumName()) && tags[2]) /*Comparing Album name (ADDITION IS 30)*/
-            sw.comp += 30;
-         if(test.getSongKeyMode().equals(sw.s.getSongKeyMode()) && tags[3]) 
-            sw.comp += 15;
-         if(tags[4])
-            sw.comp += compSongLength(test.getSongLength(), sw.s.getSongLength()); /*Comapring song length*/
-         if(tags[5])
-            sw.comp += compGenre(test.getGenreId(),sw.s.getGenreId()); 
-         if(tags[6])
-            sw.comp += compSongYear(test.getSongYear(), sw.s.getSongYear()); /*Compare song year*/
-         if(tags[7])
-           sw.comp += compBPM(test.getBpm(), sw.s.getBpm()); /*Compare BPM*/
+         compSongs(test,sw, tags);
 
          /*Deal with Priority Queue*/
          if(queue.size() <= 25)
@@ -142,6 +146,12 @@ public class Search {
    public SongWrapper(Song s) {
       this.s = s;
       comp = 0;
+   }
+   
+   public boolean equals(SongWrapper other) {
+	   if(this.compareTo(other) == 0)
+		   return true;
+	   return false;
    }
 
    public int compareTo(SongWrapper other) {
