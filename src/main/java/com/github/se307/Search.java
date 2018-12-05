@@ -1,6 +1,7 @@
 package com.github.se307;
 
 import java.util.PriorityQueue;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Search {
@@ -77,7 +78,7 @@ public class Search {
       return 0;
    }
 
-   private int compFS(String key2) {
+   private int compFs(String key2) {
       if(key2.equals("G#m"))
          return 16;
       else if(key2.equals("A#m"))
@@ -215,21 +216,6 @@ public class Search {
       else if(key2.equals("A"))
          return 8;
       return 0;
-   }
- 
-   private int compFs(String key2) {
-      if(key2.equals("A"))
-         return 16;
-      else if(key2.equals("Bm"))
-         return 14;
-      else if(key2.equals("C#m"))
-         return 12;
-      else if(key2.equals("D"))
-         return 10;
-      else if(key2.equals("E"))
-         return 8;
-      return 0;
-
    }
 
    private int compCsm(String key2) {
@@ -409,7 +395,7 @@ public class Search {
          ret = compE(key2);
       }
       else if(key1.equals("F#")) {
-         ret = compFS(key2);    
+         ret = compFs(key2);    
       } 
       else if(key1.equals("Gb")) {
          ret = compGb(key2);
@@ -437,9 +423,6 @@ public class Search {
       }
       else if(key1.equals("Bm")) {
          ret = compBm(key2);
-      }
-      else if(key1.equals("F#")) {
-         ret = compFs(key2);
       }
       else if(key1.equals("C#m")) {
          ret = compCsm(key2);
@@ -485,16 +468,16 @@ public class Search {
      */
    private int compSongYear(int year1, int year2) {
       int diff = Math.abs(year1-year2);
-      switch(1){
-         case 1: diff = 0;
+      switch(diff){
+         case 0:
             return 5;
-         case 2: diff = 1;
+         case 1:
             return 4;
-         case 3: diff = 2;
+         case 2: 
             return 3;
-         case 4: diff = 3;
+         case 3: 
             return 2;
-         case 5: diff = 4;
+         case 4:
             return 1;
       }
       return 0;
@@ -540,145 +523,24 @@ public class Search {
      * Compares how similar each genre is (MAX ADDITION: 20) 
      */
    private int compGenre(String g1, String g2) {
-      if(g1.equals(g2))
+	 ArrayList<String> genres = new ArrayList<String>();
+     if(g1.equals(g2))
          return 20;
-      if(g1.equals("Blues")) {
-         if(g2.equals("Country"))
-            return 10;
-         else if(g2.equals("Folk"))
-            return 15;
-         else if(g2.equals("Jazz"))
-            return 17;
-         else if(g2.equals("Reggae"))
-            return 10;
-         else if(g2.equals("Rock"))
-            return 13;
-      }
-      else if(g1.equals("Country")) {
-         if(g2.equals("Blues"))
-            return 10;
-         else if(g2.equals("Folk"))
-            return 12;
-         else if(g2.equals("Pop"))
-            return 8;
-         else if(g2.equals("Rock"))
-            return 10;
-      }
-      else if(g1.equals("Electronic")) {
-         if(g2.equals("Rap"))
-            return 10;
-         else if(g2.equals("Reggae"))
-            return 8;
-         else if(g2.equals("Metal"))
-            return 10;
-      }
-      else if(g1.equals("Folk")) {
-         if(g2.equals("Blues"))
-            return 15;
-         else if(g2.equals("Country"))
-            return 12;
-         else if(g2.equals("Rock"))
-            return 10;
-      }
-      else if(g1.equals("Jazz")) {
-         if(g2.equals("Blues"))
-            return 17;
-         else if(g2.equals("Rock"))
-            return 12;
-         else if(g2.equals("Rap"))
-            return 15;
-      }
-      else if(g1.equals("Latin")) {
-         if(g2.equals("World"))
-            return 12;
-         else if(g2.equals("Jazz"))
-            return 10;
-         else if(g2.equals("Pop"))
-            return 10;
-         else if(g2.equals("Rap"))
-            return 13;
-         else if(g2.equals("RnB"))
-            return 10;
-      }
-      else if(g1.equals("Metal")) {
-         if(g2.equals("Electronic"))
-            return 10;
-         else if(g2.equals("Punk"))
-            return 15;
-         else if(g2.equals("Rock"))
-            return 13;
-      }
-      else if(g1.equals("Pop")) {
-         if(g2.equals("Country"))
-            return 8;
-         else if(g2.equals("Latin"))
-            return 10;
-         else if(g2.equals("Rap"))
-            return 12;
-         else if(g2.equals("RnB"))
-            return 15;
-         else if(g2.equals("World"))
-            return 10;
-      }
-      else if(g1.equals("Punk")) {
-         if(g2.equals("Metal"))
-            return 15;
-         else if(g2.equals("Rock"))
-            return 15;
-      }
-      else if(g1.equals("Rap")) {
-         if(g2.equals("Electronic"))
-            return 10;
-         else if(g2.equals("Jazz"))
-            return 15;
-         else if(g2.equals("Latin"))
-            return 13;
-         else if(g2.equals("RnB"))
-            return 15;
-      }
-      else if(g1.equals("Reggae")) {
-         if(g2.equals("Blues"))
-            return 10;
-         else if(g2.equals("Electronic"))
-            return 8;
-         else if(g2.equals("Rock"))
-            return 12;
-      }
-      else if(g1.equals("RnB")) {
-         if(g2.equals("Pop"))
-            return 15;
-         else if(g2.equals("Rap"))
-            return 15;
-         else if(g2.equals("Latin"))
-            return 10;
-         else if(g2.equals("World"))
-            return 12;
-     }
-     else if(g1.equals("Rock")) {
-        if(g2.equals("Country"))
-           return 10;
-        else if(g2.equals("Folk"))
-           return 10;
-        else if(g2.equals("Jazz"))
-           return 12;
-        else if(g2.equals("Metal"))
-           return 13;
-        else if(g2.equals("Punk"))
-           return 15;
-        else if(g2.equals("Blues"))
-           return 13;
-     }
-     else if(g1.equals("World")) {
-        if(g2.equals("Latin"))
-           return 13;
-        else if(g2.equals("Pop"))
-           return 10;
-        else if(g2.equals("Country"))
-           return 10;
-        else if(g2.equals("RnB"))
-           return 12;
-     }
-     return 0;
+     genres.add("Metal");
+     genres.add("Punk");
+     genres.add("Rock");
+     genres.add("Reggae");
+     genres.add("Folk");
+     genres.add("Blues");
+     genres.add("Country");
+     genres.add("Jazz");
+     genres.add("Latin");
+     genres.add("World");
+     genres.add("RnB");
+     genres.add("Rap");
+     genres.add("Pop");
+     genres.add("Electronic");
+     return 12-(Math.abs(genres.indexOf(g1)-genres.indexOf(g2)));
    }
    
    private String idToGenre(int id) {
