@@ -21,8 +21,9 @@ public class Search {
             return 2;
          case 4:
             return 1;
+         default: 
+        	 return 0;
       }
-      return 0;
    }
 
    /**
