@@ -62,6 +62,7 @@ public class SongSetDatabaseDriver {
 			querySongsFromSet = dbConnection.prepareStatement(QUERY_SONG_FROM_SET_CONST);
 
 		} catch (SQLException e) {
+			e.printStackTrace();
 			logger.error("Failed to load prepared statements for SongSetDatabaseDriver: " + e.getMessage());
 		}
 	}
@@ -109,6 +110,7 @@ public class SongSetDatabaseDriver {
 	 */
 	public synchronized boolean updateSongSet(String colName, Object value, long key) {
 		Statement stmt = null;
+		boolean returnValue = true;
 		try {
 			String query = String.format(UPDATE_SONG_SET_CONST, colName, value.toString(), key);
 			
@@ -117,7 +119,7 @@ public class SongSetDatabaseDriver {
 
 		} catch (SQLException e) {
 			logger.error("Failed to execute updateSongSet prepared statement: " + e.getMessage());
-			return false;
+			returnValue = false;
 		} finally {
 			try {
 				if (stmt != null) {
@@ -125,11 +127,11 @@ public class SongSetDatabaseDriver {
 				}
 			} catch (SQLException e) {
 				logger.error("Failed to close updateSongSet statement resource: " + e.getMessage());
-				return false;
+				returnValue = false;
 			}
 		}
 
-		return true;
+		return returnValue;
 	}
 
 	/**

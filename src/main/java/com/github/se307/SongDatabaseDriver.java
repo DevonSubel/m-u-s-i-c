@@ -40,7 +40,7 @@ public class SongDatabaseDriver {
 	private static final String DELETE_STATEMENT_CONST = "DELETE FROM song WHERE id = ?";
 	private static final String QUERY_FIELDS_CONST = "SELECT * FROM song WHERE id = ?";
 	private static final String CREATE_STATEMENT_CONST = "INSERT INTO song(%s) VALUES(%s)";
-	private static final String QUERY_ALL_SONG_KEYS_CONST = "SELECT key FROM song";
+	private static final String QUERY_ALL_SONG_KEYS_CONST = "SELECT id FROM song";
 
 	private Connection dbConnection;
 
@@ -146,7 +146,8 @@ public class SongDatabaseDriver {
 	 * @return true if the update was successful
 	 */
 	public synchronized boolean updateSong(String colName, Object value, long key) {
-		Statement stmt = null;
+		Statement statement = null;
+		boolean returnValue = true;
 		try {
 			if (value == null) {
 				value = "NULL";
@@ -156,22 +157,26 @@ public class SongDatabaseDriver {
 			
 			String query = String.format(UPDATE_STATEMENT_CONST, colName, value, key);
 			
-			stmt = dbConnection.createStatement();
-			stmt.execute(query);
+			statement = dbConnection.createStatement();
+			statement.execute(query);
+			
 		} catch (SQLException e) {
+			
 			logger.error("Failed to execute updateSong prepared statement: " + e.getMessage());
-			return false;
+			returnValue = false;
+			
 		} finally {
+			
 			try {
-				if (stmt != null) {
-					stmt.close();
-				}
+				if (statement != null)
+					statement.close();
 			} catch (SQLException e) {
 				logger.error("Failed to close updateSong statement resource: " + e.getMessage());
-				return false;
+				returnValue = false;
 			}
+			
 		}
-		return true;
+		return returnValue;
 	}
 
 	/**
@@ -236,12 +241,12 @@ public class SongDatabaseDriver {
 			if (rs.wasNull())
 				songMusicKeyMode = null;
 			
-			Integer liked_i = rs.getInt(LIKED_F);
+			Integer likedInt = rs.getInt(LIKED_F);
 			Boolean liked;
 			if (rs.wasNull()) {
 				liked = null;
 			} else {
-				liked = liked_i != 0;
+				liked = likedInt != 0;
 			}	
 
 			sb.setSongLength(songLength)

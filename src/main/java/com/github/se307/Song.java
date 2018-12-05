@@ -369,8 +369,6 @@ public class Song {
 	 * For the purposes of this class, a Song is considered equal to another 
 	 * if it shares the same ID.
 	 * 
-	 * If both the IDs are <= 0 (thus have not been saved to the database) an equality 
-	 * over the fields is performed.
 	 * 
 	 * 
 	 * Ideally, the song object would populate itself using the cache then
@@ -387,36 +385,31 @@ public class Song {
 			if (this.songId > 0 || o.songId > 0) {
 				return this.songId == o.songId;
 			} else {
-				return (this.songName == null)         ? o.songName == null         : this.songName.equals(o.songName) &&
-					   (this.artistName == null)       ? o.artistName == null       : this.artistName.equals(o.artistName) &&
-					   (this.albumName == null)        ? o.albumName == null        : this.albumName.equals(o.albumName) &&
-					   (this.songLength == null)       ? o.songLength == null       : this.songLength.equals(o.songLength) &&
-					   (this.genreID == null)          ? o.genreID == null          : this.genreID.equals(o.genreID) &&
-					   (this.songYear == null)         ? o.songYear == null         : this.songYear.equals(o.songYear) &&
-					   (this.bpm == null)              ? o.bpm == null              : this.bpm.equals(o.bpm) &&
-					   (this.additionalNotes == null)  ? o.additionalNotes == null  : this.additionalNotes.equals(o.additionalNotes) &&
-					   (this.songURL == null)          ? o.songURL == null          : this.songURL.equals(o.songURL) &&
-					   (this.songMusicKeyMode == null) ? o.songMusicKeyMode == null : this.songMusicKeyMode.equals(o.songMusicKeyMode) &&
-					   (this.songMusicKey == null)     ? o.songMusicKey == null     : this.songMusicKey.equals(o.songMusicKey) &&
-					   (this.liked == null)            ? o.liked == null            : this.liked.equals(o.liked);
+				return false;
 			}
 		}
 	}
 
+	@Override
+	public int hashCode() {
+		return ((Long)this.songId).hashCode();		
+	}
+	
 	public static class SongBuilder {
 
-		private String songName;
-		private String artistName;
-		private String albumName;
-		private Integer songLength;
-		private Integer genreID;
-		private Integer songYear;
-		private Integer bpm;
-		private String additionalNotes;
-		private String songURL;
-		private Integer songMusicKey;
-		private Integer songMusicKeyMode;
 		private Boolean liked;
+		private Integer songMusicKeyMode;
+		private Integer songMusicKey;
+		private String songURL;
+		private String additionalNotes;
+		private Integer bpm;
+		private Integer songYear;
+		private Integer genreID;
+		private Integer songLength;
+		private String albumName;
+		private String artistName;
+		private String songName;
+		
 
 		public SongBuilder() {
 			// No operation/setup necessary for the builder pattern
