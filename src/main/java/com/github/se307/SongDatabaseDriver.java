@@ -31,17 +31,19 @@ public class SongDatabaseDriver {
 	public static final String SONG_YEAR_F = "song_year";
 	public static final String BPM_F = "bpm";
 	public static final String ADDITIONAL_NOTES_F = "additional_notes";
+	public static final String SONG_MUSIC_KEY_F = "song_music_key";
+	public static final String SONG_MUSIC_KEY_MODE_F = "song_mode";
+	public static final String LIKED_F = "liked";
 	public static final String URI_F = "uri";
 
-	private static final String UPDATE_STATEMENT_CONST = "UPDATE song SET ? = ? WHERE id = ?;";
+	private static final String UPDATE_STATEMENT_CONST = "UPDATE song SET %s = %s WHERE id = %d;";
 	private static final String DELETE_STATEMENT_CONST = "DELETE FROM song WHERE id = ?";
 	private static final String QUERY_FIELDS_CONST = "SELECT * FROM song WHERE id = ?";
 	private static final String CREATE_STATEMENT_CONST = "INSERT INTO song(%s) VALUES(%s)";
-	private static final String QUERY_ALL_SONG_KEYS_CONST = "SELECT key FROM song";
+	private static final String QUERY_ALL_SONG_KEYS_CONST = "SELECT id FROM song";
 
 	private Connection dbConnection;
 
-	private PreparedStatement updateStatement;
 	private PreparedStatement deleteStatement;
 	private PreparedStatement queryStatement;
 	private PreparedStatement queryAllStatement;
@@ -56,7 +58,6 @@ public class SongDatabaseDriver {
 		try {
 			dbConnection = DatabaseDriver.getConnection();
 
-			updateStatement = dbConnection.prepareStatement(UPDATE_STATEMENT_CONST);
 			deleteStatement = dbConnection.prepareStatement(DELETE_STATEMENT_CONST);
 			queryStatement = dbConnection.prepareStatement(QUERY_FIELDS_CONST);
 			queryAllStatement = dbConnection.prepareStatement(QUERY_ALL_SONG_KEYS_CONST);
@@ -86,11 +87,14 @@ public class SongDatabaseDriver {
 
 		// Insert the correct number of ? characters
 		StringBuilder qMarkString = new StringBuilder();
+		StringBuilder colFieldString = new StringBuilder();
 		for (int i = 0; i < fieldList.length - 1; i++) {
+			colFieldString.append(fieldList[i] + ", ");
 			qMarkString.append("?, ");
 		}
+		colFieldString.append(fieldList[fieldList.length-1]);
 		qMarkString.append("?");
-		String createSongStatement = String.format(CREATE_STATEMENT_CONST, qMarkString.toString(), qMarkString.toString());
+		String createSongStatement = String.format(CREATE_STATEMENT_CONST, colFieldString.toString(), qMarkString.toString());
 
 		PreparedStatement creationStatement = null;
 		ResultSet keys = null;
@@ -101,8 +105,7 @@ public class SongDatabaseDriver {
 
 			// Insert the values into the prepared statement
 			for (int i = 1; i <= fieldList.length; i++) {
-				creationStatement.setString(i, fieldList[i - 1]);
-				creationStatement.setObject(i + fieldList.length, paramList[i - 1]);
+				creationStatement.setObject(i, paramList[i - 1]);
 			}
 
 			// execute the statement and save the primary key
@@ -143,17 +146,37 @@ public class SongDatabaseDriver {
 	 * @return true if the update was successful
 	 */
 	public synchronized boolean updateSong(String colName, Object value, long key) {
+		Statement statement = null;
+		boolean returnValue = true;
 		try {
-			this.updateStatement.setString(1, colName);
-			this.updateStatement.setObject(2, value);
-			this.updateStatement.setLong(3, key);
-
-			this.updateStatement.executeUpdate();
+			if (value == null) {
+				value = "NULL";
+			} else {
+				value = "\'" + value.toString() + "\'";
+			}
+			
+			String query = String.format(UPDATE_STATEMENT_CONST, colName, value, key);
+			
+			statement = dbConnection.createStatement();
+			statement.execute(query);
+			
 		} catch (SQLException e) {
+			
 			logger.error("Failed to execute updateSong prepared statement: " + e.getMessage());
-			return false;
+			returnValue = false;
+			
+		} finally {
+			
+			try {
+				if (statement != null)
+					statement.close();
+			} catch (SQLException e) {
+				logger.error("Failed to close updateSong statement resource: " + e.getMessage());
+				returnValue = false;
+			}
+			
 		}
-		return true;
+		return returnValue;
 	}
 
 	/**
@@ -209,11 +232,30 @@ public class SongDatabaseDriver {
 			Integer bpm = rs.getInt(BPM_F);
 			if (rs.wasNull())
 				bpm = null;
+			
+			Integer songMusicKey = rs.getInt(SONG_MUSIC_KEY_F);
+			if (rs.wasNull())
+				songMusicKey = null;
+			
+			Integer songMusicKeyMode = rs.getInt(SONG_MUSIC_KEY_MODE_F);
+			if (rs.wasNull())
+				songMusicKeyMode = null;
+			
+			Integer likedInt = rs.getInt(LIKED_F);
+			Boolean liked;
+			if (rs.wasNull()) {
+				liked = null;
+			} else {
+				liked = likedInt != 0;
+			}	
 
 			sb.setSongLength(songLength)
 			  .setGenreID(genreID)
 			  .setSongYear(songYear)
 			  .setBPM(bpm)
+			  .setMusicKey(songMusicKey)
+			  .setMusicKeyMode(songMusicKeyMode)
+			  .setLiked(liked)
 			  .setNotes(rs.getString(ADDITIONAL_NOTES_F))
 			  .setURL(rs.getString(URI_F));
 		} catch (SQLException e) {
@@ -282,6 +324,6 @@ public class SongDatabaseDriver {
 	 */
 	public static String[] getFields() {
 		return new String[] { NAME_F, ARTIST_NAME_F, ALBUM_NAME_F, SONG_LENGTH_F, GENRE_ID_F, SONG_YEAR_F, BPM_F,
-				ADDITIONAL_NOTES_F, URI_F };
+				ADDITIONAL_NOTES_F, URI_F, SONG_MUSIC_KEY_F, SONG_MUSIC_KEY_MODE_F, LIKED_F };
 	}
 }

@@ -16,6 +16,7 @@ body {
 
 .container-fluid {
   height: 100%;
+  background-color: #258CCA;
 }
 
 button {
@@ -43,6 +44,10 @@ button {
   text-align: right;
   top: 0;
   cursor: pointer;
+}
+
+.navbar {
+  background-image: linear-gradient(#258CCA, white);
 }
 
 .navigation {
@@ -113,6 +118,8 @@ button {
 
 .search-page {
   padding-top: 7rem;
+  background-image: linear-gradient(white, #258CCA);
+  color: black;
 }
 
 .search-page .start-search {
@@ -133,6 +140,10 @@ button {
 .search-page #search-dropdown .custom-select {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
+  
+  background-color: black;
+  color: white;
+  border: none;
 }
 
 .search-page #search-button button {
@@ -140,6 +151,10 @@ button {
   color: #000000;
   border: 1px solid #ced4da;
   z-index: 0;
+  
+  background-color: black;
+  color: white;
+  border: none;
 }
 
 .search-page .advanced-search {
@@ -149,8 +164,9 @@ button {
 .search-page #adv-btn {
   border-radius: 0.25rem;
   border: none;
-  background-color: #211E1E;
-  color: #FFFFFF;
+/*  background-color: #211E1E;*/
+  background-color: inherit;
+  color: #000000;
   cursor: pointer;
 }
 
@@ -231,8 +247,19 @@ button {
 /*                    Results-page                    */
 /* ================================================== */
 .sort .row {
-  background-color: grey;
-  /* dev setting. change color later. */
+  background-color: #74d59e;
+}
+
+.results-page {
+  background-color: white;
+}
+
+.results {
+  background-image: linear-gradient(white, #258CCA);
+}
+
+.bg-secondary {
+  background-color: #70d2f1 !important;
 }
 
 .tabs .result-tabs {

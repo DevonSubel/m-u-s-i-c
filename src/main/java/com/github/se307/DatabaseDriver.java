@@ -18,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 public class DatabaseDriver {
 	private static final Logger logger = LogManager.getLogger();
 	
-	private static final String DB_FILE_NAME = "music.db";
+	private static final String DB_FILE_NAME = "music.sqlite";
 	private static final String TABLE_DEF_FILE_NAME = "../../../table_definitions.sql";
 	private static Connection connection;
 
