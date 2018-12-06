@@ -16,7 +16,8 @@ body {
 
 .container-fluid {
   height: 100%;
-  background-color: #258CCA;
+  background-color: #2C5364;
+  background-image: url("waves.png")
 }
 
 button {
@@ -47,7 +48,7 @@ button {
 }
 
 .navbar {
-  background-image: linear-gradient(#258CCA, white);
+  background-image: linear-gradient(#2C5364, #203A43, #0F2027);
 }
 
 .navigation {
@@ -82,7 +83,7 @@ button {
 
 .navigation a:hover,
 .navigation .active {
-  background-color: #211E1E;
+  background-color: #374f59;
 }
 
 .navigation a {
@@ -118,7 +119,7 @@ button {
 
 .search-page {
   padding-top: 7rem;
-  background-image: linear-gradient(white, #258CCA);
+  background-image: linear-gradient(#0F2027, #203A43, #2C5364);
   color: black;
 }
 
@@ -191,7 +192,7 @@ button {
 
 .search-page .modal-content {
   position: relative;
-
+  color: #FFFFFF;
   background-color: #000000;
   margin: 15% auto;
   /* 15% from the top and centered */
@@ -247,19 +248,19 @@ button {
 /*                    Results-page                    */
 /* ================================================== */
 .sort .row {
-  background-color: #74d59e;
+  background-color: #415d69;
 }
 
 .results-page {
-  background-color: white;
+  background-color: #0F2027;
 }
 
 .results {
-  background-image: linear-gradient(white, #258CCA);
+  background-image: linear-gradient(#0F2027, #203A43, #2C5364);
 }
 
 .bg-secondary {
-  background-color: #70d2f1 !important;
+  background-color: #a2bbc6 !important;
 }
 
 .tabs .result-tabs {
