@@ -17,7 +17,8 @@ body {
 .container-fluid {
   height: 100%;
   background-color: #2C5364;
-  background-image: url("waves.png")
+  background-image: url("waves.png");
+  overflow: hidden;
 }
 
 button {
@@ -47,17 +48,18 @@ button {
   cursor: pointer;
 }
 
-.navbar {
-  background-image: linear-gradient(#2C5364, #203A43, #0F2027);
-}
-
 .navigation {
   background-color: #000000;
 }
 
 .navigation .col,
-.tabs .col {
+.navigation .col-md-12,
+.results .col-md-12 {
   padding: 0;
+}
+
+.navigation .navbar:first-child {
+  background-image: linear-gradient(#2C5364, #203A43, #0F2027);
 }
 
 .navigation .logo {
@@ -120,7 +122,7 @@ button {
 .search-page {
   padding-top: 7rem;
   background-image: linear-gradient(#0F2027, #203A43, #2C5364);
-  color: black;
+  color: white;
 }
 
 .search-page .start-search {
@@ -165,9 +167,8 @@ button {
 .search-page #adv-btn {
   border-radius: 0.25rem;
   border: none;
-/*  background-color: #211E1E;*/
   background-color: inherit;
-  color: #000000;
+  color: white;
   cursor: pointer;
 }
 
@@ -263,6 +264,10 @@ button {
   background-color: #a2bbc6 !important;
 }
 
+.tabs .col {
+  padding: 0;
+}
+
 .tabs .result-tabs {
   height: 100%;
   width: 50%;
@@ -281,9 +286,22 @@ button {
 
 .songresults
 {
-	height: 40rem;
-	overflow-y: scroll;
+/*	height: 40rem;*/
+/*	overflow-y: scroll;*/
 }
+
+iframe {
+  width: 100%;
+  height: 475px;
+}
+
+/* ================================================== */
+/*                 Song-Iframe-page                   */
+/* ================================================== */
+.song-iframe {
+  width: 100%;
+}
+
 
 /* ================================================== */
 /*                    Credits-page                    */
