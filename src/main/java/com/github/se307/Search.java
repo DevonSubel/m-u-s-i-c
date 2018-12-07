@@ -193,7 +193,7 @@ public class Search {
 
 		@Override
 		public int compareTo(SongWrapper other) {
-			if (this.add(0) < other.add(0))
+			if (this.comp < other.comp)
 				return 1;
 			else if (this.comp > other.comp)
 				return -1;
