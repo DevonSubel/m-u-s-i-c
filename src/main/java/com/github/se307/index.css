@@ -149,14 +149,10 @@ button {
 }
 
 .search-page #search-button button {
-  background-color: #FFFFFF;
-  color: #000000;
-  border: 1px solid #ced4da;
-  z-index: 0;
-  
-  background-color: black;
-  color: white;
+  background-color: #000000;
+  color: #FFFFFF;
   border: none;
+  z-index: 0;
 }
 
 .search-page .advanced-search {
@@ -485,8 +481,7 @@ iframe {
   margin-right: auto;
   margin-left: auto;
   float: center;
-  background-color: #000000;
-  margin: auto;    
+  background-color: #000000;   
   display: block;
   text-align: center;
 }
@@ -517,11 +512,11 @@ iframe {
 }
 
 .odd {
-	height: 100%rem;
+	height: 100%;
 }
 
 .even {
-	height: 100% rem;
+	height: 100%;
 }
 
 .plsearch{
