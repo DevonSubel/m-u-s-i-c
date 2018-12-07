@@ -5,6 +5,10 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * @author Amanda Cheng
+ *
+ */
 public class ObjectCacheTest {
 
 	ObjectCache<String, Long> cache;
