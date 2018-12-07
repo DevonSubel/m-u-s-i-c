@@ -111,8 +111,7 @@ public class Search {
 	
 	public boolean noTags(boolean[] tags) {
 		for(int i = 0; i < tags.length; i++) {
-			if(tags[i] == true)
-				return false;
+			if(tags[i] == true) { return false; }
 		}
 		return true;
 	}
@@ -126,10 +125,10 @@ public class Search {
 	 * Album Name tag[3] = Mode tag[4] = Song Length tag[5] = Song Genre tag[6] =
 	 * Song Year tag[7] = Song BPM
 	 */
-	public ArrayList<Song> matchingAlg(Song test, boolean[] tags) {
+	public List<Song> matchingAlg(Song test, boolean[] tags) {
 		PriorityQueue<SongWrapper> queue = new PriorityQueue<>(25);
 		List<Long> songList = SongDatabaseDriver.getInstance().getAllSongs();
-		ArrayList<Song> ret = new ArrayList<Song>();
+		ArrayList<Song> ret = new ArrayList<>();
 		SongWrapper s = new SongWrapper(test);
 		s.comp = 1000;
 		/* 
@@ -153,7 +152,7 @@ public class Search {
 			}
 		}
 
-		while (queue.size() != 0) {
+		while (!queue.isEmpty()) {
 			ret.add(queue.remove().s);
 		}
 		return ret;
@@ -173,7 +172,8 @@ public class Search {
 		}
 
 		public int add(int c) {
-			return comp += c;
+			comp += c;
+			return comp;
 		}
 
 		@Override
