@@ -29,7 +29,7 @@ public class Search {
 	/**
 	 * Compares how similar the song length is (MAX ADDITION: 2)
 	 */
-	private int compSongLength(int len1, int len2) {
+	private int compSongLength(float len1, int len2) {
 		float diff;
 
 		if (len1 > len2)
@@ -143,17 +143,24 @@ public class Search {
 	/*
 	* This method is public for testing purposes 
 	*/
-	public class SongWrapper implements Comparable<SongWrapper> {
-		public Song s;
-		public int comp;
+	public static class SongWrapper implements Comparable<SongWrapper> {
+		public static Song s;
+		public static int comp;
 
 		public SongWrapper(Song s) {
 			this.s = s;
 			comp = 0;
 		}
+		
+		@Override
+		public int hashCode() {
+			return comp;
+		}
 
 		@Override
 		public boolean equals(Object other) {
+			if(other == null)
+				return false;
 			if (!other.getClass().equals(SongWrapper.class))
 				return false;
 			return this.compareTo((SongWrapper) other) == 0;
