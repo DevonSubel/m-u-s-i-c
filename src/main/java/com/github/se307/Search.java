@@ -108,6 +108,14 @@ public class Search {
 		if (tags[7])
 			sw.comp += compBPM(test.getBpm(), sw.s.getBpm()); /* Compare BPM */
 	}
+	
+	public boolean noTags(boolean[] tags) {
+		for(int i = 0; i < tags.length; i++) {
+			if(tags[i] == true)
+				return false;
+		}
+		return true;
+	}
 
 	/**
 	 * Will find the 25 most "similar" songs to the provided one based on song
@@ -118,11 +126,18 @@ public class Search {
 	 * Album Name tag[3] = Mode tag[4] = Song Length tag[5] = Song Genre tag[6] =
 	 * Song Year tag[7] = Song BPM
 	 */
-	public PriorityQueue<SongWrapper> matchingAlg(Song test, boolean[] tags) {
+	public ArrayList<Song> matchingAlg(Song test, boolean[] tags) {
 		PriorityQueue<SongWrapper> queue = new PriorityQueue<>(25);
 		List<Long> songList = SongDatabaseDriver.getInstance().getAllSongs();
+		ArrayList<Song> ret = new ArrayList<Song>();
 		SongWrapper s = new SongWrapper(test);
 		s.comp = 1000;
+		/* 
+		 * Checks that users entered some amount of tags
+		 */
+		if (noTags(tags)) {
+			return ret;
+		}
 		queue.add(s);
 		for (int i = 0; i < songList.size(); i++) /* Always does the same number of steps */
 		{
@@ -137,23 +152,30 @@ public class Search {
 				queue.add(sw);
 			}
 		}
-		return queue;
+
+		while (queue.size() != 0) {
+			ret.add(queue.remove().s);
+		}
+		return ret;
 	}
 
 	/*
-	* This method is public for testing purposes 
-	*/
+	 * This method is public for testing purposes
+	 */
 
-	public static class SongWrapper implements Comparable<SongWrapper> {
-		public static Song s;
-		public static int comp;
-
+	private class SongWrapper implements Comparable<SongWrapper> {
+		private Song s;
+		private int comp;
 
 		public SongWrapper(Song s) {
 			this.s = s;
 			comp = 0;
-    }
-		
+		}
+
+		public int add(int c) {
+			return comp += c;
+		}
+
 		@Override
 		public int hashCode() {
 			return comp;
@@ -161,7 +183,7 @@ public class Search {
 
 		@Override
 		public boolean equals(Object other) {
-			if(other == null)
+			if (other == null)
 				return false;
 
 			if (!other.getClass().equals(SongWrapper.class))
