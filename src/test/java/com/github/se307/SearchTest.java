@@ -2,25 +2,21 @@ package com.github.se307;
 
 import static org.junit.Assert.*;
 import java.util.PriorityQueue;
-
 import org.junit.Test;
-
 import com.github.se307.Search;
 import com.github.se307.Search.SongWrapper;
 import com.github.se307.Song;
 
 public class SearchTest {
+
 	@Test
 	public void testAllTags() {
 		Search s = new Search();
 		boolean[] tags = {true,true,true,true,true,true,true,true};
 		Song song = new Song(100);
 		PriorityQueue<SongWrapper> ans = s.matchingAlg(song,tags);
-		while(ans.size() != 0)
-		{
-			System.out.println(ans.remove().s.getSongName());
-		}
-		assertTrue(true == true);
+
+		assertTrue(ans.size() > 0);
 	}
 	
 	@Test

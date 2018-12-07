@@ -121,6 +121,9 @@ public class Search {
 	public PriorityQueue<SongWrapper> matchingAlg(Song test, boolean[] tags) {
 		PriorityQueue<SongWrapper> queue = new PriorityQueue<>(25);
 		List<Long> songList = SongDatabaseDriver.getInstance().getAllSongs();
+		SongWrapper s = new SongWrapper(test);
+		s.comp = 1000;
+		queue.add(s);
 		for (int i = 0; i < songList.size(); i++) /* Always does the same number of steps */
 		{
 			SongWrapper sw = new SongWrapper(new Song(songList.get(i)));
