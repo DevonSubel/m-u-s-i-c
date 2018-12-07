@@ -57,7 +57,7 @@ public class UserSettingsManagerTest {
 
 		settings = UserSettingsManager.getUserSettings();
 
-		assertEquals(settings.getGuiColor(), "red");
+		assertEquals("red", settings.getGuiColor());
 	}
 
 	@Test

@@ -143,14 +143,16 @@ public class Search {
 	/*
 	* This method is public for testing purposes 
 	*/
+
 	public static class SongWrapper implements Comparable<SongWrapper> {
 		public static Song s;
 		public static int comp;
 
+
 		public SongWrapper(Song s) {
 			this.s = s;
 			comp = 0;
-		}
+    }
 		
 		@Override
 		public int hashCode() {
@@ -161,6 +163,7 @@ public class Search {
 		public boolean equals(Object other) {
 			if(other == null)
 				return false;
+
 			if (!other.getClass().equals(SongWrapper.class))
 				return false;
 			return this.compareTo((SongWrapper) other) == 0;
