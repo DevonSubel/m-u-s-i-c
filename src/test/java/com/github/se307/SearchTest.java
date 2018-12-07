@@ -9,7 +9,7 @@ import com.github.se307.Search;
 import com.github.se307.Search.SongWrapper;
 import com.github.se307.Song;
 
-public class SearchTests {
+public class SearchTest {
 	@Test
 	public void testAllTags() {
 		Search s = new Search();
