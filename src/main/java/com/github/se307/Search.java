@@ -128,6 +128,7 @@ public class Search {
 	 * Album Name tag[3] = Mode tag[4] = Song Length tag[5] = Song Genre tag[6] =
 	 * Song Year tag[7] = Song BPM
 	 */
+
 	public ArrayList<Song> matchingAlg(Song test, boolean[] tags) {
 		PriorityQueue<SongWrapper> queue = new PriorityQueue<>(25);
 		List<Long> songList = SongDatabaseDriver.getInstance().getAllSongs();
@@ -140,6 +141,7 @@ public class Search {
 			queue.remove();
 			return ret;
 		}
+
 		for (int i = 0; i < songList.size(); i++) /* Always does the same number of steps */
 		{
 			SongWrapper sw = new SongWrapper(new Song(songList.get(i)));
@@ -152,25 +154,26 @@ public class Search {
 				queue.poll();
 				queue.add(sw);
 			}
-		}
-		
+    }
 		while(queue.size() != 0)
 		{
 			ret.add(queue.remove().s);
 		}
 		return ret;
+
 	}
 
 	/*
 	* This method is public for testing purposes 
 	*/
+
 	private class SongWrapper implements Comparable<SongWrapper> {
 		private Song s;
-		private int comp;
 
 		public SongWrapper(Song s) {
 			this.s = s;
 			comp = 0;
+
 		}
 		
 		/*
@@ -179,7 +182,7 @@ public class Search {
 		public int add(int add) {
 			return comp += add;
 		}
-
+    
 		@Override
 		public int hashCode() {
 			return comp;
@@ -189,6 +192,7 @@ public class Search {
 		public boolean equals(Object other) {
 			if(other == null)
 				return false;
+
 			if (!other.getClass().equals(SongWrapper.class))
 				return false;
 			return this.compareTo((SongWrapper) other) == 0;

@@ -18,8 +18,6 @@ import org.junit.Test;
  *
  */
 public class DynamicSongSetTest {
-
-	//private static long[] songKeys = new long[] { 1000l, 1001l, 1002l, 1003l, 1004l, 1005l };
 	
 	private static ArrayList<Song> songs;
 	

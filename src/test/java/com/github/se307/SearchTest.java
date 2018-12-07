@@ -2,6 +2,7 @@ package com.github.se307;
 
 import static org.junit.Assert.*;
 
+
 import java.util.ArrayList;
 import org.junit.Test;
 import com.github.se307.Search;
@@ -15,6 +16,7 @@ public class SearchTest {
 		boolean[] tags = {true,true,true,true,true,true,true,true};
 		Song song = new Song(100);
 		ArrayList<Song> ans = s.matchingAlg(song,tags);
+
 
 		assertTrue(ans.size() > 0);
 	}
