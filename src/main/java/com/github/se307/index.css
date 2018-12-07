@@ -16,6 +16,8 @@ body {
 
 .container-fluid {
   height: 100%;
+  background-color: #2C5364;
+  background-image: url("waves.png");
 }
 
 button {
@@ -50,8 +52,13 @@ button {
 }
 
 .navigation .col,
-.tabs .col {
+.navigation .col-md-12,
+.results .col-md-12 {
   padding: 0;
+}
+
+.navigation .navbar:first-child {
+  background-image: linear-gradient(#2C5364, #203A43, #0F2027);
 }
 
 .navigation .logo {
@@ -77,7 +84,7 @@ button {
 
 .navigation a:hover,
 .navigation .active {
-  background-color: #211E1E;
+  background-color: #374f59;
 }
 
 .navigation a {
@@ -113,6 +120,8 @@ button {
 
 .search-page {
   padding-top: 7rem;
+  background-image: linear-gradient(#0F2027, #203A43, #2C5364);
+  color: white;
 }
 
 .search-page .start-search {
@@ -133,6 +142,10 @@ button {
 .search-page #search-dropdown .custom-select {
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
+  
+  background-color: black;
+  color: white;
+  border: none;
 }
 
 .search-page #search-button button {
@@ -140,6 +153,10 @@ button {
   color: #000000;
   border: 1px solid #ced4da;
   z-index: 0;
+  
+  background-color: black;
+  color: white;
+  border: none;
 }
 
 .search-page .advanced-search {
@@ -149,8 +166,8 @@ button {
 .search-page #adv-btn {
   border-radius: 0.25rem;
   border: none;
-  background-color: #211E1E;
-  color: #FFFFFF;
+  background-color: inherit;
+  color: white;
   cursor: pointer;
 }
 
@@ -175,7 +192,7 @@ button {
 
 .search-page .modal-content {
   position: relative;
-
+  color: #FFFFFF;
   background-color: #000000;
   margin: 15% auto;
   /* 15% from the top and centered */
@@ -231,8 +248,23 @@ button {
 /*                    Results-page                    */
 /* ================================================== */
 .sort .row {
-  background-color: grey;
-  /* dev setting. change color later. */
+  background-color: #415d69;
+}
+
+.results-page {
+  background-color: #0F2027;
+}
+
+.results {
+  background-image: linear-gradient(#0F2027, #203A43, #2C5364);
+}
+
+.bg-secondary {
+  background-color: #a2bbc6 !important;
+}
+
+.tabs .col {
+  padding: 0;
 }
 
 .tabs .result-tabs {
@@ -256,6 +288,19 @@ button {
 	height: 40rem;
 	overflow-y: scroll;
 }
+
+iframe {
+  width: 100%;
+  height: 475px;
+}
+
+/* ================================================== */
+/*                 Song-Iframe-page                   */
+/* ================================================== */
+.song-iframe {
+  width: 100%;
+}
+
 
 /* ================================================== */
 /*                    Credits-page                    */
@@ -466,4 +511,10 @@ button {
 
 .plsearch{
 	width: 50%;
+}
+
+.albumartplaylist{
+	background-image: url("https://upload.wikimedia.org/wikipedia/en/thumb/0/0b/OutKast_-_Stankonia.JPG/220px-OutKast_-_Stankonia.JPG");
+	background-repeat: no-repeat;
+	background-size: contain;
 }
