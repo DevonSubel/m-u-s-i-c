@@ -62,7 +62,6 @@ public class SongSetDatabaseDriver {
 			querySongsFromSet = dbConnection.prepareStatement(QUERY_SONG_FROM_SET_CONST);
 
 		} catch (SQLException e) {
-			e.printStackTrace();
 			logger.error("Failed to load prepared statements for SongSetDatabaseDriver: " + e.getMessage());
 		}
 	}
