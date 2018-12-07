@@ -269,9 +269,9 @@ button {
 
 .tabs .result-tabs {
   height: 100%;
-  width: 50%;
+  width: 65%;
   padding-top: 0.9375rem;
-  text-align: center;
+/*  text-align: center;*/
   font-size: 1.25rem;
 }
 
