@@ -271,7 +271,7 @@ button {
   height: 100%;
   width: 65%;
   padding-top: 0.9375rem;
-/*  text-align: center;*/
+  text-align: center;
   font-size: 1.25rem;
 }
 
@@ -287,6 +287,10 @@ button {
 {
 /*	height: 40rem;*/
 /*	overflow-y: scroll;*/
+}
+
+.col-md-12.songresults.partyplaylist {
+   padding: 0;
 }
 
 iframe {
@@ -361,6 +365,17 @@ iframe {
 
 .settings .export {
   padding: 0;
+}
+
+/* ================================================== */
+/*                    Playlist-page                   */
+/* ================================================== */
+.playlist .col-md-6 {
+   padding: 0;
+}
+
+.playlist iframe {
+   width: 100%;
 }
 
 /* ================================================== */
