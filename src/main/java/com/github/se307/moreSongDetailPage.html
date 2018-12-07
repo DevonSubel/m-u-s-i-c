@@ -26,7 +26,17 @@
          <div class="menu active"><a href="resultsPage.html" id="result"><p>Result</p></a></div>
       </div>
        <div class="col">
-         <div class="menu"><a href="#" id="playlist"><p>Playlist</p></a></div>
+          <div class="dropdown menu">
+           <a class="dropdown-toggle" href="#" role="button" id="etc" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Playlists
+           </a>
+           <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+             <a class="dropdown-item" href="playlistPage.html">Workout Playlist</a>
+             <a class="dropdown-item" href="playlistPage.html">Favorite Songs</a>
+             <a class="dropdown-item" href="playlistPage.html" target="_blank">Focus Playlist</a>
+             <a class="dropdown-item" href="playlistPage.html">Party Playlist</a>
+           </div>
+           </div>
       </div>
        <div class="col">
          <div class="menu"><a href="nowPlayingPage.html" id="now-playing"><p>Now Playing</p></a></div>
@@ -88,7 +98,8 @@
           							<span class="fas fa-heart"></span></a>
           						</div>
           						<div class="col ">
-          							<a href="nowPlayingPage.html" class="btn-md text-dark">Playlist</a>
+          							<a href="moreSongDetailPage.html" class="btn btn-md text-dark fav">
+          							<span class="far fa-plus"></span></a>
           						</div>
           					</div>
           					<div class="row bg-light">
@@ -106,7 +117,8 @@
           							<span class="far fa-heart"></span></a>
           						</div>
           						<div class="col ">
-          							<a href="nowPlayingPage.html" class="btn-md text-dark">Playlist</a>
+          							<a href="moreSongDetailPage.html" class="btn btn-md text-dark fav">
+          							<span class="far fa-plus"></span></a>
           						</div>
           					</div>
           				</div>

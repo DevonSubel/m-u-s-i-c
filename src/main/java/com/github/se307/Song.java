@@ -56,9 +56,29 @@ public class Song {
 	 * Constructor to create a new song that does not exist in the database. This
 	 * constructor should not be called directly, use the SongBuilder object
 	 * instead.
+	 * 
+	 * This constructor will automatically create a new entry in the database. 
+	 * Saving does not need to be explicitly done.
 	 */
 	private Song(SongBuilder sb) {
 		populateFromSongBuilder(sb);
+		
+		Object[] fields = new Object[] { 
+				this.songName,
+				this.artistName,
+				this.albumName,
+				this.songLength,
+				this.genreID,
+				this.songYear,
+				this.bpm,
+				this.additionalNotes,
+				this.songURL,
+				this.songMusicKey,
+				this.songMusicKeyMode,
+				this.liked
+		};
+		
+		this.songId = Song.DB_DRIVER.createSong(SongDatabaseDriver.getFields(), fields);
 	}
 
 	/**
@@ -322,7 +342,13 @@ public class Song {
 	
 	public void setLiked(Boolean liked) {
 
-		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.LIKED_F, liked, this.songId)) {
+		Integer val;
+		if (liked == null) {
+			val = null;
+		} else {
+			val = (liked) ? 1 : 0;
+		}
+		if (Song.DB_DRIVER.updateSong(SongDatabaseDriver.LIKED_F, val, this.songId)) {
 			this.liked = liked;
 		} else {
 			logger.error("Error while updating 'liked' field to: " + liked);
@@ -337,21 +363,53 @@ public class Song {
 			logger.error("Error while updating 'song url' field to: " + songURL);
 		}
 	}
+	
+	@Override
+	/**
+	 * For the purposes of this class, a Song is considered equal to another 
+	 * if it shares the same ID.
+	 * 
+	 * 
+	 * 
+	 * Ideally, the song object would populate itself using the cache then
+	 * create a new object/query the cache if not. This would prevent out-of-sync
+	 * Song objects as only one Song object of each key type would ever be allowed 
+	 * to exist in memory at a time, allowing for faster identity check of objects
+	 * using keys alone.
+	 */
+	public boolean equals(Object other) {
+		if (other == null || !(other.getClass().equals(this.getClass()))) {
+			return false;
+		} else {
+			Song o = (Song)other;
+			if (this.songId > 0 || o.songId > 0) {
+				return this.songId == o.songId;
+			} else {
+				return false;
+			}
+		}
+	}
 
+	@Override
+	public int hashCode() {
+		return ((Long)this.songId).hashCode();		
+	}
+	
 	public static class SongBuilder {
 
-		private String songName;
-		private String artistName;
-		private String albumName;
-		private Integer songLength;
-		private Integer genreID;
-		private Integer songYear;
-		private Integer bpm;
-		private String additionalNotes;
-		private String songURL;
-		private Integer songMusicKey;
-		private Integer songMusicKeyMode;
 		private Boolean liked;
+		private Integer songMusicKeyMode;
+		private Integer songMusicKey;
+		private String songURL;
+		private String additionalNotes;
+		private Integer bpm;
+		private Integer songYear;
+		private Integer genreID;
+		private Integer songLength;
+		private String albumName;
+		private String artistName;
+		private String songName;
+		
 
 		public SongBuilder() {
 			// No operation/setup necessary for the builder pattern
