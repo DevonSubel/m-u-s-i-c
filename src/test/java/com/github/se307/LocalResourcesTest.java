@@ -6,6 +6,10 @@ import java.nio.file.Paths;
 
 import org.junit.Test;
 
+/**
+ * @author Declan Kelly
+ *
+ */
 public class LocalResourcesTest {
 
 	@Test

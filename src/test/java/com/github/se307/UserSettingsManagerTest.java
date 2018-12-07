@@ -14,7 +14,8 @@ import com.github.se307.UserSettingsManager.UserSettings;
 import javafx.scene.paint.Color;
 
 /**
- * Unit test for simple App.
+ * @author Declan Kelly
+ *
  */
 public class UserSettingsManagerTest {
 

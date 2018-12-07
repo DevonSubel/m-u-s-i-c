@@ -7,6 +7,10 @@ import org.junit.Test;
 import com.github.se307.Search;
 import com.github.se307.Song;
 
+/**
+ * @author Devon Subel
+ *
+ */
 public class SearchTest {
 
 	@Test

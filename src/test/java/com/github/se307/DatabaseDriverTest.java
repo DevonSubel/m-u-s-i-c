@@ -9,6 +9,10 @@ import java.sql.Statement;
 
 import org.junit.Test;
 
+/**
+ * @author Oscar Jones
+ *
+ */
 public class DatabaseDriverTest {
 
 	@Test

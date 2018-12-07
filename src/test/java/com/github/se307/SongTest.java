@@ -4,6 +4,10 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
+/**
+ * @author Maxence Weyrich
+ *
+ */
 public class SongTest {
 
 	@Test
