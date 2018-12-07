@@ -92,21 +92,21 @@ public class Search {
 	private void compSongs(Song test, SongWrapper sw, boolean[] tags) {
 		if (tags[0] && test.getSongKey().equals(sw.s.getSongKey())
 				&& sw.s.getSongKeyMode().equals(sw.s.getSongKeyMode()))
-			sw.comp += 16;
+			sw.add(16);
 		if (test.getArtistName().equals(sw.s.getArtistName()) && tags[1]) /* Comparing artist name (ADDITION IS 25) */
-			sw.comp += 25;
+			sw.add(25);
 		if (test.getAlbumName().equals(sw.s.getAlbumName()) && tags[2]) /* Comparing Album name (ADDITION IS 30) */
-			sw.comp += 30;
+			sw.add(30);
 		if (test.getSongKeyMode().equals(sw.s.getSongKeyMode()) && tags[3])
-			sw.comp += 15;
+			sw.add(15);
 		if (tags[4])
-			sw.comp += compSongLength(test.getSongLength(), sw.s.getSongLength()); /* Comapring song length */
+			sw.add(compSongLength(test.getSongLength(), sw.s.getSongLength())); /* Comapring song length */
 		if (tags[5])
-			sw.comp += compGenre(test.getGenreId(), sw.s.getGenreId());
+			sw.add(compGenre(test.getGenreId(), sw.s.getGenreId()));
 		if (tags[6])
-			sw.comp += compSongYear(test.getSongYear(), sw.s.getSongYear()); /* Compare song year */
+			sw.add(compSongYear(test.getSongYear(), sw.s.getSongYear())); /* Compare song year */
 		if (tags[7])
-			sw.comp += compBPM(test.getBpm(), sw.s.getBpm()); /* Compare BPM */
+			sw.add(compBPM(test.getBpm(), sw.s.getBpm())); /* Compare BPM */
 	}
 	
 	public boolean allFalse(boolean[] tags)
@@ -164,7 +164,7 @@ public class Search {
 	/*
 	* This method is public for testing purposes 
 	*/
-	private static class SongWrapper implements Comparable<SongWrapper> {
+	private class SongWrapper implements Comparable<SongWrapper> {
 		private Song s;
 		private int comp;
 
@@ -173,6 +173,13 @@ public class Search {
 			comp = 0;
 		}
 		
+		/*
+		 * Setter/Getter
+		 */
+		public int add(int add) {
+			return comp += add;
+		}
+
 		@Override
 		public int hashCode() {
 			return comp;
