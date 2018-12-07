@@ -18,7 +18,6 @@ body {
   height: 100%;
   background-color: #2C5364;
   background-image: url("waves.png");
-  overflow: hidden;
 }
 
 button {
@@ -286,8 +285,8 @@ button {
 
 .songresults
 {
-/*	height: 40rem;*/
-/*	overflow-y: scroll;*/
+	height: 40rem;
+	overflow-y: scroll;
 }
 
 iframe {
@@ -512,4 +511,10 @@ iframe {
 
 .plsearch{
 	width: 50%;
+}
+
+.albumartplaylist{
+	background-image: url("https://upload.wikimedia.org/wikipedia/en/thumb/0/0b/OutKast_-_Stankonia.JPG/220px-OutKast_-_Stankonia.JPG");
+	background-repeat: no-repeat;
+	background-size: contain;
 }
