@@ -111,7 +111,7 @@ public class Search {
 	
 	public boolean noTags(boolean[] tags) {
 		for(int i = 0; i < tags.length; i++) {
-			if(tags[i] == true) { return false; }
+			if(tags[i]) { return false; }
 		}
 		return true;
 	}
