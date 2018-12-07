@@ -30,10 +30,10 @@ public class ObjectCache<K, E> {
 		this.head = new Node(null, null);
 		this.tail = new Node(null, null);
 
-		this.head.next = this.tail;
-		this.head.prev = this.head;
-		this.tail.prev = this.head;
-		this.tail.next = this.tail;
+		this.head.setNext(this.tail);
+		this.head.setPrev(this.head);
+		this.tail.setPrev(this.head);
+		this.tail.setNext(this.tail);
 	}
 
 	/**
@@ -42,10 +42,10 @@ public class ObjectCache<K, E> {
 	 * @param n the Node to move
 	 */
 	private void moveNodeToFront(Node n) {
-		n.prev = this.head;
-		n.next = this.head.next;
-		this.head.next.prev = n;
-		this.head.next = n;
+		n.setPrev(this.head);
+		n.setNext(this.head.next());
+		this.head.next().setPrev(n);
+		this.head.setNext(n);
 	}
 
 	/**
@@ -53,10 +53,10 @@ public class ObjectCache<K, E> {
 	 */
 	private void trimCache() {
 		while (this.itemCount > this.maxItems) {
-			Node n = this.tail.prev;
+			Node n = this.tail.prev();
 
-			n.prev.next = this.tail;
-			this.tail.prev = n.prev;
+			n.prev().setNext(this.tail);
+			this.tail.setPrev(n.prev());
 
 			this.tableRef.remove(n.key);
 
@@ -94,11 +94,11 @@ public class ObjectCache<K, E> {
 		Node n = tableRef.get(key);
 
 		// Update linked list
-		n.next.prev = n.prev;
-		n.prev.next = n.next;
+		n.next().setPrev(n.prev());
+		n.prev().setNext(n.next());
 
 		moveNodeToFront(n);
-		return n.item;
+		return n.item();
 	}
 	
 	public int capacity() {
@@ -110,14 +110,38 @@ public class ObjectCache<K, E> {
 	}
 
 	private class Node {
-		public E item;
-		public K key;
-		public Node next;
-		public Node prev;
+		private E item;
+		private K key;
+		private Node next;
+		private Node prev;
 
 		public Node(K key, E item) {
 			this.key = key;
 			this.item = item;
+		}
+		
+		public E item() {
+			return item;
+		}
+		
+		public K key() {
+			return key;
+		}
+		
+		public Node next() {
+			return next;
+		}
+		
+		public Node prev() {
+			return prev;
+		}
+		
+		public void setNext(Node o) {
+			next = o;
+		}
+		
+		public void setPrev(Node o) {
+			prev = o;
 		}
 	}
 }
